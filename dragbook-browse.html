@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Browse Performers — DragBook</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=DM+Sans:wght@300;400;500&family=Abril+Fatface&display=swap" rel="stylesheet">
+<style>
+:root {
+  --hot-pink: #FF2D78;
+  --electric-purple: #9B00FF;
+  --acid-yellow: #FFE600;
+  --cyan: #00F5FF;
+  --deep-black: #0A0008;
+  --card-bg: #1A0020;
+  --card-bg-2: #150018;
+  --text-light: #FFE8FF;
+  --text-muted: #C084C8;
+  --border: rgba(255,255,255,0.06);
+  --border-pink: rgba(255,45,120,0.3);
+}
+
+- { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+body {
+background: var(–deep-black);
+color: var(–text-light);
+font-family: ‘DM Sans’, sans-serif;
+overflow-x: hidden;
+cursor: none;
+}
+
+.cursor {
+width: 20px; height: 20px;
+border: 2px solid var(–hot-pink);
+border-radius: 50%;
+position: fixed;
+pointer-events: none;
+z-index: 9999;
+transition: transform 0.15s ease, background 0.15s ease;
+mix-blend-mode: screen;
+}
+.cursor-dot {
+width: 6px; height: 6px;
+background: var(–acid-yellow);
+border-radius: 50%;
+position: fixed;
+pointer-events: none;
+z-index: 9999;
+}
+
+.glitter-canvas {
+position: fixed; top: 0; left: 0;
+width: 100%; height: 100%;
+pointer-events: none; z-index: 0; opacity: 0.25;
+}
+
+nav {
+position: fixed; top: 0; width: 100%; z-index: 100;
+padding: 18px 60px;
+display: flex; align-items: center; justify-content: space-between;
+background: rgba(10,0,8,0.95);
+backdrop-filter: blur(20px);
+border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+.logo {
+font-family: ‘Abril Fatface’, cursive;
+font-size: 1.8rem;
+background: linear-gradient(135deg, var(–hot-pink), var(–electric-purple), var(–cyan));
+-webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+text-decoration: none;
+}
+.logo span {
+font-family: ‘DM Sans’, sans-serif; font-size: 0.5rem; font-weight: 300;
+letter-spacing: 0.3em; display: block;
+background: linear-gradient(135deg, var(–acid-yellow), var(–hot-pink));
+-webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+text-transform: uppercase; margin-top: -2px;
+}
+
+.nav-links { display: flex; gap: 32px; list-style: none; align-items: center; }
+.nav-links a {
+color: var(–text-muted); text-decoration: none; font-size: 0.82rem; font-weight: 500;
+letter-spacing: 0.05em; text-transform: uppercase; transition: color 0.2s; position: relative;
+}
+.nav-links a::after {
+content: ‘’; position: absolute; bottom: -4px; left: 0;
+width: 0; height: 2px; background: var(–hot-pink); transition: width 0.3s;
+}
+.nav-links a:hover { color: var(–text-light); }
+.nav-links a:hover::after { width: 100%; }
+.nav-links a.active { color: var(–text-light); }
+.nav-links a.active::after { width: 100%; }
+.btn-nav {
+background: linear-gradient(135deg, var(–hot-pink), var(–electric-purple)) !important;
+color: white !important; padding: 9px 22px !important; border-radius: 100px !important;
+box-shadow: 0 0 20px rgba(255,45,120,0.3) !important;
+}
+.btn-nav::after { display: none !important; }
+
+/* BROWSE HEADER */
+.browse-header {
+padding: 110px 60px 0;
+position: relative; z-index: 1;
+}
+
+.search-bar-top {
+display: flex;
+background: rgba(255,255,255,0.04);
+border: 1px solid rgba(255,45,120,0.25);
+border-radius: 100px;
+padding: 6px 6px 6px 24px;
+gap: 0;
+align-items: center;
+backdrop-filter: blur(20px);
+max-width: 900px;
+transition: border-color 0.3s, box-shadow 0.3s;
+}
+.search-bar-top:focus-within {
+border-color: var(–hot-pink);
+box-shadow: 0 0 40px rgba(255,45,120,0.15);
+}
+
+.search-field {
+flex: 1; display: flex; align-items: center; gap: 10px;
+}
+.search-field input {
+flex: 1; background: none; border: none; outline: none;
+color: var(–text-light); font-family: ‘DM Sans’, sans-serif; font-size: 0.95rem;
+}
+.search-field input::placeholder { color: var(–text-muted); }
+
+.search-sep { width: 1px; height: 28px; background: rgba(255,255,255,0.1); margin: 0 16px; }
+
+.search-field select {
+background: none; border: none; outline: none;
+color: var(–text-muted); font-family: ‘DM Sans’, sans-serif; font-size: 0.88rem;
+cursor: pointer; min-width: 150px;
+}
+.search-field select option { background: #1A0020; }
+
+.btn-search {
+background: linear-gradient(135deg, var(–hot-pink), var(–electric-purple));
+border: none; color: white; padding: 13px 28px; border-radius: 100px;
+font-family: ‘DM Sans’, sans-serif; font-size: 0.88rem; font-weight: 500;
+cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; white-space: nowrap;
+}
+.btn-search:hover { transform: scale(1.03); box-shadow: 0 0 24px rgba(255,45,120,0.5); }
+
+/* LAYOUT */
+.browse-layout {
+display: grid;
+grid-template-columns: 280px 1fr;
+gap: 40px;
+padding: 40px 60px 100px;
+position: relative; z-index: 1;
+align-items: start;
+}
+
+/* SIDEBAR FILTERS */
+.sidebar {
+position: sticky;
+top: 100px;
+}
+
+.filter-block {
+background: var(–card-bg);
+border: 1px solid var(–border);
+border-radius: 20px;
+padding: 24px;
+margin-bottom: 16px;
+}
+
+.filter-block-title {
+font-size: 0.72rem;
+font-weight: 600;
+letter-spacing: 0.15em;
+text-transform: uppercase;
+color: var(–text-muted);
+margin-bottom: 18px;
+display: flex;
+align-items: center;
+justify-content: space-between;
+}
+
+.filter-block-title button {
+background: none; border: none; color: var(–hot-pink);
+font-size: 0.7rem; cursor: pointer; font-family: ‘DM Sans’, sans-serif;
+letter-spacing: 0.05em;
+}
+
+.filter-option {
+display: flex;
+align-items: center;
+gap: 10px;
+margin-bottom: 12px;
+cursor: pointer;
+}
+
+.filter-option input[type=“checkbox”] { display: none; }
+
+.checkbox-custom {
+width: 18px; height: 18px;
+border-radius: 6px;
+border: 1.5px solid rgba(255,255,255,0.2);
+background: transparent;
+transition: all 0.2s;
+position: relative;
+flex-shrink: 0;
+}
+.filter-option input:checked + .checkbox-custom {
+background: linear-gradient(135deg, var(–hot-pink), var(–electric-purple));
+border-color: transparent;
+}
+.filter-option input:checked + .checkbox-custom::after {
+content: ‘✓’;
+position: absolute;
+top: 50%; left: 50%;
+transform: translate(-50%, -50%);
+color: white;
+font-size: 0.65rem;
+font-weight: 700;
+}
+
+.filter-label {
+font-size: 0.88rem;
+color: var(–text-light);
+font-weight: 300;
+flex: 1;
+}
+.filter-count {
+font-size: 0.72rem;
+color: var(–text-muted);
+background: rgba(255,255,255,0.05);
+padding: 2px 8px;
+border-radius: 100px;
+}
+
+/* PRICE RANGE */
+.price-range-wrapper { margin-top: 8px; }
+.price-range {
+width: 100%;
+-webkit-appearance: none;
+appearance: none;
+height: 3px;
+background: linear-gradient(to right, var(–hot-pink) 0%, var(–hot-pink) 60%, rgba(255,255,255,0.1) 60%);
+border-radius: 100px;
+outline: none;
+margin-bottom: 12px;
+}
+.price-range::-webkit-slider-thumb {
+-webkit-appearance: none;
+width: 18px; height: 18px;
+border-radius: 50%;
+background: white;
+box-shadow: 0 0 10px rgba(255,45,120,0.5);
+cursor: pointer;
+}
+.price-labels {
+display: flex;
+justify-content: space-between;
+font-size: 0.78rem;
+color: var(–text-muted);
+}
+
+/* RESULTS AREA */
+.results-header {
+display: flex;
+align-items: center;
+justify-content: space-between;
+margin-bottom: 24px;
+}
+
+.results-count {
+font-size: 0.85rem;
+color: var(–text-muted);
+}
+.results-count strong { color: var(–text-light); font-weight: 500; }
+
+.sort-select {
+background: var(–card-bg);
+border: 1px solid var(–border);
+color: var(–text-light);
+padding: 9px 16px;
+border-radius: 12px;
+font-family: ‘DM Sans’, sans-serif;
+font-size: 0.82rem;
+outline: none;
+cursor: pointer;
+}
+.sort-select option { background: #1A0020; }
+
+/* ACTIVE FILTERS */
+.active-filters {
+display: flex;
+flex-wrap: wrap;
+gap: 8px;
+margin-bottom: 24px;
+}
+.active-filter {
+display: flex;
+align-items: center;
+gap: 6px;
+background: rgba(255,45,120,0.12);
+border: 1px solid rgba(255,45,120,0.3);
+color: var(–hot-pink);
+padding: 5px 12px;
+border-radius: 100px;
+font-size: 0.75rem;
+font-weight: 500;
+}
+.active-filter button {
+background: none; border: none; color: var(–hot-pink); cursor: pointer; font-size: 0.8rem;
+}
+
+/* GRID */
+.performers-grid {
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+gap: 20px;
+}
+
+.performer-card {
+background: var(–card-bg);
+border-radius: 20px;
+overflow: hidden;
+border: 1px solid var(–border);
+transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+cursor: pointer;
+position: relative;
+}
+.performer-card:hover {
+transform: translateY(-6px);
+box-shadow: 0 24px 50px rgba(0,0,0,0.4), 0 0 30px rgba(255,45,120,0.1);
+border-color: var(–border-pink);
+}
+
+.card-image { height: 260px; position: relative; overflow: hidden; }
+.card-image-inner {
+width: 100%; height: 100%;
+display: flex; align-items: center; justify-content: center; font-size: 4rem;
+}
+
+.g1 { background: linear-gradient(135deg, #FF2D78, #9B00FF); }
+.g2 { background: linear-gradient(135deg, #9B00FF, #00F5FF); }
+.g3 { background: linear-gradient(135deg, #FFE600, #FF2D78); }
+.g4 { background: linear-gradient(135deg, #00F5FF, #9B00FF); }
+.g5 { background: linear-gradient(135deg, #FF2D78, #FFE600); }
+.g6 { background: linear-gradient(135deg, #9B00FF, #FF2D78); }
+.g7 { background: linear-gradient(135deg, #00F5FF, #FF2D78); }
+.g8 { background: linear-gradient(135deg, #FFE600, #9B00FF); }
+
+.card-badge {
+position: absolute; top: 12px; right: 12px;
+background: rgba(0,0,0,0.7); backdrop-filter: blur(10px);
+border: 1px solid rgba(255,255,255,0.1); color: white;
+padding: 4px 10px; border-radius: 100px;
+font-size: 0.66rem; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase;
+}
+.card-badge.verified { background: rgba(0,245,255,0.12); border-color: rgba(0,245,255,0.35); color: var(–cyan); }
+.card-badge.top { background: rgba(255,230,0,0.12); border-color: rgba(255,230,0,0.35); color: var(–acid-yellow); }
+.card-badge.hot { background: rgba(255,45,120,0.12); border-color: rgba(255,45,120,0.35); color: var(–hot-pink); }
+
+.card-fav {
+position: absolute; top: 12px; left: 12px;
+width: 32px; height: 32px;
+background: rgba(0,0,0,0.6); backdrop-filter: blur(10px);
+border-radius: 50%; display: flex; align-items: center; justify-content: center;
+font-size: 0.9rem; cursor: pointer; transition: transform 0.2s;
+border: 1px solid rgba(255,255,255,0.08);
+}
+.card-fav:hover { transform: scale(1.2); }
+
+.card-body { padding: 16px 20px 20px; }
+
+.card-name {
+font-family: ‘Playfair Display’, serif; font-size: 1.2rem; font-weight: 700;
+color: white; margin-bottom: 3px; letter-spacing: -0.01em;
+}
+.card-location { font-size: 0.75rem; color: var(–text-muted); margin-bottom: 9px; }
+
+.card-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 12px; }
+.card-tag {
+background: rgba(155,0,255,0.1); border: 1px solid rgba(155,0,255,0.22);
+color: #C084FF; padding: 3px 9px; border-radius: 100px; font-size: 0.65rem; font-weight: 500;
+}
+
+.card-footer {
+display: flex; align-items: center; justify-content: space-between;
+padding-top: 12px; border-top: 1px solid var(–border);
+}
+
+.card-rating { display: flex; align-items: center; gap: 4px; font-size: 0.8rem; }
+.stars { color: var(–acid-yellow); font-size: 0.68rem; letter-spacing: 1px; }
+
+.card-price { font-family: ‘Playfair Display’, serif; font-size: 0.95rem; font-weight: 700; color: white; }
+.card-price span { font-family: ‘DM Sans’, sans-serif; font-size: 0.68rem; font-weight: 300; color: var(–text-muted); }
+
+.btn-book {
+width: 100%; margin-top: 12px;
+background: linear-gradient(135deg, var(–hot-pink), var(–electric-purple));
+border: none; color: white; padding: 11px; border-radius: 100px;
+font-family: ‘DM Sans’, sans-serif; font-size: 0.84rem; font-weight: 500; cursor: pointer;
+transition: opacity 0.2s, transform 0.2s; opacity: 0; transform: translateY(5px);
+}
+.performer-card:hover .btn-book { opacity: 1; transform: translateY(0); }
+
+/* PAGINATION */
+.pagination {
+display: flex;
+align-items: center;
+justify-content: center;
+gap: 8px;
+margin-top: 60px;
+padding-bottom: 40px;
+}
+.page-btn {
+width: 40px; height: 40px;
+border-radius: 12px;
+background: var(–card-bg);
+border: 1px solid var(–border);
+color: var(–text-muted);
+font-family: ‘DM Sans’, sans-serif; font-size: 0.88rem;
+cursor: pointer; transition: all 0.2s;
+display: flex; align-items: center; justify-content: center;
+}
+.page-btn:hover, .page-btn.active {
+background: linear-gradient(135deg, var(–hot-pink), var(–electric-purple));
+border-color: transparent; color: white;
+}
+
+/* FOOTER */
+footer {
+padding: 60px 60px 36px;
+border-top: 1px solid var(–border);
+background: var(–card-bg-2);
+position: relative; z-index: 1;
+}
+.footer-grid {
+display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 60px; margin-bottom: 48px;
+}
+.footer-brand p { color: var(–text-muted); font-size: 0.85rem; line-height: 1.7; font-weight: 300; margin-top: 14px; max-width: 240px; }
+.footer-col h4 { font-size: 0.65rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(–text-muted); margin-bottom: 18px; }
+.footer-col ul { list-style: none; }
+.footer-col li { margin-bottom: 10px; }
+.footer-col a { color: rgba(255,232,255,0.4); text-decoration: none; font-size: 0.85rem; font-weight: 300; transition: color 0.2s; }
+.footer-col a:hover { color: var(–hot-pink); }
+.footer-bottom { display: flex; align-items: center; justify-content: space-between; padding-top: 28px; border-top: 1px solid var(–border); font-size: 0.75rem; color: rgba(255,232,255,0.22); }
+.footer-socials { display: flex; gap: 10px; }
+.social-btn { width: 34px; height: 34px; border-radius: 50%; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: center; font-size: 0.9rem; cursor: pointer; transition: all 0.2s; text-decoration: none; }
+.social-btn:hover { background: rgba(255,45,120,0.15); border-color: var(–hot-pink); transform: translateY(-2px); }
+
+.fade-up { opacity: 0; transform: translateY(32px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.fade-up.visible { opacity: 1; transform: translateY(0); }
+
+@media (max-width: 1000px) {
+nav { padding: 16px 24px; }
+.nav-links { display: none; }
+.browse-header { padding: 100px 24px 0; }
+.browse-layout { grid-template-columns: 1fr; padding: 24px 24px 80px; }
+.sidebar { position: relative; top: 0; }
+.footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+.footer-bottom { flex-direction: column; gap: 16px; text-align: center; }
+}
+</style>
+
+</head>
+<body>
+
+<canvas class="glitter-canvas" id="glitterCanvas"></canvas>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-dot" id="cursorDot"></div>
+
+<nav>
+  <a href="http://dragbook.html" class="logo" target="_blank" rel="noopener">DragBook <span>The UK's drag marketplace</span></a>
+  <ul class="nav-links">
+    <li><a href="http://dragbook-browse.html" class="active" target="_blank" rel="noopener">Find Performers</a></li>
+    <li><a href="http://dragbook-how-it-works.html" target="_blank" rel="noopener">How It Works</a></li>
+    <li><a href="http://dragbook-pricing.html" target="_blank" rel="noopener">Pricing</a></li>
+    <li><a href="http://dragbook-pricing.html" class="btn-nav" target="_blank" rel="noopener">List Your Act ✨</a></li>
+  </ul>
+</nav>
+
+<div class="browse-header">
+  <div style="margin-bottom: 28px;">
+    <div style="font-size:0.7rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:var(--hot-pink);margin-bottom:12px;display:flex;align-items:center;gap:10px;"><span style="width:28px;height:2px;background:var(--hot-pink);display:inline-block;"></span>Browse Performers</div>
+    <h1 style="font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,2.8rem);font-weight:700;letter-spacing:-0.02em;line-height:1.1;margin-bottom:20px;">Find Your Perfect <em style="font-style:italic;background:linear-gradient(135deg,var(--hot-pink),var(--electric-purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Drag Star</em></h1>
+  </div>
+
+  <div class="search-bar-top">
+    <div class="search-field">
+      <span style="font-size:1rem;opacity:0.5;">🔍</span>
+      <input type="text" placeholder="Search by name, style or act type…" value="">
+    </div>
+    <div class="search-sep"></div>
+    <div class="search-field">
+      <select>
+        <option>📍 All locations</option>
+        <option>London</option>
+        <option>Manchester</option>
+        <option>Birmingham</option>
+        <option>Brighton</option>
+        <option>Leeds</option>
+        <option>Glasgow</option>
+        <option>Bristol</option>
+        <option>Edinburgh</option>
+        <option>Liverpool</option>
+        <option>Newcastle</option>
+      </select>
+    </div>
+    <div class="search-sep"></div>
+    <div class="search-field">
+      <select>
+        <option>🎭 Any event type</option>
+        <option>Hen Party</option>
+        <option>Corporate Event</option>
+        <option>Wedding</option>
+        <option>Drag Bingo</option>
+        <option>Pride Event</option>
+        <option>Birthday Party</option>
+        <option>Cabaret Night</option>
+        <option>Festival</option>
+      </select>
+    </div>
+    <button class="btn-search">Search 👑</button>
+  </div>
+</div>
+
+<div class="browse-layout">
+
+  <!-- SIDEBAR -->
+
+  <aside class="sidebar">
+
+```
+<div class="filter-block">
+  <div class="filter-block-title">
+    Event Type
+    <button onclick="clearFilter(this)">Clear</button>
+  </div>
+  <label class="filter-option"><input type="checkbox" checked><span class="checkbox-custom"></span><span class="filter-label">Hen Party</span><span class="filter-count">312</span></label>
+  <label class="filter-option"><input type="checkbox"><span class="checkbox-custom"></span><span class="filter-label">Corporate</span><span class="filter-count">198</span></label>
+  <label class="filter-option"><input type="checkbox"><span class="checkbox-custom"></span><span class="filter-label">Wedding</span><span class="filter-count">247</span></label>
+  <label class="filter-option"><input type="checkbox"><span class="checkbox-custom"></span><span class="filter-label">Drag Bingo</span><span class="filter-count">156</span></label>
+  <label class="filter-option"><input type="checkbox"><span class="checkbox-custom"></span><span class="filter-label">Pride Events</span><span class="filter-count">203</span></label>
+  <label class="filter-option"><input type="checkbox"><span class="checkbox-custom"></span><span class="filter-label">Birthday Party</span><span class="filter-count">289</span></label>
+  <label class="filter-option"><input type="checkbox"><span class="checkbox-custom"></span><span class="filter-label">Festival</span><span class="filter-count">94</span></label>
+</div>
+
+<div class="filter-block">
+  <div class="filter-block-title">
+    Act Style
+    <button onclick="clearFilter(this)">Clear</button>
+  </div>
+  <label class="filter-option"><input type="checkbox"><span class="checkbox-custom"></span><span class="filter-label">Live Singing</span><span class="filter-count">178</span></label>
+  <label class="filter-option"><input type="checkbox"><span class="checkbox-custom"></span><span class="filter-label">Lip Sync</span><span class="filter-count">340</span></label>
+  <label class="filter-option"><input type="checkbox"><span class="checkbox-custom"></span><span class="filter-label">Comedy / Hosting</span><span class="filter-count">221</span></label>
+  <label class="filter-option"><input type="checkbox"><span class="checkbox-custom"></span><span class="filter-label">Drag King</span><span class="filter-count">87</span></label>
+  <label class="filter-option"><input type="checkbox"><span class="checkbox-custom"></span><span class="filter-label">Burlesque</span><span class="filter-count">63</span></label>
+  <label class="filter-option"><input type="checkbox"><span class="checkbox-custom"></span><span class="filter-label">Drag DJ</span><span class="filter-count">112</span></label>
+</div>
+
+<div class="filter-block">
+  <div class="filter-block-title">Budget (per event)</div>
+  <div class="price-range-wrapper">
+    <input type="range" class="price-range" min="100" max="2000" value="800" id="priceRange" oninput="updatePrice(this.value)">
+    <div class="price-labels">
+      <span>£100</span>
+      <span id="priceVal" style="color:var(--hot-pink);font-weight:500;">Up to £800</span>
+      <span>£2,000+</span>
+    </div>
+  </div>
+</div>
+
+<div class="filter-block">
+  <div class="filter-block-title">Availability</div>
+  <label class="filter-option"><input type="checkbox"><span class="checkbox-custom"></span><span class="filter-label">Available this weekend</span></label>
+  <label class="filter-option"><input type="checkbox"><span class="checkbox-custom"></span><span class="filter-label">Available next month</span></label>
+  <label class="filter-option"><input type="checkbox" checked><span class="checkbox-custom"></span><span class="filter-label">Travels UK-wide</span></label>
+</div>
+
+<div class="filter-block">
+  <div class="filter-block-title">Rating</div>
+  <label class="filter-option"><input type="checkbox" checked><span class="checkbox-custom"></span><span class="filter-label">⭐ 5 stars only</span></label>
+  <label class="filter-option"><input type="checkbox"><span class="checkbox-custom"></span><span class="filter-label">⭐ 4.5 stars &amp; above</span></label>
+  <label class="filter-option"><input type="checkbox"><span class="checkbox-custom"></span><span class="filter-label">⭐ 4 stars &amp; above</span></label>
+</div>
+
+<div class="filter-block" style="background:linear-gradient(135deg,rgba(155,0,255,0.15),rgba(255,45,120,0.15));border-color:rgba(255,45,120,0.2);">
+  <div style="font-size:1.5rem;margin-bottom:10px;">✨</div>
+  <div style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;margin-bottom:8px;color:white;">Are you a performer?</div>
+  <div style="font-size:0.82rem;color:var(--text-muted);line-height:1.6;margin-bottom:16px;font-weight:300;">List your act for free and start getting booked today.</div>
+  <a href="http://dragbook-pricing.html" style="display:block;text-align:center;background:linear-gradient(135deg,var(--hot-pink),var(--electric-purple));color:white;padding:10px;border-radius:100px;font-size:0.82rem;font-weight:500;text-decoration:none;transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'" target="_blank" rel="noopener">List For Free 💄</a>
+</div>
+```
+
+  </aside>
+
+  <!-- RESULTS -->
+
+  <main>
+    <div class="results-header">
+      <div class="results-count">Showing <strong>312 performers</strong> near you</div>
+      <select class="sort-select">
+        <option>Sort: Most Popular</option>
+        <option>Sort: Highest Rated</option>
+        <option>Sort: Lowest Price</option>
+        <option>Sort: Newest</option>
+        <option>Sort: Most Reviewed</option>
+      </select>
+    </div>
+
+```
+<div class="active-filters">
+  <div class="active-filter">Hen Party <button>×</button></div>
+  <div class="active-filter">Travels UK-wide <button>×</button></div>
+  <div class="active-filter">5 stars only <button>×</button></div>
+  <div style="margin-left:auto;">
+    <button style="background:none;border:none;color:var(--text-muted);font-size:0.78rem;cursor:pointer;font-family:'DM Sans',sans-serif;">Clear all filters</button>
+  </div>
+</div>
+
+<div class="performers-grid fade-up">
+
+  <div class="performer-card" onclick="location.href='dragbook-profile.html'">
+    <div class="card-image"><div class="card-image-inner g1">👑</div>
+    <div class="card-badge verified">✓ Verified</div><div class="card-fav">🤍</div></div>
+    <div class="card-body">
+      <div class="card-name">Scarlett Voltage</div>
+      <div class="card-location">📍 London · travels UK-wide</div>
+      <div class="card-tags"><span class="card-tag">Hen Parties</span><span class="card-tag">Drag Bingo</span><span class="card-tag">Corporate</span></div>
+      <div class="card-footer">
+        <div class="card-rating"><span class="stars">★★★★★</span> 5.0 (47)</div>
+        <div class="card-price">from £380 <span>/ event</span></div>
+      </div>
+      <button class="btn-book">View Profile →</button>
+    </div>
+  </div>
+
+  <div class="performer-card" onclick="location.href='dragbook-profile.html'">
+    <div class="card-image"><div class="card-image-inner g2">💜</div>
+    <div class="card-badge verified">✓ Verified</div><div class="card-fav">🤍</div></div>
+    <div class="card-body">
+      <div class="card-name">Madam Glitterbomb</div>
+      <div class="card-location">📍 Manchester · North West</div>
+      <div class="card-tags"><span class="card-tag">Weddings</span><span class="card-tag">Cabaret</span><span class="card-tag">Live Singing</span></div>
+      <div class="card-footer">
+        <div class="card-rating"><span class="stars">★★★★★</span> 4.9 (62)</div>
+        <div class="card-price">from £450 <span>/ event</span></div>
+      </div>
+      <button class="btn-book">View Profile →</button>
+    </div>
+  </div>
+
+  <div class="performer-card" onclick="location.href='dragbook-profile.html'">
+    <div class="card-image"><div class="card-image-inner g3">⚡</div>
+    <div class="card-badge top">🏆 Top Rated</div><div class="card-fav">🤍</div></div>
+    <div class="card-body">
+      <div class="card-name">Rex Havoc</div>
+      <div class="card-location">📍 Brighton · South East</div>
+      <div class="card-tags"><span class="card-tag">Drag King</span><span class="card-tag">Pride Events</span><span class="card-tag">Festivals</span></div>
+      <div class="card-footer">
+        <div class="card-rating"><span class="stars">★★★★★</span> 5.0 (38)</div>
+        <div class="card-price">from £320 <span>/ event</span></div>
+      </div>
+      <button class="btn-book">View Profile →</button>
+    </div>
+  </div>
+
+  <div class="performer-card" onclick="location.href='dragbook-profile.html'">
+    <div class="card-image"><div class="card-image-inner g4">💎</div>
+    <div class="card-badge verified">✓ Verified</div><div class="card-fav">🤍</div></div>
+    <div class="card-body">
+      <div class="card-name">Crystal Charade</div>
+      <div class="card-location">📍 Birmingham · Midlands</div>
+      <div class="card-tags"><span class="card-tag">Wedding Crasher</span><span class="card-tag">Hen Parties</span><span class="card-tag">Hosting</span></div>
+      <div class="card-footer">
+        <div class="card-rating"><span class="stars">★★★★½</span> 4.8 (29)</div>
+        <div class="card-price">from £350 <span>/ event</span></div>
+      </div>
+      <button class="btn-book">View Profile →</button>
+    </div>
+  </div>
+
+  <div class="performer-card" onclick="location.href='dragbook-profile.html'">
+    <div class="card-image"><div class="card-image-inner g5">🌈</div>
+    <div class="card-badge verified">✓ Verified</div><div class="card-fav">🤍</div></div>
+    <div class="card-body">
+      <div class="card-name">Nova Nightshade</div>
+      <div class="card-location">📍 Leeds · Yorkshire</div>
+      <div class="card-tags"><span class="card-tag">Drag Bingo</span><span class="card-tag">Comedy</span><span class="card-tag">Corporate</span></div>
+      <div class="card-footer">
+        <div class="card-rating"><span class="stars">★★★★★</span> 4.9 (51)</div>
+        <div class="card-price">from £295 <span>/ event</span></div>
+      </div>
+      <button class="btn-book">View Profile →</button>
+    </div>
+  </div>
+
+  <div class="performer-card" onclick="location.href='dragbook-profile.html'">
+    <div class="card-image"><div class="card-image-inner g6">🔥</div>
+    <div class="card-badge hot">🔥 Hot Right Now</div><div class="card-fav">🤍</div></div>
+    <div class="card-body">
+      <div class="card-name">Destiny Devine</div>
+      <div class="card-location">📍 Glasgow · Scotland</div>
+      <div class="card-tags"><span class="card-tag">Live Singing</span><span class="card-tag">Cabaret</span><span class="card-tag">Weddings</span></div>
+      <div class="card-footer">
+        <div class="card-rating"><span class="stars">★★★★★</span> 5.0 (18)</div>
+        <div class="card-price">from £410 <span>/ event</span></div>
+      </div>
+      <button class="btn-book">View Profile →</button>
+    </div>
+  </div>
+
+  <div class="performer-card" onclick="location.href='dragbook-profile.html'">
+    <div class="card-image"><div class="card-image-inner g7">🦋</div>
+    <div class="card-badge verified">✓ Verified</div><div class="card-fav">🤍</div></div>
+    <div class="card-body">
+      <div class="card-name">Priscilla Storm</div>
+      <div class="card-location">📍 Bristol · South West</div>
+      <div class="card-tags"><span class="card-tag">Hen Parties</span><span class="card-tag">Bottomless Brunch</span></div>
+      <div class="card-footer">
+        <div class="card-rating"><span class="stars">★★★★★</span> 4.9 (33)</div>
+        <div class="card-price">from £340 <span>/ event</span></div>
+      </div>
+      <button class="btn-book">View Profile →</button>
+    </div>
+  </div>
+
+  <div class="performer-card" onclick="location.href='dragbook-profile.html'">
+    <div class="card-image"><div class="card-image-inner g8">🌙</div>
+    <div class="card-badge verified">✓ Verified</div><div class="card-fav">🤍</div></div>
+    <div class="card-body">
+      <div class="card-name">Midnight Fierce</div>
+      <div class="card-location">📍 Edinburgh · Scotland</div>
+      <div class="card-tags"><span class="card-tag">Burlesque</span><span class="card-tag">Cabaret</span><span class="card-tag">Pride</span></div>
+      <div class="card-footer">
+        <div class="card-rating"><span class="stars">★★★★½</span> 4.7 (22)</div>
+        <div class="card-price">from £280 <span>/ event</span></div>
+      </div>
+      <button class="btn-book">View Profile →</button>
+    </div>
+  </div>
+
+</div>
+
+<div class="pagination">
+  <button class="page-btn">←</button>
+  <button class="page-btn active">1</button>
+  <button class="page-btn">2</button>
+  <button class="page-btn">3</button>
+  <span style="color:var(--text-muted);font-size:0.85rem;">…</span>
+  <button class="page-btn">12</button>
+  <button class="page-btn">→</button>
+</div>
+```
+
+  </main>
+</div>
+
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="http://dragbook.html" class="logo" target="_blank" rel="noopener">DragBook</a>
+      <p>The UK's only dedicated marketplace connecting drag performers with event organisers. No agency fees. No gatekeeping.</p>
+    </div>
+    <div class="footer-col"><h4>For Bookers</h4><ul><li><a href="#">Find a Performer</a></li><li><a href="#">Browse by Event</a></li><li><a href="http://dragbook-how-it-works.html" target="_blank" rel="noopener">How It Works</a></li><li><a href="#">Pricing Guide</a></li></ul></div>
+    <div class="footer-col"><h4>For Performers</h4><ul><li><a href="http://dragbook-pricing.html" target="_blank" rel="noopener">List Your Act</a></li><li><a href="#">Dashboard</a></li><li><a href="#">Community</a></li><li><a href="#">Resources</a></li></ul></div>
+    <div class="footer-col"><h4>Company</h4><ul><li><a href="#">About</a></li><li><a href="#">Blog</a></li><li><a href="#">Contact</a></li><li><a href="#">Terms & Privacy</a></li></ul></div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 DragBook · Built with love and glitter ✨</span>
+    <div class="footer-socials">
+      <a href="#" class="social-btn">📸</a><a href="#" class="social-btn">🎵</a>
+      <a href="#" class="social-btn">🐦</a><a href="#" class="social-btn">💼</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+const cursor = document.getElementById('cursor');
+const cursorDot = document.getElementById('cursorDot');
+document.addEventListener('mousemove', (e) => {
+  cursor.style.left = e.clientX - 10 + 'px';
+  cursor.style.top = e.clientY - 10 + 'px';
+  cursorDot.style.left = e.clientX - 3 + 'px';
+  cursorDot.style.top = e.clientY - 3 + 'px';
+});
+document.querySelectorAll('a,button,.performer-card').forEach(el => {
+  el.addEventListener('mouseenter', () => { cursor.style.transform = 'scale(2)'; cursor.style.background = 'rgba(255,45,120,0.15)'; });
+  el.addEventListener('mouseleave', () => { cursor.style.transform = 'scale(1)'; cursor.style.background = 'transparent'; });
+});
+
+const canvas = document.getElementById('glitterCanvas');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+const particles = [];
+const colors = ['#FF2D78','#9B00FF','#FFE600','#00F5FF','#FF69B4'];
+for (let i = 0; i < 80; i++) {
+  particles.push({ x: Math.random()*canvas.width, y: Math.random()*canvas.height, size: Math.random()*2.5+0.5, color: colors[Math.floor(Math.random()*colors.length)], speedY: Math.random()*0.3+0.1, speedX: (Math.random()-0.5)*0.2, twinkle: Math.random()*Math.PI*2 });
+}
+function animate() {
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  particles.forEach(p => {
+    p.twinkle += 0.025;
+    ctx.save(); ctx.globalAlpha = 0.2+Math.abs(Math.sin(p.twinkle))*0.7;
+    ctx.fillStyle = p.color; ctx.shadowBlur = 5; ctx.shadowColor = p.color;
+    ctx.beginPath(); ctx.arc(p.x,p.y,p.size,0,Math.PI*2); ctx.fill(); ctx.restore();
+    p.y -= p.speedY; p.x += p.speedX;
+    if (p.y < -5) { p.y = canvas.height+5; p.x = Math.random()*canvas.width; }
+  });
+  requestAnimationFrame(animate);
+}
+animate();
+window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
+
+const observer = new IntersectionObserver(entries => entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); }), { threshold: 0.05 });
+document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+document.querySelectorAll('.card-fav').forEach(f => {
+  f.addEventListener('click', e => { e.stopPropagation(); f.textContent = f.textContent === '🤍' ? '❤️' : '🤍'; });
+});
+
+function updatePrice(val) { document.getElementById('priceVal').textContent = 'Up to £'+val; }
+function clearFilter(btn) {
+  btn.closest('.filter-block').querySelectorAll('input[type=checkbox]').forEach(cb => cb.checked = false);
+}
+</script>
+
+</body>
+</html>

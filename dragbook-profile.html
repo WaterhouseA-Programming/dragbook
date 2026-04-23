@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scarlett Voltage — DragBook</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=DM+Sans:wght@300;400;500&family=Abril+Fatface&display=swap" rel="stylesheet">
+<style>
+:root {
+  --hot-pink: #FF2D78; --electric-purple: #9B00FF; --acid-yellow: #FFE600;
+  --cyan: #00F5FF; --deep-black: #0A0008; --card-bg: #1A0020; --card-bg-2: #150018;
+  --text-light: #FFE8FF; --text-muted: #C084C8; --border: rgba(255,255,255,0.06); --border-pink: rgba(255,45,120,0.3);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { background: var(--deep-black); color: var(--text-light); font-family: 'DM Sans', sans-serif; overflow-x: hidden; cursor: none; }
+.cursor { width: 20px; height: 20px; border: 2px solid var(--hot-pink); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999; transition: transform 0.15s, background 0.15s; mix-blend-mode: screen; }
+.cursor-dot { width: 6px; height: 6px; background: var(--acid-yellow); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999; }
+.glitter-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; opacity: 0.2; }
+
+nav { position: fixed; top: 0; width: 100%; z-index: 100; padding: 18px 60px; display: flex; align-items: center; justify-content: space-between; background: rgba(10,0,8,0.95); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.04); }
+.logo { font-family: ‘Abril Fatface’, cursive; font-size: 1.8rem; background: linear-gradient(135deg, var(–hot-pink), var(–electric-purple), var(–cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-decoration: none; }
+.logo span { font-family: ‘DM Sans’, sans-serif; font-size: 0.5rem; font-weight: 300; letter-spacing: 0.3em; display: block; background: linear-gradient(135deg, var(–acid-yellow), var(–hot-pink)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-transform: uppercase; margin-top: -2px; }
+.nav-links { display: flex; gap: 32px; list-style: none; align-items: center; }
+.nav-links a { color: var(–text-muted); text-decoration: none; font-size: 0.82rem; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; transition: color 0.2s; position: relative; }
+.nav-links a::after { content: ‘’; position: absolute; bottom: -4px; left: 0; width: 0; height: 2px; background: var(–hot-pink); transition: width 0.3s; }
+.nav-links a:hover { color: var(–text-light); }
+.nav-links a:hover::after { width: 100%; }
+.btn-nav { background: linear-gradient(135deg, var(–hot-pink), var(–electric-purple)) !important; color: white !important; padding: 9px 22px !important; border-radius: 100px !important; box-shadow: 0 0 20px rgba(255,45,120,0.3) !important; }
+.btn-nav::after { display: none !important; }
+
+/* PROFILE HERO */
+.profile-hero {
+padding-top: 80px;
+position: relative; z-index: 1;
+background: linear-gradient(to bottom, rgba(155,0,255,0.12), rgba(255,45,120,0.08), transparent);
+}
+
+.hero-inner {
+display: grid;
+grid-template-columns: 420px 1fr;
+gap: 0;
+min-height: 480px;
+}
+
+.hero-visual {
+background: linear-gradient(135deg, #FF2D78, #9B00FF, #00F5FF);
+display: flex; align-items: center; justify-content: center;
+font-size: 8rem;
+position: relative;
+overflow: hidden;
+}
+
+.hero-visual::after {
+content: ‘’;
+position: absolute; inset: 0;
+background: linear-gradient(to right, transparent 60%, var(–deep-black));
+}
+
+.hero-visual .sparkle {
+position: absolute; font-size: 1.5rem; opacity: 0.5;
+animation: sparkleFloat 4s infinite ease-in-out;
+}
+.sparkle:nth-child(2) { top: 20%; left: 15%; animation-delay: 0.5s; }
+.sparkle:nth-child(3) { top: 60%; left: 25%; animation-delay: 1s; font-size: 1rem; }
+.sparkle:nth-child(4) { top: 30%; right: 30%; animation-delay: 1.5s; font-size: 2rem; }
+.sparkle:nth-child(5) { bottom: 20%; left: 10%; animation-delay: 2s; }
+
+@keyframes sparkleFloat {
+0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.5; }
+50% { transform: translateY(-12px) rotate(20deg); opacity: 0.9; }
+}
+
+.hero-info {
+padding: 60px 60px 60px 50px;
+display: flex; flex-direction: column; justify-content: center;
+}
+
+.breadcrumb {
+display: flex; align-items: center; gap: 8px;
+font-size: 0.75rem; color: var(–text-muted); margin-bottom: 20px;
+}
+.breadcrumb a { color: var(–hot-pink); text-decoration: none; }
+.breadcrumb span { opacity: 0.4; }
+
+.performer-name {
+font-family: ‘Playfair Display’, serif;
+font-size: clamp(2.5rem, 5vw, 4rem);
+font-weight: 900; line-height: 1; letter-spacing: -0.03em;
+margin-bottom: 10px; color: white;
+}
+
+.performer-tagline {
+font-size: 1.05rem; color: var(–text-muted); font-weight: 300;
+font-style: italic; margin-bottom: 20px; line-height: 1.5;
+}
+
+.profile-badges {
+display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px;
+}
+
+.profile-badge {
+display: flex; align-items: center; gap: 6px;
+padding: 6px 14px; border-radius: 100px;
+font-size: 0.75rem; font-weight: 500; letter-spacing: 0.04em;
+}
+.badge-verified { background: rgba(0,245,255,0.12); border: 1px solid rgba(0,245,255,0.35); color: var(–cyan); }
+.badge-top { background: rgba(255,230,0,0.12); border: 1px solid rgba(255,230,0,0.35); color: var(–acid-yellow); }
+.badge-location { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); color: var(–text-muted); }
+.badge-travels { background: rgba(155,0,255,0.1); border: 1px solid rgba(155,0,255,0.25); color: #C084FF; }
+
+.profile-stats {
+display: flex; gap: 36px; margin-bottom: 32px;
+}
+
+.profile-stat { text-align: left; }
+.profile-stat .num {
+font-family: ‘Abril Fatface’, cursive; font-size: 1.8rem;
+background: linear-gradient(135deg, var(–hot-pink), var(–electric-purple));
+-webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+line-height: 1;
+}
+.profile-stat .lbl { font-size: 0.72rem; color: var(–text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 4px; }
+
+.hero-cta { display: flex; gap: 12px; flex-wrap: wrap; }
+
+.btn-primary {
+background: linear-gradient(135deg, var(–hot-pink), var(–electric-purple));
+border: none; color: white; padding: 15px 36px; border-radius: 100px;
+font-family: ‘DM Sans’, sans-serif; font-size: 0.95rem; font-weight: 500;
+cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+}
+.btn-primary:hover { transform: translateY(-3px); box-shadow: 0 20px 40px rgba(255,45,120,0.45); }
+
+.btn-secondary {
+background: transparent; border: 1px solid rgba(255,255,255,0.15); color: var(–text-light);
+padding: 15px 28px; border-radius: 100px; font-family: ‘DM Sans’, sans-serif; font-size: 0.95rem;
+font-weight: 400; cursor: pointer; transition: all 0.2s; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+}
+.btn-secondary:hover { border-color: var(–hot-pink); color: var(–hot-pink); transform: translateY(-2px); }
+
+/* PROFILE BODY */
+.profile-body {
+display: grid;
+grid-template-columns: 1fr 340px;
+gap: 40px;
+padding: 60px 60px 100px;
+position: relative; z-index: 1;
+align-items: start;
+}
+
+/* TABS */
+.tabs {
+display: flex; gap: 0; margin-bottom: 40px;
+border-bottom: 1px solid var(–border);
+}
+.tab {
+padding: 14px 24px; font-size: 0.85rem; font-weight: 500;
+color: var(–text-muted); cursor: pointer; border: none; background: none;
+font-family: ‘DM Sans’, sans-serif; letter-spacing: 0.04em; position: relative;
+transition: color 0.2s;
+}
+.tab::after {
+content: ‘’; position: absolute; bottom: -1px; left: 0;
+width: 0; height: 2px; background: var(–hot-pink); transition: width 0.3s;
+}
+.tab.active { color: white; }
+.tab.active::after { width: 100%; }
+.tab:hover { color: var(–text-light); }
+
+/* CONTENT SECTIONS */
+.content-section { margin-bottom: 48px; }
+
+.section-heading {
+font-family: ‘Playfair Display’, serif;
+font-size: 1.4rem; font-weight: 700; color: white;
+margin-bottom: 16px; letter-spacing: -0.01em;
+}
+
+.bio-text {
+font-size: 0.95rem; color: var(–text-muted); line-height: 1.8;
+font-weight: 300;
+}
+.bio-text strong { color: var(–text-light); font-weight: 500; }
+
+/* SERVICES */
+.services-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+.service-card {
+background: var(–card-bg);
+border: 1px solid var(–border);
+border-radius: 16px; padding: 20px;
+transition: border-color 0.2s, transform 0.2s;
+cursor: pointer;
+}
+.service-card:hover { border-color: var(–border-pink); transform: translateY(-2px); }
+
+.service-icon { font-size: 1.8rem; margin-bottom: 10px; }
+.service-name { font-family: ‘Playfair Display’, serif; font-size: 1rem; font-weight: 700; color: white; margin-bottom: 4px; }
+.service-desc { font-size: 0.78rem; color: var(–text-muted); font-weight: 300; line-height: 1.5; margin-bottom: 10px; }
+.service-price { font-size: 0.88rem; color: var(–hot-pink); font-weight: 500; }
+
+/* MEDIA GALLERY */
+.gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.gallery-item {
+border-radius: 14px; overflow: hidden; aspect-ratio: 1;
+display: flex; align-items: center; justify-content: center; font-size: 2.5rem;
+cursor: pointer; transition: transform 0.2s;
+}
+.gallery-item:hover { transform: scale(1.03); }
+.gi1 { background: linear-gradient(135deg, #FF2D78, #9B00FF); }
+.gi2 { background: linear-gradient(135deg, #9B00FF, #00F5FF); }
+.gi3 { background: linear-gradient(135deg, #FFE600, #FF2D78); }
+.gi4 { background: linear-gradient(135deg, #00F5FF, #FF2D78); }
+.gi5 { background: linear-gradient(135deg, #FF2D78, #FFE600); }
+.gi6 { background: linear-gradient(135deg, #9B00FF, #FF2D78); }
+
+/* REVIEWS */
+.reviews-summary {
+display: flex; gap: 32px; align-items: center;
+padding: 28px; background: var(–card-bg); border-radius: 20px;
+border: 1px solid var(–border); margin-bottom: 24px;
+}
+
+.rating-big {
+text-align: center; min-width: 100px;
+}
+.rating-number {
+font-family: ‘Abril Fatface’, cursive; font-size: 3.5rem;
+background: linear-gradient(135deg, var(–hot-pink), var(–electric-purple));
+-webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+line-height: 1;
+}
+.rating-stars { color: var(–acid-yellow); font-size: 1rem; letter-spacing: 3px; margin: 6px 0; }
+.rating-count { font-size: 0.75rem; color: var(–text-muted); }
+
+.rating-bars { flex: 1; }
+.rating-bar-row {
+display: flex; align-items: center; gap: 10px; margin-bottom: 8px;
+}
+.bar-label { font-size: 0.75rem; color: var(–text-muted); min-width: 35px; }
+.bar-track {
+flex: 1; height: 6px; background: rgba(255,255,255,0.07); border-radius: 100px; overflow: hidden;
+}
+.bar-fill { height: 100%; border-radius: 100px; background: linear-gradient(135deg, var(–hot-pink), var(–electric-purple)); }
+.bar-pct { font-size: 0.72rem; color: var(–text-muted); min-width: 30px; text-align: right; }
+
+.review-card {
+background: var(–card-bg); border: 1px solid var(–border);
+border-radius: 16px; padding: 22px; margin-bottom: 14px;
+transition: border-color 0.2s;
+}
+.review-card:hover { border-color: rgba(155,0,255,0.2); }
+.review-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+.reviewer { display: flex; align-items: center; gap: 10px; }
+.reviewer-avatar { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1rem; }
+.ra1 { background: linear-gradient(135deg, #FF2D78, #9B00FF); }
+.ra2 { background: linear-gradient(135deg, #FFE600, #FF2D78); }
+.ra3 { background: linear-gradient(135deg, #00F5FF, #9B00FF); }
+.reviewer-name { font-size: 0.88rem; font-weight: 500; color: white; }
+.reviewer-event { font-size: 0.72rem; color: var(–text-muted); margin-top: 2px; }
+.review-rating { color: var(–acid-yellow); font-size: 0.8rem; }
+.review-text { font-size: 0.88rem; color: var(–text-muted); line-height: 1.7; font-weight: 300; font-style: italic; }
+.review-date { font-size: 0.7rem; color: rgba(255,232,255,0.25); margin-top: 10px; }
+
+/* EVENT TYPES */
+.event-tags-list { display: flex; flex-wrap: wrap; gap: 8px; }
+.event-tag {
+background: rgba(155,0,255,0.1); border: 1px solid rgba(155,0,255,0.2);
+color: #C084FF; padding: 7px 16px; border-radius: 100px;
+font-size: 0.8rem; font-weight: 400;
+}
+
+/* SIDEBAR BOOKING WIDGET */
+.booking-widget {
+background: var(–card-bg);
+border: 1px solid var(–border-pink);
+border-radius: 24px; padding: 28px;
+position: sticky; top: 100px;
+box-shadow: 0 20px 60px rgba(255,45,120,0.08);
+}
+
+.widget-price {
+display: flex; align-items: baseline; gap: 6px;
+margin-bottom: 4px;
+}
+.widget-price-from { font-size: 0.78rem; color: var(–text-muted); }
+.widget-price-amount {
+font-family: ‘Playfair Display’, serif; font-size: 2rem; font-weight: 900; color: white;
+}
+.widget-price-per { font-size: 0.78rem; color: var(–text-muted); }
+
+.widget-rating {
+display: flex; align-items: center; gap: 6px; margin-bottom: 24px;
+font-size: 0.82rem; color: var(–text-muted);
+}
+.widget-rating .stars { color: var(–acid-yellow); font-size: 0.72rem; }
+
+.widget-field { margin-bottom: 14px; }
+.widget-label { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(–text-muted); margin-bottom: 8px; display: block; }
+.widget-input, .widget-select {
+width: 100%; background: rgba(255,255,255,0.04); border: 1px solid var(–border);
+border-radius: 12px; padding: 12px 16px; color: var(–text-light);
+font-family: ‘DM Sans’, sans-serif; font-size: 0.88rem; outline: none;
+transition: border-color 0.2s;
+}
+.widget-input:focus, .widget-select:focus { border-color: var(–hot-pink); }
+.widget-select option { background: #1A0020; }
+
+.btn-enquire {
+width: 100%; margin-top: 8px;
+background: linear-gradient(135deg, var(–hot-pink), var(–electric-purple));
+border: none; color: white; padding: 16px; border-radius: 100px;
+font-family: ‘DM Sans’, sans-serif; font-size: 0.95rem; font-weight: 500;
+cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; letter-spacing: 0.02em;
+}
+.btn-enquire:hover { transform: translateY(-2px); box-shadow: 0 16px 40px rgba(255,45,120,0.45); }
+
+.widget-note {
+text-align: center; font-size: 0.72rem; color: var(–text-muted);
+margin-top: 12px; line-height: 1.5;
+}
+
+.widget-divider { height: 1px; background: var(–border); margin: 20px 0; }
+
+.widget-trust { display: flex; flex-direction: column; gap: 10px; }
+.trust-item { display: flex; align-items: center; gap: 10px; font-size: 0.8rem; color: var(–text-muted); }
+.trust-icon { font-size: 1rem; width: 24px; text-align: center; }
+
+/* SIMILAR PERFORMERS */
+.similar-card {
+background: var(–card-bg); border: 1px solid var(–border);
+border-radius: 16px; padding: 14px; display: flex; gap: 12px;
+margin-bottom: 10px; cursor: pointer; transition: border-color 0.2s, transform 0.2s;
+}
+.similar-card:hover { border-color: var(–border-pink); transform: translateX(4px); }
+.similar-thumb {
+width: 54px; height: 54px; border-radius: 12px;
+display: flex; align-items: center; justify-content: center; font-size: 1.6rem; flex-shrink: 0;
+}
+.st1 { background: linear-gradient(135deg, #9B00FF, #00F5FF); }
+.st2 { background: linear-gradient(135deg, #FFE600, #FF2D78); }
+.st3 { background: linear-gradient(135deg, #00F5FF, #9B00FF); }
+.similar-info { flex: 1; }
+.similar-name { font-family: ‘Playfair Display’, serif; font-size: 0.95rem; font-weight: 700; color: white; margin-bottom: 2px; }
+.similar-loc { font-size: 0.72rem; color: var(–text-muted); margin-bottom: 4px; }
+.similar-price { font-size: 0.78rem; color: var(–hot-pink); font-weight: 500; }
+
+/* FOOTER */
+footer { padding: 60px 60px 36px; border-top: 1px solid var(–border); background: var(–card-bg-2); position: relative; z-index: 1; }
+.footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 60px; margin-bottom: 48px; }
+.footer-brand p { color: var(–text-muted); font-size: 0.85rem; line-height: 1.7; font-weight: 300; margin-top: 14px; max-width: 240px; }
+.footer-col h4 { font-size: 0.65rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(–text-muted); margin-bottom: 18px; }
+.footer-col ul { list-style: none; }
+.footer-col li { margin-bottom: 10px; }
+.footer-col a { color: rgba(255,232,255,0.4); text-decoration: none; font-size: 0.85rem; font-weight: 300; transition: color 0.2s; }
+.footer-col a:hover { color: var(–hot-pink); }
+.footer-bottom { display: flex; align-items: center; justify-content: space-between; padding-top: 28px; border-top: 1px solid var(–border); font-size: 0.75rem; color: rgba(255,232,255,0.22); }
+.footer-socials { display: flex; gap: 10px; }
+.social-btn { width: 34px; height: 34px; border-radius: 50%; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: center; font-size: 0.9rem; cursor: pointer; transition: all 0.2s; text-decoration: none; }
+.social-btn:hover { background: rgba(255,45,120,0.15); border-color: var(–hot-pink); transform: translateY(-2px); }
+
+.fade-up { opacity: 0; transform: translateY(28px); transition: opacity 0.6s, transform 0.6s; }
+.fade-up.visible { opacity: 1; transform: translateY(0); }
+
+@media (max-width: 1100px) {
+.hero-inner { grid-template-columns: 300px 1fr; }
+.profile-body { grid-template-columns: 1fr; }
+.booking-widget { position: relative; top: 0; }
+}
+@media (max-width: 768px) {
+nav { padding: 16px 24px; }
+.nav-links { display: none; }
+.hero-inner { grid-template-columns: 1fr; }
+.hero-visual { height: 300px; }
+.hero-info { padding: 32px 24px; }
+.profile-body { padding: 32px 24px 80px; }
+.services-grid { grid-template-columns: 1fr; }
+.gallery { grid-template-columns: repeat(2, 1fr); }
+.footer-grid { grid-template-columns: 1fr 1fr; }
+.footer-bottom { flex-direction: column; gap: 16px; text-align: center; }
+}
+</style>
+
+</head>
+<body>
+
+<canvas class="glitter-canvas" id="glitterCanvas"></canvas>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-dot" id="cursorDot"></div>
+
+<nav>
+  <a href="http://dragbook.html" class="logo" target="_blank" rel="noopener">DragBook <span>The UK's drag marketplace</span></a>
+  <ul class="nav-links">
+    <li><a href="http://dragbook-browse.html" target="_blank" rel="noopener">Find Performers</a></li>
+    <li><a href="http://dragbook-how-it-works.html" target="_blank" rel="noopener">How It Works</a></li>
+    <li><a href="http://dragbook-pricing.html" target="_blank" rel="noopener">Pricing</a></li>
+    <li><a href="http://dragbook-pricing.html" class="btn-nav" target="_blank" rel="noopener">List Your Act ✨</a></li>
+  </ul>
+</nav>
+
+<!-- PROFILE HERO -->
+
+<div class="profile-hero">
+  <div class="hero-inner">
+    <div class="hero-visual">
+      <span>👑</span>
+      <span class="sparkle">✨</span>
+      <span class="sparkle">💫</span>
+      <span class="sparkle">⭐</span>
+      <span class="sparkle">🌟</span>
+    </div>
+    <div class="hero-info">
+      <div class="breadcrumb">
+        <a href="http://dragbook-browse.html" target="_blank" rel="noopener">Browse</a>
+        <span>/</span>
+        <span>London</span>
+        <span>/</span>
+        <span style="color:var(--text-light);">Scarlett Voltage</span>
+      </div>
+
+```
+  <h1 class="performer-name">Scarlett<br>Voltage</h1>
+  <p class="performer-tagline">"London's most electrifying drag host — where comedy meets chaos"</p>
+
+  <div class="profile-badges">
+    <span class="profile-badge badge-verified">✓ Verified Performer</span>
+    <span class="profile-badge badge-top">🏆 Top Rated 2025</span>
+    <span class="profile-badge badge-location">📍 London</span>
+    <span class="profile-badge badge-travels">✈️ Travels UK-wide</span>
+  </div>
+
+  <div class="profile-stats">
+    <div class="profile-stat"><div class="num">5.0</div><div class="lbl">Rating</div></div>
+    <div class="profile-stat"><div class="num">47</div><div class="lbl">Reviews</div></div>
+    <div class="profile-stat"><div class="num">120+</div><div class="lbl">Events</div></div>
+    <div class="profile-stat"><div class="num">8yr</div><div class="lbl">Experience</div></div>
+  </div>
+
+  <div class="hero-cta">
+    <button class="btn-primary">💌 Send Enquiry</button>
+    <button class="btn-secondary">❤️ Save to Favourites</button>
+    <button class="btn-secondary" style="padding:15px 18px;">↗️ Share</button>
+  </div>
+</div>
+```
+
+  </div>
+</div>
+
+<!-- PROFILE BODY -->
+
+<div class="profile-body">
+
+  <main>
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab(this,'about')">About</button>
+      <button class="tab" onclick="switchTab(this,'services')">Services & Pricing</button>
+      <button class="tab" onclick="switchTab(this,'media')">Photos & Video</button>
+      <button class="tab" onclick="switchTab(this,'reviews')">Reviews (47)</button>
+    </div>
+
+```
+<!-- ABOUT TAB -->
+<div id="tab-about">
+  <div class="content-section fade-up">
+    <h2 class="section-heading">About Scarlett</h2>
+    <p class="bio-text">
+      Scarlett Voltage has been lighting up stages across London and beyond for <strong>8 years</strong>. Trained in musical theatre, comedy, and the fine art of dramatic lip sync, Scarlett brings a unique blend of <strong>jaw-dropping performance, sharp wit, and audience chaos</strong> to every event she graces.<br><br>
+      Whether she's hosting a hen party bingo that descends beautifully into carnage, crashing a wedding as a surprise guest (the bride always cries, in a good way), or running a corporate team-building drag workshop that HR will be talking about for years — Scarlett arrives in full costume, full personality, and absolutely zero chill.<br><br>
+      Originally from Newcastle but <strong>based in London since 2016</strong>, Scarlett is available for events across the UK and has performed at venues from Soho basement bars to country house wedding marquees, corporate boardrooms to Brighton Pride.
+    </p>
+  </div>
+
+  <div class="content-section fade-up">
+    <h2 class="section-heading">Event Types</h2>
+    <div class="event-tags-list">
+      <span class="event-tag">🥂 Hen Parties</span>
+      <span class="event-tag">🎯 Drag Bingo</span>
+      <span class="event-tag">💼 Corporate Events</span>
+      <span class="event-tag">💍 Weddings</span>
+      <span class="event-tag">🎂 Birthday Parties</span>
+      <span class="event-tag">🌈 Pride Events</span>
+      <span class="event-tag">🥂 Bottomless Brunch</span>
+      <span class="event-tag">🎪 Festivals</span>
+      <span class="event-tag">🏆 Awards Ceremonies</span>
+      <span class="event-tag">🎭 Cabaret Nights</span>
+    </div>
+  </div>
+
+  <div class="content-section fade-up">
+    <h2 class="section-heading">What to Expect</h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div style="background:var(--card-bg);border:1px solid var(--border);border-radius:16px;padding:18px;">
+        <div style="font-size:1.4rem;margin-bottom:8px;">🎤</div>
+        <div style="font-size:0.88rem;font-weight:500;color:white;margin-bottom:4px;">Live Performance</div>
+        <div style="font-size:0.78rem;color:var(--text-muted);line-height:1.5;font-weight:300;">Full 45–90 min show with costume changes, live vocals and comedy. Tailored to your group and event.</div>
+      </div>
+      <div style="background:var(--card-bg);border:1px solid var(--border);border-radius:16px;padding:18px;">
+        <div style="font-size:1.4rem;margin-bottom:8px;">🎭</div>
+        <div style="font-size:0.88rem;font-weight:500;color:white;margin-bottom:4px;">Custom Show</div>
+        <div style="font-size:0.78rem;color:var(--text-muted);line-height:1.5;font-weight:300;">Pre-event consultation to build bespoke setlists, jokes and crowd-work specific to your guests.</div>
+      </div>
+      <div style="background:var(--card-bg);border:1px solid var(--border);border-radius:16px;padding:18px;">
+        <div style="font-size:1.4rem;margin-bottom:8px;">📋</div>
+        <div style="font-size:0.88rem;font-weight:500;color:white;margin-bottom:4px;">Rider Requirements</div>
+        <div style="font-size:0.78rem;color:var(--text-muted);line-height:1.5;font-weight:300;">Private dressing room with mirror and lighting, PA system, 30 mins setup time. Full spec on booking.</div>
+      </div>
+      <div style="background:var(--card-bg);border:1px solid var(--border);border-radius:16px;padding:18px;">
+        <div style="font-size:1.4rem;margin-bottom:8px;">✅</div>
+        <div style="font-size:0.88rem;font-weight:500;color:white;margin-bottom:4px;">Fully Insured</div>
+        <div style="font-size:0.78rem;color:var(--text-muted);line-height:1.5;font-weight:300;">Public liability insurance held. DBS checked. Safe to work with 18+ groups. Inclusive and professional.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SERVICES TAB -->
+<div id="tab-services" style="display:none;">
+  <div class="content-section fade-up">
+    <h2 class="section-heading">Services & Pricing</h2>
+    <p style="color:var(--text-muted);font-size:0.88rem;line-height:1.6;margin-bottom:28px;font-weight:300;">All prices are starting from rates. Final quote depends on travel, event duration, and any custom requirements. Enquire for a tailored quote.</p>
+    <div class="services-grid">
+      <div class="service-card">
+        <div class="service-icon">🎤</div>
+        <div class="service-name">Cabaret Show</div>
+        <div class="service-desc">Full 60–90 min drag show. Multiple costume changes, live singing, lip sync performances, comedy, audience interaction and a grand finale.</div>
+        <div class="service-price">from £480 / event</div>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">🎯</div>
+        <div class="service-name">Drag Bingo Host</div>
+        <div class="service-desc">2 hours of drag-hosted bingo chaos. Includes prizes coordination, cheeky commentary, and audience games. A hen party essential.</div>
+        <div class="service-price">from £380 / event</div>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">💍</div>
+        <div class="service-name">Wedding Crasher</div>
+        <div class="service-desc">The legendary "It Should Have Been Me" surprise entrance during speeches. Kept secret from guests, pre-arranged with couple. Pure magic.</div>
+        <div class="service-price">from £420 / event</div>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">💼</div>
+        <div class="service-name">Corporate Host</div>
+        <div class="service-desc">Professional drag MC for awards, team events, or product launches. Inclusive, adaptable, and great for D&I team-building workshops.</div>
+        <div class="service-price">from £550 / event</div>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">🌈</div>
+        <div class="service-name">Pop-Up Appearances</div>
+        <div class="service-desc">Walkabout drag entertainment for festivals, parties, or brand activations. 90 mins of roaming interaction, photos, and pure fabulousness.</div>
+        <div class="service-price">from £300 / event</div>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">🎓</div>
+        <div class="service-name">Drag Workshop</div>
+        <div class="service-desc">Interactive 2-hour drag makeup and performance workshop for groups of 6–20. Perfect for hen dos, team away days, or just a fabulous Saturday.</div>
+        <div class="service-price">from £600 / session</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MEDIA TAB -->
+<div id="tab-media" style="display:none;">
+  <div class="content-section fade-up">
+    <h2 class="section-heading">Photos & Video</h2>
+    <div class="gallery">
+      <div class="gallery-item gi1">👑</div>
+      <div class="gallery-item gi2">💃</div>
+      <div class="gallery-item gi3">🎤</div>
+      <div class="gallery-item gi4">✨</div>
+      <div class="gallery-item gi5">🌈</div>
+      <div class="gallery-item gi6">🎭</div>
+    </div>
+    <div style="margin-top:20px;background:var(--card-bg);border:1px solid var(--border);border-radius:16px;padding:20px;display:flex;align-items:center;gap:16px;">
+      <div style="width:56px;height:56px;background:linear-gradient(135deg,var(--hot-pink),var(--electric-purple));border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0;">▶️</div>
+      <div>
+        <div style="font-size:0.88rem;font-weight:500;color:white;margin-bottom:3px;">Scarlett Voltage — Live Hen Party Showreel 2025</div>
+        <div style="font-size:0.75rem;color:var(--text-muted);">16 minutes · 4,200 views</div>
+      </div>
+      <button style="margin-left:auto;background:none;border:1px solid var(--border);color:var(--text-muted);padding:8px 16px;border-radius:100px;font-size:0.78rem;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--hot-pink)';this.style.color='var(--hot-pink)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-muted)'">Watch ▶</button>
+    </div>
+  </div>
+</div>
+
+<!-- REVIEWS TAB -->
+<div id="tab-reviews" style="display:none;">
+  <div class="content-section fade-up">
+    <h2 class="section-heading">Reviews</h2>
+    <div class="reviews-summary">
+      <div class="rating-big">
+        <div class="rating-number">5.0</div>
+        <div class="rating-stars">★★★★★</div>
+        <div class="rating-count">47 reviews</div>
+      </div>
+      <div class="rating-bars">
+        <div class="rating-bar-row"><span class="bar-label">5 ★</span><div class="bar-track"><div class="bar-fill" style="width:91%"></div></div><span class="bar-pct">91%</span></div>
+        <div class="rating-bar-row"><span class="bar-label">4 ★</span><div class="bar-track"><div class="bar-fill" style="width:7%;opacity:0.5"></div></div><span class="bar-pct">7%</span></div>
+        <div class="rating-bar-row"><span class="bar-label">3 ★</span><div class="bar-track"><div class="bar-fill" style="width:2%;opacity:0.3"></div></div><span class="bar-pct">2%</span></div>
+        <div class="rating-bar-row"><span class="bar-label">2 ★</span><div class="bar-track"><div class="bar-fill" style="width:0%"></div></div><span class="bar-pct">0%</span></div>
+        <div class="rating-bar-row"><span class="bar-label">1 ★</span><div class="bar-track"><div class="bar-fill" style="width:0%"></div></div><span class="bar-pct">0%</span></div>
+      </div>
+    </div>
+
+    <div class="review-card">
+      <div class="review-header">
+        <div class="reviewer"><div class="reviewer-avatar ra1">👰</div><div><div class="reviewer-name">Sophie T.</div><div class="reviewer-event">Hen party · London · Feb 2026</div></div></div>
+        <div class="review-rating">★★★★★</div>
+      </div>
+      <p class="review-text">Absolutely mind-blowing. Scarlett had the whole group in tears of laughter within five minutes. She remembered everyone's names, worked them into the bingo, and the final act was genuinely showstopping. Already thinking about who I can hire her for next.</p>
+      <div class="review-date">Verified booking via DragBook</div>
+    </div>
+
+    <div class="review-card">
+      <div class="review-header">
+        <div class="reviewer"><div class="reviewer-avatar ra2">💼</div><div><div class="reviewer-name">Marcus P.</div><div class="reviewer-event">Corporate team event · Manchester · Jan 2026</div></div></div>
+        <div class="review-rating">★★★★★</div>
+      </div>
+      <p class="review-text">We were nervous about booking drag entertainment for a mixed corporate group but Scarlett was a total professional. She read the room perfectly — funny and cheeky without crossing any lines. Our quietest team member ended up doing a lip sync battle. 10/10.</p>
+      <div class="review-date">Verified booking via DragBook</div>
+    </div>
+
+    <div class="review-card">
+      <div class="review-header">
+        <div class="reviewer"><div class="reviewer-avatar ra3">💍</div><div><div class="reviewer-name">James & Olly</div><div class="reviewer-event">Wedding · Brighton · Oct 2025</div></div></div>
+        <div class="review-rating">★★★★★</div>
+      </div>
+      <p class="review-text">The wedding crasher moment was the highlight of our entire wedding. Everyone screamed. Our gran loved her. She stayed for an extra hour just chatting to guests because she was having such a good time. We'd hire her again in a heartbeat.</p>
+      <div class="review-date">Verified booking via DragBook</div>
+    </div>
+  </div>
+</div>
+```
+
+  </main>
+
+  <!-- BOOKING SIDEBAR -->
+
+  <aside>
+    <div class="booking-widget">
+      <div class="widget-price">
+        <span class="widget-price-from">from</span>
+        <span class="widget-price-amount">£380</span>
+        <span class="widget-price-per">/ event</span>
+      </div>
+      <div class="widget-rating">
+        <span class="stars">★★★★★</span>
+        <span>5.0 · 47 reviews</span>
+      </div>
+
+```
+  <div class="widget-field">
+    <label class="widget-label">Event Type</label>
+    <select class="widget-select">
+      <option>Select event type…</option>
+      <option>Hen Party</option>
+      <option>Corporate Event</option>
+      <option>Wedding</option>
+      <option>Drag Bingo</option>
+      <option>Birthday Party</option>
+      <option>Festival</option>
+      <option>Other</option>
+    </select>
+  </div>
+
+  <div class="widget-field">
+    <label class="widget-label">Event Date</label>
+    <input type="date" class="widget-input" style="color-scheme:dark;">
+  </div>
+
+  <div class="widget-field">
+    <label class="widget-label">Location / Venue</label>
+    <input type="text" class="widget-input" placeholder="City or venue name…">
+  </div>
+
+  <div class="widget-field">
+    <label class="widget-label">Approximate Guest Count</label>
+    <select class="widget-select">
+      <option>Select guest count…</option>
+      <option>Under 20</option>
+      <option>20–50</option>
+      <option>50–100</option>
+      <option>100–200</option>
+      <option>200+</option>
+    </select>
+  </div>
+
+  <button class="btn-enquire">Send Enquiry 💌</button>
+  <p class="widget-note">Scarlett typically responds within 2 hours · No payment until confirmed</p>
+
+  <div class="widget-divider"></div>
+
+  <div class="widget-trust">
+    <div class="trust-item"><span class="trust-icon">🔒</span><span>Secure booking via DragBook</span></div>
+    <div class="trust-item"><span class="trust-icon">💰</span><span>Deposit held safely until event</span></div>
+    <div class="trust-item"><span class="trust-icon">✓</span><span>Verified performer · DBS checked</span></div>
+    <div class="trust-item"><span class="trust-icon">🛡️</span><span>Publicly insured</span></div>
+  </div>
+</div>
+
+<div style="margin-top:24px;">
+  <div style="font-size:0.7rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-muted);margin-bottom:14px;">Similar Performers</div>
+
+  <div class="similar-card" onclick="location.href='dragbook-profile.html'">
+    <div class="similar-thumb st1">💜</div>
+    <div class="similar-info">
+      <div class="similar-name">Madam Glitterbomb</div>
+      <div class="similar-loc">📍 Manchester</div>
+      <div class="similar-price">from £450 / event</div>
+    </div>
+  </div>
+  <div class="similar-card" onclick="location.href='dragbook-profile.html'">
+    <div class="similar-thumb st2">⚡</div>
+    <div class="similar-info">
+      <div class="similar-name">Rex Havoc</div>
+      <div class="similar-loc">📍 Brighton</div>
+      <div class="similar-price">from £320 / event</div>
+    </div>
+  </div>
+  <div class="similar-card" onclick="location.href='dragbook-profile.html'">
+    <div class="similar-thumb st3">🌈</div>
+    <div class="similar-info">
+      <div class="similar-name">Nova Nightshade</div>
+      <div class="similar-loc">📍 Leeds</div>
+      <div class="similar-price">from £295 / event</div>
+    </div>
+  </div>
+</div>
+```
+
+  </aside>
+
+</div>
+
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand"><a href="http://dragbook.html" class="logo" target="_blank" rel="noopener">DragBook</a><p>The UK's only dedicated marketplace connecting drag performers with event organisers. No agency fees. No gatekeeping.</p></div>
+    <div class="footer-col"><h4>For Bookers</h4><ul><li><a href="#">Find a Performer</a></li><li><a href="#">Browse by Event</a></li><li><a href="http://dragbook-how-it-works.html" target="_blank" rel="noopener">How It Works</a></li></ul></div>
+    <div class="footer-col"><h4>For Performers</h4><ul><li><a href="http://dragbook-pricing.html" target="_blank" rel="noopener">List Your Act</a></li><li><a href="#">Dashboard</a></li><li><a href="#">Community</a></li></ul></div>
+    <div class="footer-col"><h4>Company</h4><ul><li><a href="#">About</a></li><li><a href="#">Blog</a></li><li><a href="#">Contact</a></li><li><a href="#">Terms</a></li></ul></div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 DragBook · Built with love and glitter ✨</span>
+    <div class="footer-socials"><a href="#" class="social-btn">📸</a><a href="#" class="social-btn">🎵</a><a href="#" class="social-btn">🐦</a><a href="#" class="social-btn">💼</a></div>
+  </div>
+</footer>
+
+<script>
+const cursor = document.getElementById('cursor');
+const cursorDot = document.getElementById('cursorDot');
+document.addEventListener('mousemove', e => {
+  cursor.style.left = e.clientX-10+'px'; cursor.style.top = e.clientY-10+'px';
+  cursorDot.style.left = e.clientX-3+'px'; cursorDot.style.top = e.clientY-3+'px';
+});
+document.querySelectorAll('a,button,.similar-card,.service-card,.gallery-item').forEach(el => {
+  el.addEventListener('mouseenter', () => { cursor.style.transform='scale(2)'; cursor.style.background='rgba(255,45,120,0.15)'; });
+  el.addEventListener('mouseleave', () => { cursor.style.transform='scale(1)'; cursor.style.background='transparent'; });
+});
+
+const canvas = document.getElementById('glitterCanvas');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+const particles = [];
+const colors = ['#FF2D78','#9B00FF','#FFE600','#00F5FF','#FF69B4'];
+for(let i=0;i<60;i++) particles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,size:Math.random()*2+0.5,color:colors[Math.floor(Math.random()*colors.length)],speedY:Math.random()*0.25+0.08,speedX:(Math.random()-0.5)*0.15,twinkle:Math.random()*Math.PI*2});
+function animate(){ctx.clearRect(0,0,canvas.width,canvas.height);particles.forEach(p=>{p.twinkle+=0.02;ctx.save();ctx.globalAlpha=0.15+Math.abs(Math.sin(p.twinkle))*0.6;ctx.fillStyle=p.color;ctx.shadowBlur=4;ctx.shadowColor=p.color;ctx.beginPath();ctx.arc(p.x,p.y,p.size,0,Math.PI*2);ctx.fill();ctx.restore();p.y-=p.speedY;p.x+=p.speedX;if(p.y<-5){p.y=canvas.height+5;p.x=Math.random()*canvas.width;}});requestAnimationFrame(animate);}
+animate();
+window.addEventListener('resize',()=>{canvas.width=window.innerWidth;canvas.height=window.innerHeight;});
+
+const observer = new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');}),{threshold:0.05});
+document.querySelectorAll('.fade-up').forEach(el=>observer.observe(el));
+
+function switchTab(btn, tabId) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  ['about','services','media','reviews'].forEach(id => {
+    const el = document.getElementById('tab-'+id);
+    if(el) el.style.display = id===tabId ? 'block' : 'none';
+  });
+}
+</script>
+
+</body>
+</html>
