@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 
 <html lang="en">
 <head>
@@ -19,13 +19,13 @@
     --text-muted: #C084C8;
   }
 
-- { margin: 0; padding: 0; box-sizing: border-box; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
 html { scroll-behavior: smooth; }
 
 body {
-background: var(–deep-black);
-color: var(–text-light);
+background: var(--deep-black);
+color: var(--text-light);
 font-family: ‘DM Sans’, sans-serif;
 overflow-x: hidden;
 cursor: none;
@@ -34,7 +34,7 @@ cursor: none;
 /* CUSTOM CURSOR */
 .cursor {
 width: 20px; height: 20px;
-border: 2px solid var(–hot-pink);
+border: 2px solid var(--hot-pink);
 border-radius: 50%;
 position: fixed;
 pointer-events: none;
@@ -44,7 +44,7 @@ mix-blend-mode: screen;
 }
 .cursor-dot {
 width: 6px; height: 6px;
-background: var(–acid-yellow);
+background: var(--acid-yellow);
 border-radius: 50%;
 position: fixed;
 pointer-events: none;
@@ -78,7 +78,7 @@ backdrop-filter: blur(10px);
 .logo {
 font-family: ‘Abril Fatface’, cursive;
 font-size: 2rem;
-background: linear-gradient(135deg, var(–hot-pink), var(–electric-purple), var(–cyan));
+background: linear-gradient(135deg, var(--hot-pink), var(--electric-purple), var(--cyan));
 -webkit-background-clip: text;
 -webkit-text-fill-color: transparent;
 background-clip: text;
@@ -92,7 +92,7 @@ font-size: 0.55rem;
 font-weight: 300;
 letter-spacing: 0.3em;
 display: block;
-background: linear-gradient(135deg, var(–acid-yellow), var(–hot-pink));
+background: linear-gradient(135deg, var(--acid-yellow), var(--hot-pink));
 -webkit-background-clip: text;
 -webkit-text-fill-color: transparent;
 background-clip: text;
@@ -108,7 +108,7 @@ align-items: center;
 }
 
 .nav-links a {
-color: var(–text-muted);
+color: var(--text-muted);
 text-decoration: none;
 font-size: 0.85rem;
 font-weight: 500;
@@ -123,15 +123,15 @@ content: ‘’;
 position: absolute;
 bottom: -4px; left: 0;
 width: 0; height: 2px;
-background: var(–hot-pink);
+background: var(--hot-pink);
 transition: width 0.3s ease;
 }
 
-.nav-links a:hover { color: var(–text-light); }
+.nav-links a:hover { color: var(--text-light); }
 .nav-links a:hover::after { width: 100%; }
 
 .btn-nav {
-background: linear-gradient(135deg, var(–hot-pink), var(–electric-purple));
+background: linear-gradient(135deg, var(--hot-pink), var(--electric-purple));
 color: white !important;
 padding: 10px 24px;
 border-radius: 100px;
@@ -174,7 +174,7 @@ align-items: center;
 gap: 8px;
 background: rgba(255,230,0,0.1);
 border: 1px solid rgba(255,230,0,0.3);
-color: var(–acid-yellow);
+color: var(--acid-yellow);
 padding: 8px 20px;
 border-radius: 100px;
 font-size: 0.75rem;
@@ -187,7 +187,7 @@ animation: fadeSlideDown 0.8s ease both;
 
 .hero-badge .dot {
 width: 6px; height: 6px;
-background: var(–acid-yellow);
+background: var(--acid-yellow);
 border-radius: 50%;
 animation: pulse 2s infinite;
 }
@@ -209,7 +209,7 @@ animation: fadeSlideDown 0.8s 0.1s ease both;
 
 .hero h1 .line1 {
 display: block;
-background: linear-gradient(135deg, #fff 0%, var(–text-light) 100%);
+background: linear-gradient(135deg, #fff 0%, var(--text-light) 100%);
 -webkit-background-clip: text;
 -webkit-text-fill-color: transparent;
 background-clip: text;
@@ -218,7 +218,7 @@ background-clip: text;
 .hero h1 .line2 {
 display: block;
 font-style: italic;
-background: linear-gradient(135deg, var(–hot-pink) 0%, var(–electric-purple) 50%, var(–cyan) 100%);
+background: linear-gradient(135deg, var(--hot-pink) 0%, var(--electric-purple) 50%, var(--cyan) 100%);
 -webkit-background-clip: text;
 -webkit-text-fill-color: transparent;
 background-clip: text;
@@ -227,7 +227,7 @@ filter: drop-shadow(0 0 40px rgba(255,45,120,0.5));
 
 .hero-sub {
 font-size: clamp(1rem, 2vw, 1.25rem);
-color: var(–text-muted);
+color: var(--text-muted);
 font-weight: 300;
 max-width: 560px;
 line-height: 1.6;
@@ -236,7 +236,7 @@ animation: fadeSlideDown 0.8s 0.2s ease both;
 }
 
 .hero-sub strong {
-color: var(–text-light);
+color: var(--text-light);
 font-weight: 500;
 }
 
@@ -262,7 +262,7 @@ transition: border-color 0.3s, box-shadow 0.3s;
 }
 
 .search-bar:focus-within {
-border-color: var(–hot-pink);
+border-color: var(--hot-pink);
 box-shadow: 0 0 60px rgba(255,45,120,0.2);
 }
 
@@ -271,13 +271,13 @@ flex: 1;
 background: none;
 border: none;
 outline: none;
-color: var(–text-light);
+color: var(--text-light);
 font-family: ‘DM Sans’, sans-serif;
 font-size: 1rem;
 font-weight: 300;
 }
 
-.search-bar input::placeholder { color: var(–text-muted); }
+.search-bar input::placeholder { color: var(--text-muted); }
 
 .search-divider {
 width: 1px;
@@ -289,7 +289,7 @@ background: rgba(255,255,255,0.15);
 background: none;
 border: none;
 outline: none;
-color: var(–text-muted);
+color: var(--text-muted);
 font-family: ‘DM Sans’, sans-serif;
 font-size: 0.9rem;
 padding: 0 16px;
@@ -298,7 +298,7 @@ min-width: 140px;
 }
 
 .btn-search {
-background: linear-gradient(135deg, var(–hot-pink), var(–electric-purple));
+background: linear-gradient(135deg, var(--hot-pink), var(--electric-purple));
 border: none;
 color: white;
 padding: 14px 32px;
@@ -329,7 +329,7 @@ animation: fadeSlideDown 0.8s 0.4s ease both;
 .tag {
 background: rgba(255,255,255,0.05);
 border: 1px solid rgba(255,255,255,0.1);
-color: var(–text-muted);
+color: var(--text-muted);
 padding: 7px 18px;
 border-radius: 100px;
 font-size: 0.8rem;
@@ -341,8 +341,8 @@ letter-spacing: 0.03em;
 
 .tag:hover, .tag.active {
 background: rgba(255,45,120,0.15);
-border-color: var(–hot-pink);
-color: var(–hot-pink);
+border-color: var(--hot-pink);
+color: var(--hot-pink);
 }
 
 /* STATS STRIP */
@@ -363,7 +363,7 @@ background: rgba(255,255,255,0.02);
 .stat-number {
 font-family: ‘Abril Fatface’, cursive;
 font-size: 2.5rem;
-background: linear-gradient(135deg, var(–hot-pink), var(–electric-purple));
+background: linear-gradient(135deg, var(--hot-pink), var(--electric-purple));
 -webkit-background-clip: text;
 -webkit-text-fill-color: transparent;
 background-clip: text;
@@ -374,7 +374,7 @@ margin-bottom: 6px;
 
 .stat-label {
 font-size: 0.75rem;
-color: var(–text-muted);
+color: var(--text-muted);
 text-transform: uppercase;
 letter-spacing: 0.1em;
 font-weight: 500;
@@ -392,7 +392,7 @@ font-size: 0.7rem;
 font-weight: 600;
 letter-spacing: 0.2em;
 text-transform: uppercase;
-color: var(–hot-pink);
+color: var(--hot-pink);
 margin-bottom: 16px;
 display: flex;
 align-items: center;
@@ -402,7 +402,7 @@ gap: 12px;
 .section-eyebrow::before {
 content: ‘’;
 width: 32px; height: 2px;
-background: var(–hot-pink);
+background: var(--hot-pink);
 }
 
 .section-title {
@@ -416,7 +416,7 @@ margin-bottom: 16px;
 
 .section-title em {
 font-style: italic;
-background: linear-gradient(135deg, var(–hot-pink), var(–electric-purple));
+background: linear-gradient(135deg, var(--hot-pink), var(--electric-purple));
 -webkit-background-clip: text;
 -webkit-text-fill-color: transparent;
 background-clip: text;
@@ -431,7 +431,7 @@ margin-top: 60px;
 }
 
 .performer-card {
-background: var(–card-bg);
+background: var(--card-bg);
 border-radius: 24px;
 overflow: hidden;
 border: 1px solid rgba(255,255,255,0.06);
@@ -488,7 +488,7 @@ text-transform: uppercase;
 .card-badge.verified {
 background: rgba(0,245,255,0.15);
 border-color: rgba(0,245,255,0.4);
-color: var(–cyan);
+color: var(--cyan);
 }
 
 .card-fav {
@@ -524,7 +524,7 @@ letter-spacing: -0.01em;
 
 .card-location {
 font-size: 0.8rem;
-color: var(–text-muted);
+color: var(--text-muted);
 margin-bottom: 12px;
 display: flex;
 align-items: center;
@@ -562,10 +562,10 @@ display: flex;
 align-items: center;
 gap: 6px;
 font-size: 0.85rem;
-color: var(–text-light);
+color: var(--text-light);
 }
 
-.stars { color: var(–acid-yellow); font-size: 0.75rem; letter-spacing: 1px; }
+.stars { color: var(--acid-yellow); font-size: 0.75rem; letter-spacing: 1px; }
 
 .card-price {
 font-family: ‘Playfair Display’, serif;
@@ -578,13 +578,13 @@ color: white;
 font-family: ‘DM Sans’, sans-serif;
 font-size: 0.75rem;
 font-weight: 300;
-color: var(–text-muted);
+color: var(--text-muted);
 }
 
 .btn-book {
 width: 100%;
 margin-top: 16px;
-background: linear-gradient(135deg, var(–hot-pink), var(–electric-purple));
+background: linear-gradient(135deg, var(--hot-pink), var(--electric-purple));
 border: none;
 color: white;
 padding: 14px;
@@ -636,7 +636,7 @@ border-color: rgba(255,45,120,0.2);
 .how-number {
 font-family: ‘Abril Fatface’, cursive;
 font-size: 4rem;
-background: linear-gradient(135deg, var(–hot-pink), var(–electric-purple));
+background: linear-gradient(135deg, var(--hot-pink), var(--electric-purple));
 -webkit-background-clip: text;
 -webkit-text-fill-color: transparent;
 background-clip: text;
@@ -657,7 +657,7 @@ color: white;
 
 .how-desc {
 font-size: 0.9rem;
-color: var(–text-muted);
+color: var(--text-muted);
 line-height: 1.7;
 font-weight: 300;
 }
@@ -709,14 +709,14 @@ margin-bottom: 20px;
 
 .cta-title em {
 font-style: italic;
-background: linear-gradient(135deg, var(–acid-yellow), var(–hot-pink));
+background: linear-gradient(135deg, var(--acid-yellow), var(--hot-pink));
 -webkit-background-clip: text;
 -webkit-text-fill-color: transparent;
 background-clip: text;
 }
 
 .cta-desc {
-color: var(–text-muted);
+color: var(--text-muted);
 font-size: 1rem;
 line-height: 1.7;
 font-weight: 300;
@@ -734,7 +734,7 @@ flex-wrap: wrap;
 }
 
 .btn-primary {
-background: linear-gradient(135deg, var(–hot-pink), var(–electric-purple));
+background: linear-gradient(135deg, var(--hot-pink), var(--electric-purple));
 border: none;
 color: white;
 padding: 16px 40px;
@@ -757,7 +757,7 @@ box-shadow: 0 20px 50px rgba(255,45,120,0.5);
 .btn-secondary {
 background: transparent;
 border: 1px solid rgba(255,255,255,0.2);
-color: var(–text-light);
+color: var(--text-light);
 padding: 16px 40px;
 border-radius: 100px;
 font-family: ‘DM Sans’, sans-serif;
@@ -770,8 +770,8 @@ display: inline-block;
 }
 
 .btn-secondary:hover {
-border-color: var(–hot-pink);
-color: var(–hot-pink);
+border-color: var(--hot-pink);
+color: var(--hot-pink);
 transform: translateY(-2px);
 }
 
@@ -784,7 +784,7 @@ margin-top: 60px;
 }
 
 .testimonial-card {
-background: var(–card-bg);
+background: var(--card-bg);
 border-radius: 24px;
 padding: 32px;
 border: 1px solid rgba(255,255,255,0.05);
@@ -801,7 +801,7 @@ border-color: rgba(155,0,255,0.2);
 content: ‘”’;
 font-family: ‘Abril Fatface’, cursive;
 font-size: 6rem;
-color: var(–electric-purple);
+color: var(--electric-purple);
 opacity: 0.15;
 position: absolute;
 top: -10px; left: 20px;
@@ -811,7 +811,7 @@ line-height: 1;
 .testimonial-text {
 font-size: 0.95rem;
 line-height: 1.7;
-color: var(–text-muted);
+color: var(--text-muted);
 font-weight: 300;
 margin-bottom: 24px;
 font-style: italic;
@@ -845,7 +845,7 @@ color: white;
 
 .author-role {
 font-size: 0.75rem;
-color: var(–text-muted);
+color: var(--text-muted);
 margin-top: 2px;
 }
 
@@ -876,7 +876,7 @@ align-items: center;
 gap: 20px;
 }
 
-.marquee-item .divider { color: var(–hot-pink); font-size: 0.6rem; }
+.marquee-item .divider { color: var(--hot-pink); font-size: 0.6rem; }
 
 @keyframes marquee {
 from { transform: translateX(0); }
@@ -899,7 +899,7 @@ margin-bottom: 60px;
 }
 
 .footer-brand p {
-color: var(–text-muted);
+color: var(--text-muted);
 font-size: 0.9rem;
 line-height: 1.7;
 font-weight: 300;
@@ -912,7 +912,7 @@ font-size: 0.7rem;
 font-weight: 600;
 letter-spacing: 0.15em;
 text-transform: uppercase;
-color: var(–text-muted);
+color: var(--text-muted);
 margin-bottom: 20px;
 }
 
@@ -930,7 +930,7 @@ font-weight: 300;
 transition: color 0.2s;
 }
 
-.footer-col a:hover { color: var(–hot-pink); }
+.footer-col a:hover { color: var(--hot-pink); }
 
 .footer-bottom {
 display: flex;
@@ -963,7 +963,7 @@ text-decoration: none;
 
 .social-btn:hover {
 background: rgba(255,45,120,0.2);
-border-color: var(–hot-pink);
+border-color: var(--hot-pink);
 transform: translateY(-3px);
 }
 
@@ -1026,7 +1026,7 @@ color: rgba(255,255,255,0.3);
 .scroll-line {
 width: 1px;
 height: 40px;
-background: linear-gradient(to bottom, var(–hot-pink), transparent);
+background: linear-gradient(to bottom, var(--hot-pink), transparent);
 animation: scrollPulse 2s infinite;
 }
 
