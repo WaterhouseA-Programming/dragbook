@@ -426,12 +426,12 @@ footer { padding: 60px 60px 36px; border-top: 1px solid var(--border); backgroun
 <div class="cursor-dot" id="cursorDot"></div>
 
 <nav>
-  <a href="http://dragbook.html" class="logo" target="_blank" rel="noopener">DragBook <span>The UK's drag marketplace</span></a>
+  <a href="dragbook.html" class="logo" target="_blank" rel="noopener">DragBook <span>The UK's drag marketplace</span></a>
   <ul class="nav-links">
-    <li><a href="http://dragbook-browse.html" target="_blank" rel="noopener">Find Performers</a></li>
-    <li><a href="http://dragbook-how-it-works.html" target="_blank" rel="noopener">How It Works</a></li>
-    <li><a href="http://dragbook-pricing.html" target="_blank" rel="noopener">Pricing</a></li>
-    <li><a href="http://dragbook-pricing.html" class="btn-nav" target="_blank" rel="noopener">List Your Act ✨</a></li>
+    <li><a href="dragbook-browse.html" target="_blank" rel="noopener">Find Performers</a></li>
+    <li><a href="dragbook-how-it-works.html" target="_blank" rel="noopener">How It Works</a></li>
+    <li><a href="dragbook-pricing.html" target="_blank" rel="noopener">Pricing</a></li>
+    <li><a href="dragbook-pricing.html" class="btn-nav" target="_blank" rel="noopener">List Your Act ✨</a></li>
   </ul>
 </nav>
 
@@ -448,7 +448,7 @@ footer { padding: 60px 60px 36px; border-top: 1px solid var(--border); backgroun
     </div>
     <div class="hero-info">
       <div class="breadcrumb">
-        <a href="http://dragbook-browse.html" target="_blank" rel="noopener">Browse</a>
+        <a href="dragbook-browse.html" target="_blank" rel="noopener">Browse</a>
         <span>/</span>
         <span>London</span>
         <span>/</span>
@@ -722,8 +722,13 @@ footer { padding: 60px 60px 36px; border-top: 1px solid var(--border); backgroun
     </select>
   </div>
 
-  <button class="btn-enquire">Send Enquiry 💌</button>
-  <p class="widget-note">Scarlett typically responds within 2 hours · No payment until confirmed</p>
+  <button class="btn-enquire" id="enquireBtn" onclick="submitEnquiry()">Send Enquiry 💌</button>
+  <p class="widget-note" id="enquireNote">Scarlett typically responds within 2 hours · No payment until confirmed</p>
+  <div id="enquireSuccess" style="display:none;text-align:center;padding:20px;background:rgba(0,245,255,0.08);border:1px solid rgba(0,245,255,0.25);border-radius:16px;margin-top:8px;">
+    <div style="font-size:1.8rem;margin-bottom:8px;">💌</div>
+    <div style="font-size:0.92rem;font-weight:500;color:white;margin-bottom:4px;">Enquiry sent!</div>
+    <div style="font-size:0.78rem;color:var(--text-muted);line-height:1.5;">Scarlett will be in touch shortly. Check your email for a confirmation.</div>
+  </div>
 
   <div class="widget-divider"></div>
 
@@ -771,9 +776,9 @@ footer { padding: 60px 60px 36px; border-top: 1px solid var(--border); backgroun
 
 <footer>
   <div class="footer-grid">
-    <div class="footer-brand"><a href="http://dragbook.html" class="logo" target="_blank" rel="noopener">DragBook</a><p>The UK's only dedicated marketplace connecting drag performers with event organisers. No agency fees. No gatekeeping.</p></div>
-    <div class="footer-col"><h4>For Bookers</h4><ul><li><a href="#">Find a Performer</a></li><li><a href="#">Browse by Event</a></li><li><a href="http://dragbook-how-it-works.html" target="_blank" rel="noopener">How It Works</a></li></ul></div>
-    <div class="footer-col"><h4>For Performers</h4><ul><li><a href="http://dragbook-pricing.html" target="_blank" rel="noopener">List Your Act</a></li><li><a href="#">Dashboard</a></li><li><a href="#">Community</a></li></ul></div>
+    <div class="footer-brand"><a href="dragbook.html" class="logo" target="_blank" rel="noopener">DragBook</a><p>The UK's only dedicated marketplace connecting drag performers with event organisers. No agency fees. No gatekeeping.</p></div>
+    <div class="footer-col"><h4>For Bookers</h4><ul><li><a href="#">Find a Performer</a></li><li><a href="#">Browse by Event</a></li><li><a href="dragbook-how-it-works.html" target="_blank" rel="noopener">How It Works</a></li></ul></div>
+    <div class="footer-col"><h4>For Performers</h4><ul><li><a href="dragbook-pricing.html" target="_blank" rel="noopener">List Your Act</a></li><li><a href="#">Dashboard</a></li><li><a href="#">Community</a></li></ul></div>
     <div class="footer-col"><h4>Company</h4><ul><li><a href="#">About</a></li><li><a href="#">Blog</a></li><li><a href="#">Contact</a></li><li><a href="#">Terms</a></li></ul></div>
   </div>
   <div class="footer-bottom">
@@ -806,6 +811,28 @@ window.addEventListener('resize',()=>{canvas.width=window.innerWidth;canvas.heig
 
 const observer = new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');}),{threshold:0.05});
 document.querySelectorAll('.fade-up').forEach(el=>observer.observe(el));
+
+function submitEnquiry() {
+  const fields = document.querySelectorAll('.widget-select, .widget-input');
+  let valid = true;
+  fields.forEach(f => {
+    if (!f.value || f.value === f.options?.[0]?.value) {
+      f.style.borderColor = 'var(--hot-pink)';
+      valid = false;
+      setTimeout(() => f.style.borderColor = '', 2000);
+    }
+  });
+  if (!valid) return;
+  const btn = document.getElementById('enquireBtn');
+  btn.textContent = 'Sending…';
+  btn.disabled = true;
+  btn.style.opacity = '0.7';
+  setTimeout(() => {
+    btn.style.display = 'none';
+    document.getElementById('enquireNote').style.display = 'none';
+    document.getElementById('enquireSuccess').style.display = 'block';
+  }, 1000);
+}
 
 function switchTab(btn, tabId) {
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));

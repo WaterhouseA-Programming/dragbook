@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Bungee+Inline&family=Bungee&family=Abril+Fatface&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#0A0008; font-family:'DM Sans',sans-serif; padding:28px 36px; }
+
+.wordmark-stack {
+  display:inline-flex; flex-direction:column;
+  align-items:center; line-height:1; gap:2px;
+  position:relative;
+}
+/* Tight neon tube glow — white core, then colour */
+.you {
+  font-family:'Fredoka One',cursive;
+  font-size:3rem; letter-spacing:0.06em;
+  color:white;
+  text-shadow:
+    0 0 2px white, 0 0 6px white,
+    0 0 12px #FF2D78, 0 0 24px #FF2D78, 0 0 48px rgba(255,45,120,0.7);
+  position:relative; z-index:1;
+}
+.better {
+  font-family:'Bungee Inline',cursive;
+  font-size:2.4rem; letter-spacing:0.04em;
+  color:white;
+  text-shadow:
+    0 0 2px white, 0 0 6px white,
+    0 0 14px #9B00FF, 0 0 28px #9B00FF, 0 0 55px rgba(155,0,255,0.7);
+  position:relative; z-index:1;
+}
+/* WERK — massive, neon tube, can't miss it */
+.werk {
+  font-family:'Abril Fatface',cursive;
+  font-size:5rem; letter-spacing:0.05em;
+  color:white;
+  text-shadow:
+    0 0 2px white, 0 0 8px white,
+    0 0 16px #FF2D78, 0 0 32px #FF2D78,
+    0 0 60px rgba(255,45,120,0.8),
+    0 0 100px rgba(255,45,120,0.5);
+  position:relative; z-index:1;
+  line-height:0.92;
+  animation:werkPulse 2.5s ease-in-out infinite;
+}
+@keyframes werkPulse {
+  0%,100% { text-shadow: 0 0 2px white, 0 0 8px white, 0 0 16px #FF2D78, 0 0 32px #FF2D78, 0 0 60px rgba(255,45,120,0.8), 0 0 100px rgba(255,45,120,0.5); }
+  50% { text-shadow: 0 0 4px white, 0 0 12px white, 0 0 22px #FF2D78, 0 0 45px #FF2D78, 0 0 80px rgba(255,45,120,1), 0 0 140px rgba(255,45,120,0.7); }
+}
+
+/* Tighter halo behind wordmark */
+.wordmark-stack::before {
+  content:''; position:absolute;
+  width:100%; height:120%;
+  top:-10%; left:0;
+  background:radial-gradient(ellipse 55% 45% at 50% 55%, rgba(255,45,120,0.6) 0%, rgba(155,0,255,0.35) 30%, transparent 60%);
+  filter:blur(6px);
+  z-index:0;
+}
+
+.div { width:100%; height:1px; background:rgba(255,255,255,0.06); margin:22px 0; }
+.usage-row { display:flex; align-items:center; gap:24px; margin-bottom:18px; }
+.usage-label { font-size:0.55rem; color:#C084C8; text-transform:uppercase; letter-spacing:0.12em; min-width:90px; }
+.nav-mark { font-family:'Fredoka One',cursive; font-size:1.3rem; letter-spacing:0.04em; color:#FF2D78; text-shadow:0 0 6px rgba(255,45,120,0.7); }
+.nav-tagline { font-family:'DM Sans',sans-serif; font-size:0.42rem; font-weight:300; letter-spacing:0.32em; text-transform:uppercase; color:rgba(255,232,255,0.4); display:block; margin-top:-2px; }
+</style></head><body>
+
+<!-- MAIN HERO WORDMARK -->
+<div style="display:flex;align-items:center;justifyContent:'center';gap:48px;margin-bottom:28px;">
+  <div style="text-align:center;">
+    <div class="wordmark-stack">
+      <span class="you">YOU</span>
+      <span class="better">BETTER</span>
+      <span class="werk">Werk</span>
+    </div>
+    <div style="font-size:0.5rem;color:rgba(255,232,255,0.3);letter-spacing:0.4em;text-transform:uppercase;margin-top:8px;">The UK's drag booking marketplace</div>
+  </div>
+
+  <!-- vs the actual logo image -->
+  <div style="position:relative;display:flex;align-items:center;justify-content:center;">
+    <div style="position:absolute;width:160px;height:160px;background:radial-gradient(circle,rgba(255,45,120,0.45) 0%,rgba(155,0,255,0.3) 40%,transparent 70%);filter:blur(16px);border-radius:50%;"></div>
+    <img src="../assets/logo.png" style="width:120px;height:auto;position:relative;z-index:1;filter:drop-shadow(0 0 10px rgba(255,45,120,0.4));" alt="You Better Werk logo">
+  </div>
+</div>
+
+<div class="div"></div>
+
+<!-- WHERE IT'S USED -->
+<div style="font-size:0.6rem;color:#C084C8;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:16px;">Where each version is used</div>
+
+<div class="usage-row">
+  <span class="usage-label">Nav bar</span>
+  <div style="background:rgba(10,0,8,0.95);padding:12px 20px;border-radius:12px;display:flex;align-items:center;gap:10px;border:1px solid rgba(255,255,255,0.05);">
+    <div>
+      <div class="nav-mark">You Better Werk</div>
+      <span class="nav-tagline">The UK's drag marketplace</span>
+    </div>
+  </div>
+  <span style="font-size:0.62rem;color:rgba(192,132,200,0.5);">Text-only · fits inline</span>
+</div>
+
+<div class="usage-row">
+  <span class="usage-label">With logo</span>
+  <div style="background:rgba(10,0,8,0.95);padding:10px 18px;border-radius:12px;display:flex;align-items:center;gap:12px;border:1px solid rgba(255,255,255,0.05);">
+    <div class="icon-only"><img src="../assets/logo.png" style="width:36px;height:36px;object-fit:contain;" alt="YBW icon"></div>
+    <div>
+      <div class="nav-mark">You Better Werk</div>
+      <span class="nav-tagline">The UK's drag marketplace</span>
+    </div>
+  </div>
+  <span style="font-size:0.62rem;color:rgba(192,132,200,0.5);">Nav / header preferred treatment</span>
+</div>
+
+<div class="usage-row">
+  <span class="usage-label">Icon only</span>
+  <div class="icon-only"><img src="../assets/logo.png" style="width:56px;height:56px;object-fit:contain;" alt="YBW icon"></div>
+  <div class="icon-only"><img src="../assets/logo.png" style="width:40px;height:40px;object-fit:contain;" alt="YBW icon"></div>
+  <div class="icon-only"><img src="../assets/logo.png" style="width:28px;height:28px;object-fit:contain;" alt="YBW icon"></div>
+  <span style="font-size:0.62rem;color:rgba(192,132,200,0.5);">Favicon / avatar / app icon</span>
+</div>
+
+</body></html>

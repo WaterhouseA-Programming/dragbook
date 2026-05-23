@@ -1,0 +1,266 @@
+/**
+ * YOU BETTER WERK — DragBook Design System
+ * colors_and_type.css
+ *
+ * Google Fonts substitutes (no local font files provided):
+ *   - Abril Fatface  → Google Fonts (exact match available)
+ *   - Playfair Display → Google Fonts (exact match available)
+ *   - DM Sans → Google Fonts (exact match available)
+ *
+ * Import this file AFTER the Google Fonts link tag:
+ *   <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Staatliches&family=Barlow+Condensed:wght@700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+ *
+ * Font roles:
+ *   Abril Fatface    → Logo wordmark, stat numbers (display)
+ *   Staatliches      → H1/H2 hero + section headings (ultra-condensed poster type — theatrical, camp, unignorable)
+ *   Barlow Condensed → Card names, subheadings, CTA copy (700–900)
+ *   DM Sans          → All body, nav, labels, buttons (300/400/500)
+ */
+
+/* ─────────────────────────────────────────
+   BASE COLOR TOKENS
+───────────────────────────────────────── */
+:root {
+  /* Brand neons */
+  --hot-pink:        #FF2D78;
+  --electric-purple: #9B00FF;
+  --acid-yellow:     #FFE600;
+  --cyan:            #00F5FF;
+
+  /* Backgrounds */
+  --deep-black:  #0A0008;   /* page background */
+  --soft-black:  #130012;   /* alternate dark bg */
+  --card-bg:     #1A0020;   /* card / panel */
+  --card-bg-2:   #150018;   /* footer / secondary panels */
+
+  /* Text */
+  --text-light:  #FFE8FF;   /* primary text (warm white, slight pink tint) */
+  --text-muted:  #C084C8;   /* secondary text, placeholders, labels */
+
+  /* Borders */
+  --border:       rgba(255, 255, 255, 0.06);
+  --border-pink:  rgba(255,  45, 120, 0.30);
+  --border-cyan:  rgba(  0, 245, 255, 0.35);
+  --border-yellow: rgba(255, 230,   0, 0.35);
+
+  /* ─────────────────────────────────────────
+     GRADIENTS (as CSS custom props via background shorthand)
+     Use on background: var(--grad-primary);
+  ───────────────────────────────────────── */
+  --grad-primary:     linear-gradient(135deg, var(--hot-pink), var(--electric-purple));
+  --grad-triple:      linear-gradient(135deg, var(--hot-pink), var(--electric-purple), var(--cyan));
+  --grad-yellow:      linear-gradient(135deg, var(--acid-yellow), var(--hot-pink));
+  --grad-cyan-purple: linear-gradient(135deg, var(--cyan), var(--electric-purple));
+  --grad-card-pink:   linear-gradient(145deg, rgba(155,0,255,0.2), rgba(255,45,120,0.2));
+
+  /* ─────────────────────────────────────────
+     SEMANTIC SURFACE TOKENS
+  ───────────────────────────────────────── */
+  --surface-page:      var(--deep-black);
+  --surface-card:      var(--card-bg);
+  --surface-footer:    var(--card-bg-2);
+  --surface-nav:       rgba(10, 0, 8, 0.95);
+  --surface-search:    rgba(255, 255, 255, 0.05);
+  --surface-badge-frosted: rgba(0, 0, 0, 0.70);
+
+  /* ─────────────────────────────────────────
+     SEMANTIC TEXT TOKENS
+  ───────────────────────────────────────── */
+  --text-primary:   var(--text-light);
+  --text-secondary: var(--text-muted);
+  --text-on-dark:   #FFFFFF;
+  --text-pink:      var(--hot-pink);
+  --text-yellow:    var(--acid-yellow);
+  --text-cyan:      var(--cyan);
+  --text-purple:    #C084FF;
+
+  /* ─────────────────────────────────────────
+     SEMANTIC ACTION TOKENS
+  ───────────────────────────────────────── */
+  --action-primary:        var(--grad-primary);
+  --action-primary-glow:   rgba(255, 45, 120, 0.45);
+  --action-hover-lift:     translateY(-3px) scale(1.02);
+  --action-link-hover:     var(--hot-pink);
+
+  /* ─────────────────────────────────────────
+     SPACING SCALE
+  ───────────────────────────────────────── */
+  --space-1:   4px;
+  --space-2:   8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-8:  32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+  --space-24: 96px;
+
+  /* ─────────────────────────────────────────
+     BORDER RADIUS SCALE
+  ───────────────────────────────────────── */
+  --radius-sm:   6px;    /* checkbox, tiny elements */
+  --radius-md:  12px;    /* inputs, small cards */
+  --radius-lg:  16px;    /* inner cards, gallery items */
+  --radius-xl:  20px;    /* performer cards */
+  --radius-2xl: 24px;    /* sections, how-cards */
+  --radius-3xl: 28px;    /* pricing cards */
+  --radius-4xl: 32px;    /* CTA boxes */
+  --radius-pill: 100px;  /* buttons, tags, all pill shapes */
+  --radius-full: 50%;    /* avatars, circles */
+
+  /* ─────────────────────────────────────────
+     SHADOW SYSTEM
+  ───────────────────────────────────────── */
+  --shadow-card:       0 40px 80px rgba(0, 0, 0, 0.50);
+  --shadow-card-glow:  0 0 60px rgba(255, 45, 120, 0.15);
+  --shadow-btn:        0 20px 50px rgba(255, 45, 120, 0.50);
+  --shadow-nav-btn:    0 0 20px rgba(255, 45, 120, 0.40);
+  --shadow-widget:     0 20px 60px rgba(255, 45, 120, 0.08);
+  --shadow-glow-sm:    0 0 20px rgba(255, 45, 120, 0.40);
+  --shadow-glow-md:    0 0 40px rgba(255, 45, 120, 0.40);
+  --shadow-glow-lg:    0 0 60px rgba(255, 45, 120, 0.20);
+
+  /* ─────────────────────────────────────────
+     ANIMATION TOKENS
+  ───────────────────────────────────────── */
+  --transition-fast:   0.15s ease;
+  --transition-base:   0.2s ease;
+  --transition-slow:   0.3s ease;
+  --transition-reveal: 0.7s ease;
+
+  /* ─────────────────────────────────────────
+     TYPOGRAPHY TOKENS
+  ───────────────────────────────────────── */
+  --font-display:  'Abril Fatface', cursive;
+  --font-heading:  'Staatliches', cursive;
+  --font-subhead:  'Barlow Condensed', sans-serif;
+  --font-body:     'DM Sans', system-ui, sans-serif;
+
+  /* Type scale */
+  --text-xs:   0.65rem;   /* 10.4px — captions, micro labels */
+  --text-sm:   0.75rem;   /* 12px — badges, timestamps */
+  --text-base: 0.875rem;  /* 14px — body default */
+  --text-md:   0.95rem;   /* 15.2px — comfortable body */
+  --text-lg:   1rem;      /* 16px */
+  --text-xl:   1.1rem;    /* 17.6px */
+  --text-2xl:  1.4rem;    /* 22.4px — card names, subheads */
+  --text-3xl:  2rem;      /* 32px — section titles */
+  --text-4xl:  3.5rem;    /* 56px — hero */
+  --text-5xl:  9rem;      /* 144px — hero max */
+
+  /* Letter spacing */
+  --tracking-tight:  -0.03em;
+  --tracking-base:    0;
+  --tracking-wide:    0.05em;
+  --tracking-wider:   0.1em;
+  --tracking-widest:  0.2em;
+
+  /* Line heights */
+  --leading-none:    0.9;
+  --leading-tight:   1.1;
+  --leading-snug:    1.5;
+  --leading-normal:  1.7;
+}
+
+
+/* ─────────────────────────────────────────
+   SEMANTIC ELEMENT DEFAULTS
+   Apply these to your base reset layer
+───────────────────────────────────────── */
+body {
+  background: var(--surface-page);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-weight: 300;
+  line-height: var(--leading-normal);
+  overflow-x: hidden;
+}
+
+/* Display — Abril Fatface */
+.display,
+.logo-wordmark {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5vw, 4rem);
+  letter-spacing: var(--tracking-tight);
+  color: white;
+}
+
+/* Heading — Playfair Display */
+h1, .h1 {
+  font-family: var(--font-heading);
+  font-size: clamp(3.5rem, 9vw, 9rem);
+  font-weight: 900;
+  line-height: var(--leading-none);
+  letter-spacing: var(--tracking-tight);
+}
+
+h2, .h2 {
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: 700;
+  line-height: var(--leading-tight);
+  letter-spacing: -0.02em;
+}
+
+h3, .h3 {
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+h4, .h4 {
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+p, .body {
+  font-family: var(--font-body);
+  font-size: var(--text-md);
+  font-weight: 300;
+  line-height: var(--leading-normal);
+  color: var(--text-secondary);
+}
+
+/* Gradient text utility */
+.gradient-text {
+  background: var(--grad-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-text-triple {
+  background: var(--grad-triple);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Eyebrow label */
+.eyebrow {
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color: var(--hot-pink);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.eyebrow::before {
+  content: '';
+  width: 32px;
+  height: 2px;
+  background: var(--hot-pink);
+  flex-shrink: 0;
+}

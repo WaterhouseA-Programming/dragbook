@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#0A0008; font-family:'DM Sans',sans-serif; padding:24px; }
+.grid { display:grid; grid-template-columns:repeat(5,1fr); gap:12px; }
+.swatch { border-radius:14px; overflow:hidden; }
+.color { height:80px; }
+.info { padding:10px 12px; background:#1A0020; }
+.name { font-size:0.72rem; font-weight:500; color:#FFE8FF; letter-spacing:0.03em; }
+.hex  { font-size:0.65rem; color:#C084C8; margin-top:2px; font-family:monospace; }
+.tag  { font-size:0.6rem; color:rgba(255,232,255,0.35); margin-top:3px; letter-spacing:0.05em; text-transform:uppercase; }
+</style></head><body>
+<div class="grid">
+  <div class="swatch">
+    <div class="color" style="background:#FF2D78;box-shadow:0 0 30px rgba(255,45,120,0.6) inset;"></div>
+    <div class="info"><div class="name">Hot Pink</div><div class="hex">#FF2D78</div><div class="tag">--hot-pink · Primary</div></div>
+  </div>
+  <div class="swatch">
+    <div class="color" style="background:#9B00FF;box-shadow:0 0 30px rgba(155,0,255,0.6) inset;"></div>
+    <div class="info"><div class="name">Electric Purple</div><div class="hex">#9B00FF</div><div class="tag">--electric-purple</div></div>
+  </div>
+  <div class="swatch">
+    <div class="color" style="background:#FFE600;"></div>
+    <div class="info"><div class="name">Acid Yellow</div><div class="hex">#FFE600</div><div class="tag">--acid-yellow · Stars</div></div>
+  </div>
+  <div class="swatch">
+    <div class="color" style="background:#00F5FF;box-shadow:0 0 30px rgba(0,245,255,0.5) inset;"></div>
+    <div class="info"><div class="name">Cyan</div><div class="hex">#00F5FF</div><div class="tag">--cyan · Verified</div></div>
+  </div>
+  <div class="swatch">
+    <div class="color" style="background:linear-gradient(135deg,#FF2D78,#9B00FF);"></div>
+    <div class="info"><div class="name">Primary Gradient</div><div class="hex">→ purple</div><div class="tag">--grad-primary</div></div>
+  </div>
+</div>
+</body></html>

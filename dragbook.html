@@ -1098,10 +1098,10 @@ animation: scrollPulse 2s infinite;
     <span>The UK's drag marketplace</span>
   </a>
   <ul class="nav-links">
-    <li><a href="#performers">Find Performers</a></li>
-    <li><a href="#how">How It Works</a></li>
-    <li><a href="#performers-cta">For Performers</a></li>
-    <li><a href="#" class="btn-nav">List Your Act ✨</a></li>
+    <li><a href="dragbook-browse.html">Find Performers</a></li>
+    <li><a href="dragbook-how-it-works.html">How It Works</a></li>
+    <li><a href="dragbook-pricing.html">For Performers</a></li>
+    <li><a href="dragbook-pricing.html" class="btn-nav">List Your Act ✨</a></li>
   </ul>
 </nav>
 
@@ -1461,8 +1461,8 @@ animation: scrollPulse 2s infinite;
       List your act for free and get discovered by thousands of event organisers across the UK. No agency taking a cut. No gatekeeping. Just you, your talent, and the bookings you deserve.
     </p>
     <div class="cta-buttons">
-      <a href="#" class="btn-primary">List Your Act Free 💄</a>
-      <a href="#" class="btn-secondary">See How It Works</a>
+      <a href="dragbook-pricing.html" class="btn-primary">List Your Act Free 💄</a>
+      <a href="dragbook-how-it-works.html" class="btn-secondary">See How It Works</a>
     </div>
   </div>
 </section>
@@ -1598,13 +1598,53 @@ animation: scrollPulse 2s infinite;
 
   document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
 
-  // Filter tags
+  // Filter tags — filter performer cards
+  const tagMap = {
+    'All Events': null,
+    'Hen Party': ['hen', 'hen parties'],
+    'Corporate': ['corporate'],
+    'Wedding': ['wedding'],
+    'Drag Bingo': ['drag bingo', 'bingo'],
+    'Pride': ['pride'],
+    'Birthday': ['birthday']
+  };
+
   document.querySelectorAll('.tag').forEach(tag => {
     tag.addEventListener('click', () => {
       document.querySelectorAll('.tag').forEach(t => t.classList.remove('active'));
       tag.classList.add('active');
+
+      const filter = tagMap[tag.textContent.trim()];
+      document.querySelectorAll('.performer-card').forEach(card => {
+        if (!filter) {
+          card.style.display = '';
+          return;
+        }
+        const text = card.textContent.toLowerCase();
+        card.style.display = filter.some(f => text.includes(f)) ? '' : 'none';
+      });
     });
   });
+
+  // Search bar — filter cards live
+  const searchInput = document.querySelector('.search-bar input');
+  const searchBtn = document.querySelector('.btn-search');
+
+  function runSearch() {
+    const q = searchInput.value.toLowerCase().trim();
+    document.querySelectorAll('.performer-card').forEach(card => {
+      card.style.display = !q || card.textContent.toLowerCase().includes(q) ? '' : 'none';
+    });
+    // Reset active tag to All Events
+    if (q) {
+      document.querySelectorAll('.tag').forEach(t => t.classList.remove('active'));
+      document.querySelector('.tag').classList.add('active');
+    }
+  }
+
+  searchInput.addEventListener('input', runSearch);
+  searchBtn.addEventListener('click', runSearch);
+  searchInput.addEventListener('keydown', e => { if (e.key === 'Enter') runSearch(); });
 
   // Favourite toggle
   document.querySelectorAll('.card-fav').forEach(fav => {
@@ -1612,6 +1652,12 @@ animation: scrollPulse 2s infinite;
       e.stopPropagation();
       fav.textContent = fav.textContent === '🤍' ? '❤️' : '🤍';
     });
+  });
+
+  // Wire up performer cards to profile page
+  document.querySelectorAll('.performer-card').forEach(card => {
+    card.style.cursor = 'pointer';
+    card.addEventListener('click', () => { window.location.href = 'dragbook-profile.html'; });
   });
 </script>
 

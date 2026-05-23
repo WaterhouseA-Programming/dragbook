@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#0A0008; font-family:'DM Sans',sans-serif; padding:24px; }
+.row { display:flex; gap:10px; align-items:center; margin-bottom:14px; flex-wrap:wrap; }
+.label { font-size:0.58rem; color:#C084C8; text-transform:uppercase; letter-spacing:0.1em; min-width:90px; flex-shrink:0; }
+</style></head><body>
+
+<!-- Hero / announcement badges -->
+<div class="row">
+  <span class="label">hero badge</span>
+  <div style="background:rgba(255,45,120,0.1);border:1px solid rgba(255,45,120,0.4);padding:7px 20px;border-radius:100px;font-size:0.78rem;font-weight:500;color:#FF2D78;display:flex;align-items:center;gap:8px;">
+    <span style="width:7px;height:7px;background:#FF2D78;border-radius:50%;flex-shrink:0;display:inline-block;"></span>
+    UK's first dedicated drag marketplace
+  </div>
+  <div style="background:rgba(155,0,255,0.1);border:1px solid rgba(155,0,255,0.3);padding:7px 18px;border-radius:100px;font-size:0.78rem;color:#C084FF;font-weight:400;">
+    Fresh fish arriving daily
+  </div>
+</div>
+
+<!-- Performer status badges — with drag wit -->
+<div class="row">
+  <span class="label">performer</span>
+  <!-- Verified — dry, deadpan -->
+  <div style="background:rgba(0,245,255,0.12);border:1px solid rgba(0,245,255,0.35);padding:5px 13px;border-radius:100px;font-size:0.7rem;font-family:'DM Sans',sans-serif;color:#00F5FF;font-weight:500;letter-spacing:0.02em;">
+    ✓ We checked. She's real.
+  </div>
+  <!-- Top rated — camp -->
+  <div style="background:rgba(255,230,0,0.1);border:1px solid rgba(255,230,0,0.35);padding:5px 13px;border-radius:100px;font-size:0.7rem;font-family:'DM Sans',sans-serif;color:#FFE600;font-weight:500;">
+    The crowd went feral
+  </div>
+  <!-- Hot right now — camp wit -->
+  <div style="background:rgba(255,45,120,0.12);border:1px solid rgba(255,45,120,0.35);padding:5px 13px;border-radius:100px;font-size:0.7rem;font-family:'DM Sans',sans-serif;color:#FF2D78;font-weight:500;">
+    Currently on fire (the good kind)
+  </div>
+  <!-- New -->
+  <div style="background:rgba(155,0,255,0.1);border:1px solid rgba(155,0,255,0.3);padding:5px 13px;border-radius:100px;font-size:0.7rem;font-family:'DM Sans',sans-serif;color:#C084FF;font-weight:500;">
+    Just hit the main stage
+  </div>
+</div>
+
+<!-- Standard shorthand versions (list cards / smaller contexts) -->
+<div class="row">
+  <span class="label">compact</span>
+  <div style="background:rgba(0,245,255,0.12);border:1px solid rgba(0,245,255,0.35);padding:4px 11px;border-radius:100px;font-size:0.68rem;color:#00F5FF;">✓ Verified</div>
+  <div style="background:rgba(255,230,0,0.1);border:1px solid rgba(255,230,0,0.3);padding:4px 11px;border-radius:100px;font-size:0.68rem;color:#FFE600;">Crowd fave</div>
+  <div style="background:rgba(255,45,120,0.1);border:1px solid rgba(255,45,120,0.3);padding:4px 11px;border-radius:100px;font-size:0.68rem;color:#FF2D78;">On fire</div>
+  <div style="background:rgba(155,0,255,0.1);border:1px solid rgba(155,0,255,0.25);padding:4px 11px;border-radius:100px;font-size:0.68rem;color:#C084FF;">New</div>
+</div>
+
+<!-- Card tags (specialism) — no change needed here -->
+<div class="row">
+  <span class="label">card tags</span>
+  <div style="background:rgba(155,0,255,0.12);border:1px solid rgba(155,0,255,0.25);color:#C084FF;padding:4px 11px;border-radius:100px;font-size:0.68rem;">Hen Parties</div>
+  <div style="background:rgba(155,0,255,0.12);border:1px solid rgba(155,0,255,0.25);color:#C084FF;padding:4px 11px;border-radius:100px;font-size:0.68rem;">Drag Bingo</div>
+  <div style="background:rgba(155,0,255,0.12);border:1px solid rgba(155,0,255,0.25);color:#C084FF;padding:4px 11px;border-radius:100px;font-size:0.68rem;">Corporate</div>
+  <div style="background:rgba(155,0,255,0.12);border:1px solid rgba(155,0,255,0.25);color:#C084FF;padding:4px 11px;border-radius:100px;font-size:0.68rem;">Wedding Crasher</div>
+  <div style="background:rgba(155,0,255,0.12);border:1px solid rgba(155,0,255,0.25);color:#C084FF;padding:4px 11px;border-radius:100px;font-size:0.68rem;">Bottomless Brunch</div>
+</div>
+
+<!-- Filter tags -->
+<div class="row">
+  <span class="label">filter tags</span>
+  <div style="background:rgba(255,45,120,0.15);border:1px solid #FF2D78;padding:7px 18px;border-radius:100px;font-size:0.8rem;color:#FF2D78;font-weight:500;">All Events</div>
+  <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);padding:7px 18px;border-radius:100px;font-size:0.8rem;color:#C084C8;">Hen Party</div>
+  <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);padding:7px 18px;border-radius:100px;font-size:0.8rem;color:#C084C8;">Corporate</div>
+  <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);padding:7px 18px;border-radius:100px;font-size:0.8rem;color:#C084C8;">Wedding</div>
+  <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);padding:7px 18px;border-radius:100px;font-size:0.8rem;color:#C084C8;">Pride</div>
+</div>
+
+<!-- Eyebrow label -->
+<div class="row">
+  <span class="label">eyebrow</span>
+  <div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.7rem;color:#FF2D78;letter-spacing:0.18em;text-transform:uppercase;display:flex;align-items:center;gap:10px;">
+    <span style="width:26px;height:2px;background:#FF2D78;display:inline-block;flex-shrink:0;"></span>
+    Featured Performers
+  </div>
+  <div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.7rem;color:#FF2D78;letter-spacing:0.18em;text-transform:uppercase;display:flex;align-items:center;gap:10px;">
+    <span style="width:26px;height:2px;background:#FF2D78;display:inline-block;flex-shrink:0;"></span>
+    Simple Process
+  </div>
+</div>
+
+</body></html>

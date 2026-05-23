@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How It Works — DragBook</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=DM+Sans:wght@300;400;500&family=Abril+Fatface&display=swap" rel="stylesheet">
+<style>
+:root {
+  --hot-pink: #FF2D78; --electric-purple: #9B00FF; --acid-yellow: #FFE600;
+  --cyan: #00F5FF; --deep-black: #0A0008; --card-bg: #1A0020; --card-bg-2: #150018;
+  --text-light: #FFE8FF; --text-muted: #C084C8; --border: rgba(255,255,255,0.06); --border-pink: rgba(255,45,120,0.3);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { background: var(--deep-black); color: var(--text-light); font-family: 'DM Sans', sans-serif; overflow-x: hidden; cursor: none; }
+.cursor { width: 20px; height: 20px; border: 2px solid var(--hot-pink); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999; transition: transform 0.15s, background 0.15s; mix-blend-mode: screen; }
+.cursor-dot { width: 6px; height: 6px; background: var(--acid-yellow); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999; }
+.glitter-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; opacity: 0.25; }
+
+nav { position: fixed; top: 0; width: 100%; z-index: 100; padding: 18px 60px; display: flex; align-items: center; justify-content: space-between; background: rgba(10,0,8,0.95); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.04); }
+.logo { font-family: 'Abril Fatface', cursive; font-size: 1.8rem; background: linear-gradient(135deg, var(--hot-pink), var(--electric-purple), var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-decoration: none; }
+.logo span { font-family: 'DM Sans', sans-serif; font-size: 0.5rem; font-weight: 300; letter-spacing: 0.3em; display: block; background: linear-gradient(135deg, var(--acid-yellow), var(--hot-pink)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-transform: uppercase; margin-top: -2px; }
+.nav-links { display: flex; gap: 32px; list-style: none; align-items: center; }
+.nav-links a { color: var(--text-muted); text-decoration: none; font-size: 0.82rem; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; transition: color 0.2s; position: relative; }
+.nav-links a::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 2px; background: var(--hot-pink); transition: width 0.3s; }
+.nav-links a:hover { color: var(--text-light); }
+.nav-links a:hover::after { width: 100%; }
+.nav-links a.active { color: var(--text-light); }
+.nav-links a.active::after { width: 100%; }
+.btn-nav { background: linear-gradient(135deg, var(--hot-pink), var(--electric-purple)) !important; color: white !important; padding: 9px 22px !important; border-radius: 100px !important; box-shadow: 0 0 20px rgba(255,45,120,0.3) !important; }
+.btn-nav::after { display: none !important; }
+
+/* HERO */
+.page-hero {
+  padding: 140px 60px 80px;
+  text-align: center;
+  position: relative; z-index: 1;
+  overflow: hidden;
+}
+.page-hero-bg {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 60% 60% at 20% 50%, rgba(155,0,255,0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 60% at 80% 50%, rgba(255,45,120,0.12) 0%, transparent 60%);
+}
+.eyebrow { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--hot-pink); margin-bottom: 16px; display: flex; align-items: center; justify-content: center; gap: 12px; }
+.eyebrow::before, .eyebrow::after { content: ''; width: 28px; height: 2px; background: var(--hot-pink); }
+.page-title { font-family: 'Playfair Display', serif; font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 900; line-height: 1.05; letter-spacing: -0.03em; margin-bottom: 20px; }
+.page-title em { font-style: italic; background: linear-gradient(135deg, var(--hot-pink), var(--electric-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.page-sub { font-size: 1.05rem; color: var(--text-muted); font-weight: 300; max-width: 540px; margin: 0 auto; line-height: 1.7; }
+
+/* AUDIENCE TOGGLE */
+.audience-toggle {
+  display: flex;
+  justify-content: center;
+  gap: 0;
+  margin: 60px auto 0;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  padding: 4px;
+  max-width: 320px;
+  position: relative; z-index: 1;
+}
+.aud-btn {
+  flex: 1; padding: 12px 24px; border-radius: 100px; border: none;
+  font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 500;
+  cursor: pointer; transition: all 0.3s; color: var(--text-muted); background: none;
+}
+.aud-btn.active {
+  background: linear-gradient(135deg, var(--hot-pink), var(--electric-purple));
+  color: white; box-shadow: 0 4px 20px rgba(255,45,120,0.35);
+}
+
+/* STEPS */
+.steps-section { padding: 80px 60px; position: relative; z-index: 1; max-width: 1000px; margin: 0 auto; }
+
+.audience-panel { display: none; }
+.audience-panel.active { display: block; }
+
+.steps-list { display: flex; flex-direction: column; gap: 0; position: relative; }
+.steps-list::before {
+  content: '';
+  position: absolute;
+  left: 39px; top: 60px; bottom: 60px;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--hot-pink), var(--electric-purple), var(--cyan));
+  opacity: 0.3;
+}
+
+.step {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 32px;
+  padding: 40px 0;
+  border-bottom: 1px solid var(--border);
+  align-items: start;
+}
+.step:last-child { border-bottom: none; }
+
+.step-num-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  position: relative; z-index: 1;
+}
+.step-num {
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Abril Fatface', cursive; font-size: 1.6rem;
+  background: var(--card-bg);
+  border: 2px solid rgba(255,255,255,0.08);
+  color: white;
+  transition: all 0.3s;
+  flex-shrink: 0;
+}
+.step:hover .step-num {
+  background: linear-gradient(135deg, var(--hot-pink), var(--electric-purple));
+  border-color: transparent;
+  box-shadow: 0 0 30px rgba(255,45,120,0.4);
+}
+.step-icon { font-size: 2rem; }
+
+.step-content { padding-top: 12px; }
+.step-title { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 700; color: white; margin-bottom: 10px; letter-spacing: -0.01em; }
+.step-desc { font-size: 0.95rem; color: var(--text-muted); line-height: 1.8; font-weight: 300; margin-bottom: 16px; }
+.step-detail {
+  display: flex; flex-wrap: wrap; gap: 8px;
+}
+.step-tag {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  color: var(--text-muted);
+  padding: 5px 14px; border-radius: 100px;
+  font-size: 0.78rem; font-weight: 400;
+}
+
+/* TRUST STRIP */
+.trust-section {
+  background: linear-gradient(135deg, rgba(155,0,255,0.08), rgba(255,45,120,0.08));
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 60px;
+  position: relative; z-index: 1;
+}
+.trust-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 40px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+.trust-item { text-align: center; }
+.trust-icon { font-size: 2rem; margin-bottom: 12px; }
+.trust-title { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; color: white; margin-bottom: 6px; }
+.trust-desc { font-size: 0.82rem; color: var(--text-muted); font-weight: 300; line-height: 1.6; }
+
+/* FAQ */
+.faq-section {
+  padding: 80px 60px 60px;
+  position: relative; z-index: 1;
+  max-width: 800px; margin: 0 auto;
+}
+.faq-item { border-bottom: 1px solid var(--border); }
+.faq-question { width: 100%; text-align: left; background: none; border: none; padding: 22px 0; display: flex; justify-content: space-between; align-items: center; font-family: 'DM Sans', sans-serif; font-size: 0.95rem; font-weight: 500; color: var(--text-light); cursor: pointer; transition: color 0.2s; }
+.faq-question:hover { color: var(--hot-pink); }
+.faq-icon { font-size: 1.2rem; transition: transform 0.3s; color: var(--hot-pink); }
+.faq-item.open .faq-icon { transform: rotate(45deg); }
+.faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.4s ease, padding 0.3s; }
+.faq-item.open .faq-answer { max-height: 300px; padding-bottom: 20px; }
+.faq-answer p { font-size: 0.88rem; color: var(--text-muted); line-height: 1.7; font-weight: 300; }
+
+/* CTA */
+.cta-section { padding: 60px; position: relative; z-index: 1; }
+.cta-box {
+  max-width: 900px; margin: 0 auto;
+  background: linear-gradient(135deg, rgba(155,0,255,0.18), rgba(255,45,120,0.18));
+  border: 1px solid rgba(255,45,120,0.3); border-radius: 32px;
+  padding: 72px 60px; text-align: center; position: relative; overflow: hidden;
+}
+.cta-box::before { content: '✨'; position: absolute; font-size: 10rem; opacity: 0.04; top: -20px; right: -20px; }
+.cta-title { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem, 3vw, 2.6rem); font-weight: 900; line-height: 1.1; margin-bottom: 16px; }
+.cta-title em { font-style: italic; background: linear-gradient(135deg, var(--acid-yellow), var(--hot-pink)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.cta-sub { color: var(--text-muted); font-size: 1rem; font-weight: 300; line-height: 1.7; margin-bottom: 36px; max-width: 480px; margin-left: auto; margin-right: auto; }
+.cta-buttons { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+.btn-primary { background: linear-gradient(135deg, var(--hot-pink), var(--electric-purple)); border: none; color: white; padding: 16px 40px; border-radius: 100px; font-family: 'DM Sans', sans-serif; font-size: 1rem; font-weight: 500; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; text-decoration: none; display: inline-block; }
+.btn-primary:hover { transform: translateY(-3px); box-shadow: 0 20px 50px rgba(255,45,120,0.5); }
+.btn-secondary { background: transparent; border: 1px solid rgba(255,255,255,0.2); color: var(--text-light); padding: 16px 40px; border-radius: 100px; font-family: 'DM Sans', sans-serif; font-size: 1rem; font-weight: 400; cursor: pointer; transition: all 0.2s; text-decoration: none; display: inline-block; }
+.btn-secondary:hover { border-color: var(--hot-pink); color: var(--hot-pink); transform: translateY(-2px); }
+
+/* FOOTER */
+footer { padding: 60px 60px 36px; border-top: 1px solid var(--border); background: var(--card-bg-2); position: relative; z-index: 1; }
+.footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 60px; margin-bottom: 48px; }
+.footer-brand p { color: var(--text-muted); font-size: 0.85rem; line-height: 1.7; font-weight: 300; margin-top: 14px; max-width: 240px; }
+.footer-col h4 { font-size: 0.65rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 18px; }
+.footer-col ul { list-style: none; }
+.footer-col li { margin-bottom: 10px; }
+.footer-col a { color: rgba(255,232,255,0.4); text-decoration: none; font-size: 0.85rem; font-weight: 300; transition: color 0.2s; }
+.footer-col a:hover { color: var(--hot-pink); }
+.footer-bottom { display: flex; align-items: center; justify-content: space-between; padding-top: 28px; border-top: 1px solid var(--border); font-size: 0.75rem; color: rgba(255,232,255,0.22); }
+.footer-socials { display: flex; gap: 10px; }
+.social-btn { width: 34px; height: 34px; border-radius: 50%; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: center; font-size: 0.9rem; cursor: pointer; transition: all 0.2s; text-decoration: none; }
+.social-btn:hover { background: rgba(255,45,120,0.15); border-color: var(--hot-pink); transform: translateY(-2px); }
+
+.fade-up { opacity: 0; transform: translateY(28px); transition: opacity 0.6s, transform 0.6s; }
+.fade-up.visible { opacity: 1; transform: translateY(0); }
+
+/* HIDE CURSOR ON TOUCH */
+@media (pointer: coarse) { body { cursor: auto; } .cursor, .cursor-dot { display: none; } }
+
+@media (max-width: 900px) {
+  nav { padding: 16px 24px; }
+  .nav-links { display: none; }
+  .page-hero { padding: 110px 24px 60px; }
+  .steps-section { padding: 60px 24px; }
+  .steps-list::before { left: 31px; }
+  .step { grid-template-columns: 64px 1fr; gap: 20px; }
+  .step-num { width: 64px; height: 64px; font-size: 1.2rem; }
+  .trust-section { padding: 48px 24px; }
+  .trust-grid { grid-template-columns: 1fr 1fr; gap: 28px; }
+  .faq-section { padding: 60px 24px 48px; }
+  .cta-section { padding: 48px 24px; }
+  .cta-box { padding: 48px 32px; }
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+  .footer-bottom { flex-direction: column; gap: 16px; text-align: center; }
+}
+@media (max-width: 480px) {
+  .page-hero { padding: 90px 20px 48px; }
+  .steps-section { padding: 48px 20px; }
+  .step { grid-template-columns: 56px 1fr; gap: 16px; }
+  .step-num { width: 56px; height: 56px; font-size: 1rem; }
+  .trust-grid { grid-template-columns: 1fr 1fr; gap: 20px; }
+  .cta-box { padding: 40px 20px; }
+  .cta-buttons { flex-direction: column; }
+  .btn-primary, .btn-secondary { width: 100%; text-align: center; }
+  .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+  footer { padding: 48px 20px 28px; }
+}
+</style>
+</head>
+<body>
+
+<canvas class="glitter-canvas" id="glitterCanvas"></canvas>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-dot" id="cursorDot"></div>
+
+<nav>
+  <a href="dragbook.html" class="logo">DragBook <span>The UK's drag marketplace</span></a>
+  <ul class="nav-links">
+    <li><a href="dragbook-browse.html">Find Performers</a></li>
+    <li><a href="dragbook-how-it-works.html" class="active">How It Works</a></li>
+    <li><a href="dragbook-pricing.html">Pricing</a></li>
+    <li><a href="dragbook-pricing.html" class="btn-nav">List Your Act ✨</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="page-hero">
+  <div class="page-hero-bg"></div>
+  <div class="eyebrow">Simple Process</div>
+  <h1 class="page-title">How DragBook <em>Works</em></h1>
+  <p class="page-sub">Whether you're booking a performer for your event or listing your act for the world to find — it takes minutes.</p>
+  <div class="audience-toggle">
+    <button class="aud-btn active" onclick="switchAudience('booker', this)">I'm a Booker</button>
+    <button class="aud-btn" onclick="switchAudience('performer', this)">I'm a Performer</button>
+  </div>
+</div>
+
+<!-- STEPS -->
+<div class="steps-section">
+
+  <!-- BOOKER STEPS -->
+  <div class="audience-panel active" id="panel-booker">
+    <div class="steps-list">
+
+      <div class="step fade-up">
+        <div class="step-num-wrap">
+          <div class="step-num">01</div>
+          <div class="step-icon">🔍</div>
+        </div>
+        <div class="step-content">
+          <div class="step-title">Search for performers</div>
+          <p class="step-desc">Tell us what you need — a hen party host, wedding crasher, drag bingo queen, corporate MC. Filter by location, style, budget and availability. Every performer on DragBook is verified and reviewed by real event organisers.</p>
+          <div class="step-detail">
+            <span class="step-tag">📍 Filter by location</span>
+            <span class="step-tag">🎭 Filter by act type</span>
+            <span class="step-tag">💷 Set your budget</span>
+            <span class="step-tag">📅 Check availability</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="step fade-up">
+        <div class="step-num-wrap">
+          <div class="step-num">02</div>
+          <div class="step-icon">💬</div>
+        </div>
+        <div class="step-content">
+          <div class="step-title">Send an enquiry</div>
+          <p class="step-desc">Found someone you like? Send them a direct enquiry with your event details — date, venue, guest count, and what you're after. No middlemen. No agency calls. The performer gets your message directly and typically responds within a few hours.</p>
+          <div class="step-detail">
+            <span class="step-tag">⚡ Most respond in 2 hours</span>
+            <span class="step-tag">📩 Direct messages only</span>
+            <span class="step-tag">🚫 No agency fees</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="step fade-up">
+        <div class="step-num-wrap">
+          <div class="step-num">03</div>
+          <div class="step-icon">🔒</div>
+        </div>
+        <div class="step-content">
+          <div class="step-title">Confirm and pay a deposit</div>
+          <p class="step-desc">Once you've agreed the details, confirm your booking through DragBook. A deposit is held securely on the platform — it only releases to the performer after your event. You're protected against no-shows and last-minute cancellations.</p>
+          <div class="step-detail">
+            <span class="step-tag">🛡️ Deposit protected</span>
+            <span class="step-tag">💳 Secure payment</span>
+            <span class="step-tag">✅ Cancellation cover</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="step fade-up">
+        <div class="step-num-wrap">
+          <div class="step-num">04</div>
+          <div class="step-icon">🎉</div>
+        </div>
+        <div class="step-content">
+          <div class="step-title">Enjoy your event — then review</div>
+          <p class="step-desc">Your performer arrives, does their thing, and absolutely makes the night. After the event, leave a review to help other bookers and release the deposit. That's it — pure fabulousness, start to finish.</p>
+          <div class="step-detail">
+            <span class="step-tag">⭐ Leave a review</span>
+            <span class="step-tag">💰 Deposit auto-released</span>
+            <span class="step-tag">🔁 Easy to rebook</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- PERFORMER STEPS -->
+  <div class="audience-panel" id="panel-performer">
+    <div class="steps-list">
+
+      <div class="step fade-up">
+        <div class="step-num-wrap">
+          <div class="step-num">01</div>
+          <div class="step-icon">✍️</div>
+        </div>
+        <div class="step-content">
+          <div class="step-title">Create your free profile</div>
+          <p class="step-desc">Sign up and build your performer profile in minutes. Add your act name, photos, show reel, event specialisms, location, and your pricing. The Free tier is genuinely free — no credit card, no tricks.</p>
+          <div class="step-detail">
+            <span class="step-tag">🆓 Free forever tier</span>
+            <span class="step-tag">📸 Upload photos & video</span>
+            <span class="step-tag">💷 Set your own rates</span>
+            <span class="step-tag">📍 Set your travel range</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="step fade-up">
+        <div class="step-num-wrap">
+          <div class="step-num">02</div>
+          <div class="step-icon">✅</div>
+        </div>
+        <div class="step-content">
+          <div class="step-title">Get verified</div>
+          <p class="step-desc">Verified performers get significantly more bookings. Submit a short clip of a live performance, confirm your identity and public liability insurance, and we'll review within 48 hours. Verification is free.</p>
+          <div class="step-detail">
+            <span class="step-tag">🎬 Submit a clip</span>
+            <span class="step-tag">🪪 ID verification</span>
+            <span class="step-tag">48hr turnaround</span>
+            <span class="step-tag">✨ Verified badge unlocked</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="step fade-up">
+        <div class="step-num-wrap">
+          <div class="step-num">03</div>
+          <div class="step-icon">📩</div>
+        </div>
+        <div class="step-content">
+          <div class="step-title">Receive and respond to enquiries</div>
+          <p class="step-desc">When a booker finds you and sends an enquiry, you'll get notified immediately. Review the event details, ask any questions, and confirm when you're happy. You're in control — accept only what works for you.</p>
+          <div class="step-detail">
+            <span class="step-tag">🔔 Instant notifications</span>
+            <span class="step-tag">💬 Direct messaging</span>
+            <span class="step-tag">📅 Calendar management</span>
+            <span class="step-tag">❌ Decline anything</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="step fade-up">
+        <div class="step-num-wrap">
+          <div class="step-num">04</div>
+          <div class="step-icon">💰</div>
+        </div>
+        <div class="step-content">
+          <div class="step-title">Perform and get paid</div>
+          <p class="step-desc">Do what you do best. After the event, the booker releases your deposit and DragBook transfers your payment — minus just 3%. No agency taking 20–35%. No waiting weeks. Your money, in your account.</p>
+          <div class="step-detail">
+            <span class="step-tag">Only 3% platform fee</span>
+            <span class="step-tag">⚡ Fast payout</span>
+            <span class="step-tag">🏦 Direct bank transfer</span>
+            <span class="step-tag">📊 Earnings dashboard</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- TRUST -->
+<div class="trust-section fade-up">
+  <div class="trust-grid">
+    <div class="trust-item">
+      <div class="trust-icon">🔒</div>
+      <div class="trust-title">Protected Deposits</div>
+      <p class="trust-desc">Payments are held securely and only released after your event completes successfully.</p>
+    </div>
+    <div class="trust-item">
+      <div class="trust-icon">✅</div>
+      <div class="trust-title">Verified Performers</div>
+      <p class="trust-desc">Every verified performer has submitted a performance clip, confirmed ID, and holds public liability insurance.</p>
+    </div>
+    <div class="trust-item">
+      <div class="trust-icon">⭐</div>
+      <div class="trust-title">Real Reviews Only</div>
+      <p class="trust-desc">Reviews are only possible after a confirmed, completed booking. No fake testimonials.</p>
+    </div>
+    <div class="trust-item">
+      <div class="trust-icon">🚫</div>
+      <div class="trust-title">Zero Agency Fees</div>
+      <p class="trust-desc">Performers keep 97% of every booking. Bookers pay what the performer charges — nothing added on top.</p>
+    </div>
+  </div>
+</div>
+
+<!-- FAQ -->
+<div class="faq-section fade-up">
+  <div style="text-align:center;margin-bottom:48px;">
+    <div class="eyebrow" style="justify-content:center;">Questions</div>
+    <h2 style="font-family:'Playfair Display',serif;font-size:clamp(1.8rem,3vw,2.6rem);font-weight:700;letter-spacing:-0.02em;line-height:1.1;">Got <em style="font-style:italic;background:linear-gradient(135deg,var(--hot-pink),var(--electric-purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Questions?</em></h2>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-question" onclick="toggleFaq(this)"><span>Is DragBook free to use as a booker?</span><span class="faq-icon">+</span></button>
+    <div class="faq-answer"><p>Completely free. You pay the performer's stated fee — nothing is added on top by DragBook. The 3% platform fee comes out of the performer's payment, not yours.</p></div>
+  </div>
+  <div class="faq-item">
+    <button class="faq-question" onclick="toggleFaq(this)"><span>What if a performer cancels on me?</span><span class="faq-icon">+</span></button>
+    <div class="faq-answer"><p>Your deposit is fully refunded if a performer cancels. We also help you find a replacement quickly. Performers who cancel are flagged on the platform and may lose their verified status.</p></div>
+  </div>
+  <div class="faq-item">
+    <button class="faq-question" onclick="toggleFaq(this)"><span>How do I know performers are who they say they are?</span><span class="faq-icon">+</span></button>
+    <div class="faq-answer"><p>Verified performers have submitted a live performance clip, undergone identity verification, and confirmed they hold public liability insurance. The Verified badge only appears on profiles that have passed all three checks.</p></div>
+  </div>
+  <div class="faq-item">
+    <button class="faq-question" onclick="toggleFaq(this)"><span>Can I book for events outside the UK?</span><span class="faq-icon">+</span></button>
+    <div class="faq-answer"><p>DragBook is currently UK-focused, but many performers are available for international events at their discretion. Check individual profiles for travel availability and use the enquiry form to discuss international bookings directly.</p></div>
+  </div>
+  <div class="faq-item">
+    <button class="faq-question" onclick="toggleFaq(this)"><span>How quickly will a performer respond to my enquiry?</span><span class="faq-icon">+</span></button>
+    <div class="faq-answer"><p>Most verified performers respond within 2–4 hours. Each profile shows the performer's typical response time. If you need someone urgently, filter by "Available this weekend" and message several performers at once.</p></div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="cta-section fade-up">
+  <div class="cta-box">
+    <div class="cta-title">Ready to get <em>fabulous?</em></div>
+    <p class="cta-sub">Find your perfect drag performer in minutes, or list your act and start getting booked today.</p>
+    <div class="cta-buttons">
+      <a href="dragbook-browse.html" class="btn-primary">Find a Performer 👑</a>
+      <a href="dragbook-pricing.html" class="btn-secondary">List Your Act 💄</a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="dragbook.html" class="logo">DragBook</a>
+      <p>The UK's only dedicated marketplace connecting drag performers with event organisers. No agency fees. No gatekeeping.</p>
+    </div>
+    <div class="footer-col"><h4>For Bookers</h4><ul><li><a href="dragbook-browse.html">Find a Performer</a></li><li><a href="dragbook-browse.html">Browse by Event</a></li><li><a href="dragbook-how-it-works.html">How It Works</a></li><li><a href="#">Pricing Guide</a></li></ul></div>
+    <div class="footer-col"><h4>For Performers</h4><ul><li><a href="dragbook-pricing.html">List Your Act</a></li><li><a href="#">Dashboard</a></li><li><a href="#">Community</a></li><li><a href="#">Resources</a></li></ul></div>
+    <div class="footer-col"><h4>Company</h4><ul><li><a href="#">About</a></li><li><a href="#">Blog</a></li><li><a href="#">Contact</a></li><li><a href="#">Terms & Privacy</a></li></ul></div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 DragBook · Built with love and glitter ✨</span>
+    <div class="footer-socials">
+      <a href="#" class="social-btn">📸</a><a href="#" class="social-btn">🎵</a>
+      <a href="#" class="social-btn">🐦</a><a href="#" class="social-btn">💼</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+const cursor = document.getElementById('cursor');
+const cursorDot = document.getElementById('cursorDot');
+document.addEventListener('mousemove', e => {
+  cursor.style.left = e.clientX-10+'px'; cursor.style.top = e.clientY-10+'px';
+  cursorDot.style.left = e.clientX-3+'px'; cursorDot.style.top = e.clientY-3+'px';
+});
+document.querySelectorAll('a,button,.step').forEach(el => {
+  el.addEventListener('mouseenter', () => { cursor.style.transform='scale(2)'; cursor.style.background='rgba(255,45,120,0.15)'; });
+  el.addEventListener('mouseleave', () => { cursor.style.transform='scale(1)'; cursor.style.background='transparent'; });
+});
+
+const canvas = document.getElementById('glitterCanvas');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+const particles = [];
+const colors = ['#FF2D78','#9B00FF','#FFE600','#00F5FF','#FF69B4'];
+for(let i=0;i<80;i++) particles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,size:Math.random()*2.5+0.5,color:colors[Math.floor(Math.random()*colors.length)],speedY:Math.random()*0.3+0.1,speedX:(Math.random()-0.5)*0.2,twinkle:Math.random()*Math.PI*2});
+function animate(){ctx.clearRect(0,0,canvas.width,canvas.height);particles.forEach(p=>{p.twinkle+=0.025;ctx.save();ctx.globalAlpha=0.2+Math.abs(Math.sin(p.twinkle))*0.7;ctx.fillStyle=p.color;ctx.shadowBlur=5;ctx.shadowColor=p.color;ctx.beginPath();ctx.arc(p.x,p.y,p.size,0,Math.PI*2);ctx.fill();ctx.restore();p.y-=p.speedY;p.x+=p.speedX;if(p.y<-5){p.y=canvas.height+5;p.x=Math.random()*canvas.width;}});requestAnimationFrame(animate);}
+animate();
+window.addEventListener('resize',()=>{canvas.width=window.innerWidth;canvas.height=window.innerHeight;});
+
+const observer = new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');}),{threshold:0.08});
+document.querySelectorAll('.fade-up').forEach(el=>observer.observe(el));
+
+function switchAudience(type, btn) {
+  document.querySelectorAll('.aud-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.audience-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-'+type).classList.add('active');
+  // Re-observe fade-up elements in newly shown panel
+  document.querySelectorAll('#panel-'+type+' .fade-up').forEach(el => {
+    el.classList.remove('visible');
+    setTimeout(() => observer.observe(el), 50);
+  });
+}
+
+function toggleFaq(btn) {
+  const item = btn.closest('.faq-item');
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+  if(!isOpen) item.classList.add('open');
+}
+</script>
+</body>
+</html>

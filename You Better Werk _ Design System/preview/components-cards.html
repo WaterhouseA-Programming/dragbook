@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Barlow+Condensed:wght@700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#0A0008; font-family:'DM Sans',sans-serif; padding:28px; display:flex; gap:20px; align-items:flex-start; flex-wrap:wrap; }
+
+.card {
+  background:#1A0020; border-radius:20px; overflow:hidden;
+  border:1px solid rgba(255,255,255,0.06);
+  width:262px; height:490px;
+  flex-shrink:0; display:flex; flex-direction:column;
+  transition:transform .3s,box-shadow .3s,border-color .3s;
+  cursor:pointer; position:relative;
+}
+.card:hover { transform:translateY(-6px); box-shadow:0 24px 50px rgba(0,0,0,0.45),0 0 30px rgba(255,45,120,0.12); border-color:rgba(255,45,120,0.3); }
+
+/* FEATURED card — over the top */
+.card.featured {
+  width:262px;
+  border:2px solid transparent;
+  background:linear-gradient(#1A0020,#1A0020) padding-box,
+             linear-gradient(135deg,#FF2D78,#FFE600,#9B00FF,#00F5FF,#FF2D78) border-box;
+  animation:featuredPulse 3s ease-in-out infinite;
+  box-shadow:0 0 40px rgba(255,45,120,0.3),0 0 80px rgba(155,0,255,0.15);
+}
+.card.featured:hover {
+  transform:translateY(-8px) scale(1.02);
+  box-shadow:0 30px 70px rgba(0,0,0,0.5),0 0 60px rgba(255,45,120,0.5),0 0 100px rgba(155,0,255,0.3);
+}
+@keyframes featuredPulse {
+  0%,100% { box-shadow:0 0 40px rgba(255,45,120,0.3),0 0 80px rgba(155,0,255,0.15); }
+  50% { box-shadow:0 0 60px rgba(255,45,120,0.5),0 0 100px rgba(155,0,255,0.3),0 0 20px rgba(255,230,0,0.2); }
+}
+
+/* Featured banner above card */
+.featured-crown {
+  position:absolute; top:10px; left:50%; transform:translateX(-50%);
+  background:linear-gradient(135deg,#FF2D78,#FFE600,#9B00FF);
+  color:white; padding:5px 16px; border-radius:100px;
+  font-family:'Abril Fatface',cursive; font-size:0.68rem; letter-spacing:0.08em;
+  white-space:nowrap; z-index:10;
+  box-shadow:0 0 20px rgba(255,45,120,0.6);
+  animation:crownBounce 2s ease-in-out infinite;
+}
+@keyframes crownBounce { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(-3px)} }
+
+.media { height:220px; position:relative; overflow:hidden; flex-shrink:0; }
+.slide { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:3.8rem; opacity:0; transition:opacity .45s; pointer-events:none; }
+.slide.active { opacity:1; pointer-events:auto; }
+.vid-slide { position:absolute; inset:0; background:#050005; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; opacity:0; transition:opacity .45s; pointer-events:none; }
+.vid-slide.active { opacity:1; pointer-events:auto; }
+.play-btn { width:52px; height:52px; background:linear-gradient(135deg,#FF2D78,#9B00FF); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.3rem; box-shadow:0 0 30px rgba(255,45,120,0.5); }
+
+/* Manual nav arrows — show on hover */
+.arr { position:absolute; top:50%; transform:translateY(-50%); background:rgba(0,0,0,0.65); backdrop-filter:blur(8px); border:1px solid rgba(255,255,255,0.15); color:white; width:30px; height:30px; border-radius:50%; font-size:0.85rem; cursor:pointer; z-index:5; opacity:0; transition:opacity .2s,background .2s; display:flex; align-items:center; justify-content:center; }
+.card:hover .arr { opacity:1; }
+.arr:hover { background:rgba(255,45,120,0.5) !important; }
+.arr.prev { left:9px; }
+.arr.next { right:9px; }
+
+/* Progress */
+.progress-bar { position:absolute; bottom:0; left:0; right:0; height:2px; background:rgba(255,255,255,0.08); z-index:4; }
+.progress-fill { height:100%; background:linear-gradient(to right,#FF2D78,#9B00FF); transition:width .08s linear; }
+
+/* Dots */
+.dots { position:absolute; bottom:10px; left:50%; transform:translateX(-50%); display:flex; gap:5px; z-index:3; }
+.dot { width:6px; height:6px; border-radius:50%; background:rgba(255,255,255,0.3); border:none; cursor:pointer; padding:0; transition:all .2s; }
+.dot.active { background:white; width:16px; border-radius:3px; }
+
+.badge-ov { position:absolute; top:11px; right:11px; padding:4px 10px; border-radius:100px; font-size:0.62rem; font-weight:500; z-index:3; }
+.fav { position:absolute; top:11px; left:11px; width:30px; height:30px; background:rgba(0,0,0,0.6); backdrop-filter:blur(8px); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.82rem; z-index:3; border:1px solid rgba(255,255,255,0.08); }
+
+.body { padding:14px 18px 18px; display:flex; flex-direction:column; flex:1; min-height:0; }
+.name { font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:1.22rem; color:white; margin-bottom:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.tagline { font-size:0.7rem; color:#FF2D78; font-style:italic; margin-bottom:7px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.loc { font-size:0.7rem; color:#C084C8; margin-bottom:8px; }
+.tags { display:flex; gap:5px; margin-bottom:9px; overflow:hidden; }
+.tag { background:rgba(155,0,255,0.1); border:1px solid rgba(155,0,255,0.22); color:#C084FF; padding:3px 8px; border-radius:100px; font-size:0.6rem; white-space:nowrap; flex-shrink:0; }
+.footer-row { display:flex; align-items:center; justify-content:space-between; padding-top:9px; border-top:1px solid rgba(255,255,255,0.06); margin-top:auto; }
+.rating { display:flex; align-items:center; gap:4px; font-size:0.74rem; color:#FFE8FF; }
+.stars { color:#FFE600; font-size:0.62rem; }
+.price { font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:0.98rem; color:white; }
+.price span { font-family:'DM Sans',sans-serif; font-size:0.6rem; color:#C084C8; font-weight:300; }
+.btn-book { width:100%; margin-top:9px; background:linear-gradient(135deg,#FF2D78,#9B00FF); border:none; color:white; padding:10px; border-radius:100px; font-family:'DM Sans',sans-serif; font-size:0.78rem; font-weight:500; cursor:pointer; opacity:0; transform:translateY(5px); transition:opacity .2s,transform .2s; }
+.card:hover .btn-book { opacity:1; transform:translateY(0); }
+
+/* Featured book btn always visible + extra */
+.card.featured .btn-book { opacity:1; transform:none; background:linear-gradient(135deg,#FF2D78,#FFE600,#9B00FF); box-shadow:0 0 20px rgba(255,45,120,0.4); animation:btnGlow 2s ease-in-out infinite; }
+@keyframes btnGlow { 0%,100%{box-shadow:0 0 20px rgba(255,45,120,0.4)} 50%{box-shadow:0 0 40px rgba(255,45,120,0.7),0 0 20px rgba(255,230,0,0.3)} }
+
+/* Featured sparkle overlay */
+.sparkle-overlay { position:absolute; inset:0; pointer-events:none; z-index:2; overflow:hidden; }
+.sp { position:absolute; font-size:1rem; animation:spFloat 3s ease-in-out infinite; opacity:0; }
+@keyframes spFloat { 0%{opacity:0;transform:translateY(0) scale(0.5)} 20%{opacity:0.9} 80%{opacity:0.6} 100%{opacity:0;transform:translateY(-60px) scale(1.2)} }
+</style></head><body>
+
+<!-- STANDARD CARD -->
+<div class="card" id="c1" onmouseenter="pauseCard('c1')" onmouseleave="resumeCard('c1')">
+  <div class="media">
+    <div class="slide active" style="background:linear-gradient(135deg,#FF2D78,#9B00FF);">👑</div>
+    <div class="vid-slide" id="c1-vid"><div class="play-btn">▶</div><span style="font-size:.7rem;color:#C084C8;font-family:'DM Sans',sans-serif;">Showreel · 3 min</span></div>
+    <div class="slide" style="background:linear-gradient(135deg,#9B00FF,#00F5FF);">🎤</div>
+    <div class="slide" style="background:linear-gradient(135deg,#FFE600,#FF2D78);">✨</div>
+    <div class="badge-ov" style="background:rgba(0,245,255,0.12);border:1px solid rgba(0,245,255,0.35);color:#00F5FF;">✓ We checked. She's real.</div>
+    <div class="fav">🤍</div>
+    <button class="arr prev" onclick="manualSlide('c1',-1,4);event.stopPropagation()">‹</button>
+    <button class="arr next" onclick="manualSlide('c1',1,4);event.stopPropagation()">›</button>
+    <div class="dots" id="c1-dots"><button class="dot active"></button><button class="dot"></button><button class="dot"></button><button class="dot"></button></div>
+    <div class="progress-bar"><div class="progress-fill" id="c1-prog"></div></div>
+  </div>
+  <div class="body">
+    <div class="name">Scarlett Voltage</div>
+    <div class="tagline">"Zero chill. Maximum fabulousness."</div>
+    <div class="loc">📍 London · travels UK-wide</div>
+    <div class="tags"><span class="tag">Hen Parties</span><span class="tag">Drag Bingo</span><span class="tag">Corporate</span></div>
+    <div class="footer-row">
+      <div class="rating"><span class="stars">★★★★★</span> 5.0 (47)</div>
+      <div class="price">from £380 <span>/ event</span></div>
+    </div>
+    <button class="btn-book">Book Scarlett →</button>
+  </div>
+</div>
+
+<!-- MINIMAL INFO CARD -->
+<div class="card" id="c2" onmouseenter="pauseCard('c2')" onmouseleave="resumeCard('c2')">
+  <div class="media">
+    <div class="slide active" style="background:linear-gradient(135deg,#FFE600,#FF2D78);">⚡</div>
+    <div class="vid-slide" id="c2-vid"><div class="play-btn">▶</div><span style="font-size:.7rem;color:#C084C8;font-family:'DM Sans',sans-serif;">Pride set · 5 min</span></div>
+    <div class="slide" style="background:linear-gradient(135deg,#9B00FF,#FF2D78);">🌈</div>
+    <div class="badge-ov" style="background:rgba(255,230,0,0.1);border:1px solid rgba(255,230,0,0.3);color:#FFE600;">The crowd went feral</div>
+    <div class="fav">🤍</div>
+    <button class="arr prev" onclick="manualSlide('c2',-1,3);event.stopPropagation()">‹</button>
+    <button class="arr next" onclick="manualSlide('c2',1,3);event.stopPropagation()">›</button>
+    <div class="dots" id="c2-dots"><button class="dot active"></button><button class="dot"></button><button class="dot"></button></div>
+    <div class="progress-bar"><div class="progress-fill" id="c2-prog"></div></div>
+  </div>
+  <div class="body">
+    <div class="name">Rex Havoc</div>
+    <div class="tagline" style="color:rgba(192,132,200,0.35);font-style:normal;">No tagline added yet</div>
+    <div class="loc">📍 Brighton · South East</div>
+    <div class="tags"><span class="tag">Drag King</span><span class="tag">Pride Events</span></div>
+    <div class="footer-row">
+      <div class="rating"><span class="stars">★★★★★</span> 5.0 (38)</div>
+      <div class="price">from £320 <span>/ event</span></div>
+    </div>
+    <button class="btn-book">Book Rex →</button>
+  </div>
+</div>
+
+<!-- FEATURED CARD — absolutely unhinged -->
+<div class="card featured" id="c3" onmouseenter="pauseCard('c3')" onmouseleave="resumeCard('c3')" style="margin-top:18px;">
+  <div class="sparkle-overlay" id="sparkles"></div>
+  <div class="media">
+    <div class="featured-crown">👑 SLAY OF THE WEEK 👑</div>
+    <div class="slide active" style="background:linear-gradient(135deg,#FF2D78,#FFE600,#9B00FF);">🔥</div>
+    <div class="vid-slide" id="c3-vid">
+      <div class="play-btn" style="background:linear-gradient(135deg,#FF2D78,#FFE600);">▶</div>
+      <span style="font-size:.7rem;color:#C084C8;font-family:'DM Sans',sans-serif;">Wedding crasher · 2 min</span>
+    </div>
+    <div class="slide" style="background:linear-gradient(135deg,#FFE600,#FF2D78);">💃</div>
+    <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,45,120,0.15),rgba(255,230,0,0.08),rgba(155,0,255,0.15));pointer-events:none;z-index:1;animation:featGlow 3s ease-in-out infinite;"></div>
+    <style>@keyframes featGlow{0%,100%{opacity:.6}50%{opacity:1}}</style>
+    <div class="badge-ov" style="background:linear-gradient(135deg,rgba(255,45,120,0.3),rgba(255,230,0,0.2));border:1px solid rgba(255,230,0,0.5);color:#FFE600;font-family:'Abril Fatface',cursive;font-size:0.6rem;letter-spacing:0.06em;z-index:4;top:52px;">MOTHER HAS ARRIVED</div>
+    <div class="fav" style="background:rgba(255,45,120,0.3);border-color:rgba(255,45,120,0.5);">❤️</div>
+    <button class="arr prev" onclick="manualSlide('c3',-1,3);event.stopPropagation()">‹</button>
+    <button class="arr next" onclick="manualSlide('c3',1,3);event.stopPropagation()">›</button>
+    <div class="dots" id="c3-dots"><button class="dot active"></button><button class="dot"></button><button class="dot"></button></div>
+    <div class="progress-bar"><div class="progress-fill" id="c3-prog" style="background:linear-gradient(to right,#FF2D78,#FFE600,#9B00FF)"></div></div>
+  </div>
+  <div class="body">
+    <div class="name" style="background:linear-gradient(135deg,#FF2D78,#FFE600);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-size:1.3rem;">Destiny Devine</div>
+    <div class="tagline" style="color:#FFE600;">"I came, I saw, I slayed the bar tab."</div>
+    <div class="loc" style="color:#C084FF;">📍 Glasgow · Scotland · she goes everywhere</div>
+    <div class="tags">
+      <span class="tag" style="background:rgba(255,45,120,0.15);border-color:rgba(255,45,120,0.3);color:#FF2D78;">Live Singing</span>
+      <span class="tag" style="background:rgba(255,45,120,0.15);border-color:rgba(255,45,120,0.3);color:#FF2D78;">Cabaret</span>
+      <span class="tag" style="background:rgba(255,45,120,0.15);border-color:rgba(255,45,120,0.3);color:#FF2D78;">Weddings</span>
+    </div>
+    <div class="footer-row">
+      <div class="rating"><span class="stars" style="font-size:0.75rem;">★★★★★</span> <span style="color:#FFE600;font-weight:500;">5.0</span> (18)</div>
+      <div class="price" style="background:linear-gradient(135deg,#FF2D78,#FFE600);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">from £410 <span style="-webkit-text-fill-color:#C084C8;">/ event</span></div>
+    </div>
+    <button class="btn-book" style="font-weight:600;letter-spacing:0.04em;">Book Destiny — if you dare →</button>
+  </div>
+</div>
+
+<script>
+const INTERVAL = 3200;
+const cards = {
+  c1:{total:4,cur:0,timer:null,progTimer:null,prog:0},
+  c2:{total:3,cur:0,timer:null,progTimer:null,prog:0},
+  c3:{total:3,cur:0,timer:null,progTimer:null,prog:0},
+};
+
+function getSlides(id){
+  return [...document.getElementById(id).querySelector('.media').querySelectorAll('.slide,.vid-slide')];
+}
+function showSlide(id,idx){
+  const s=cards[id]; s.cur=idx;
+  getSlides(id).forEach((el,i)=>el.classList.toggle('active',i===idx));
+  document.querySelectorAll(`#${id}-dots .dot`).forEach((d,i)=>d.classList.toggle('active',i===idx));
+  s.prog=0; const f=document.getElementById(`${id}-prog`); if(f) f.style.width='0%';
+}
+function startProgress(id){
+  const s=cards[id]; if(s.progTimer) clearInterval(s.progTimer); s.prog=0;
+  s.progTimer=setInterval(()=>{
+    s.prog+=100/(INTERVAL/50);
+    const f=document.getElementById(`${id}-prog`); if(f) f.style.width=Math.min(s.prog,100)+'%';
+  },50);
+}
+function startAuto(id){
+  const s=cards[id]; if(s.timer) clearInterval(s.timer);
+  startProgress(id);
+  s.timer=setInterval(()=>{showSlide(id,(s.cur+1)%s.total);startProgress(id);},INTERVAL);
+}
+function pauseCard(id){const s=cards[id];clearInterval(s.timer);clearInterval(s.progTimer);}
+function resumeCard(id){startAuto(id);}
+function manualSlide(id,dir,total){
+  pauseCard(id);
+  showSlide(id,(cards[id].cur+dir+total)%total);
+  startAuto(id);
+}
+
+Object.keys(cards).forEach(id=>{showSlide(id,0);startAuto(id);});
+
+// Sparkles on featured card
+function spawnSparkle(){
+  const c=document.getElementById('sparkles');
+  if(!c)return;
+  const sp=document.createElement('span');
+  sp.className='sp';
+  sp.textContent=['✨','💫','⭐','🌟'][Math.floor(Math.random()*4)];
+  sp.style.left=Math.random()*90+'%';
+  sp.style.top=Math.random()*90+'%';
+  sp.style.animationDuration=(2+Math.random()*2)+'s';
+  sp.style.animationDelay=(Math.random()*1)+'s';
+  c.appendChild(sp);
+  setTimeout(()=>sp.remove(),4000);
+}
+setInterval(spawnSparkle,600);
+</script>
+</body></html>

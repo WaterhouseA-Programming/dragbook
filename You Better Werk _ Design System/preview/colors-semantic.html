@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#0A0008; font-family:'DM Sans',sans-serif; padding:24px; }
+.row { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:12px; }
+.swatch { border-radius:14px; overflow:hidden; }
+.color { height:60px; position:relative; display:flex; align-items:flex-end; padding:8px 12px; }
+.label { font-size:0.6rem; color:rgba(255,255,255,0.5); letter-spacing:0.08em; text-transform:uppercase; }
+.info { padding:10px 12px; background:#1A0020; }
+.name { font-size:0.72rem; font-weight:500; color:#FFE8FF; }
+.hex  { font-size:0.62rem; color:#C084C8; margin-top:2px; font-family:monospace; }
+</style></head><body>
+<div class="row">
+  <div class="swatch">
+    <div class="color" style="background:#0A0008;border:1px solid rgba(255,255,255,0.08);">
+      <span class="label">--deep-black</span></div>
+    <div class="info"><div class="name">Deep Black</div><div class="hex">#0A0008 · Page bg</div></div>
+  </div>
+  <div class="swatch">
+    <div class="color" style="background:#130012;border:1px solid rgba(255,255,255,0.06);">
+      <span class="label">--soft-black</span></div>
+    <div class="info"><div class="name">Soft Black</div><div class="hex">#130012 · Alt bg</div></div>
+  </div>
+  <div class="swatch">
+    <div class="color" style="background:#1A0020;border:1px solid rgba(255,255,255,0.06);">
+      <span class="label">--card-bg</span></div>
+    <div class="info"><div class="name">Card BG</div><div class="hex">#1A0020 · Cards</div></div>
+  </div>
+  <div class="swatch">
+    <div class="color" style="background:#150018;border:1px solid rgba(255,255,255,0.06);">
+      <span class="label">--card-bg-2</span></div>
+    <div class="info"><div class="name">Card BG 2</div><div class="hex">#150018 · Footer</div></div>
+  </div>
+</div>
+<div class="row">
+  <div class="swatch">
+    <div class="color" style="background:#FFE8FF;"><span class="label" style="color:#0A0008;">--text-light</span></div>
+    <div class="info"><div class="name">Text Light</div><div class="hex">#FFE8FF · Primary text</div></div>
+  </div>
+  <div class="swatch">
+    <div class="color" style="background:#C084C8;"><span class="label" style="color:#0A0008;">--text-muted</span></div>
+    <div class="info"><div class="name">Text Muted</div><div class="hex">#C084C8 · Secondary</div></div>
+  </div>
+  <div class="swatch">
+    <div class="color" style="background:rgba(255,45,120,0.3);border:1px solid rgba(255,45,120,0.5);">
+      <span class="label">--border-pink</span></div>
+    <div class="info"><div class="name">Border Pink</div><div class="hex">rgba(255,45,120,.3)</div></div>
+  </div>
+  <div class="swatch">
+    <div class="color" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);">
+      <span class="label">--border</span></div>
+    <div class="info"><div class="name">Border</div><div class="hex">rgba(255,255,255,.06)</div></div>
+  </div>
+</div>
+</body></html>
