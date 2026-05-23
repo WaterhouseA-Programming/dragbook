@@ -235,17 +235,33 @@ footer { padding: 60px 60px 36px; border-top: 1px solid var(--border); backgroun
 .fade-up { opacity: 0; transform: translateY(28px); transition: opacity 0.6s, transform 0.6s; }
 .fade-up.visible { opacity: 1; transform: translateY(0); }
 
+/* HIDE CURSOR ON TOUCH */
+@media (pointer: coarse) {
+  body { cursor: auto; }
+  .cursor, .cursor-dot { display: none; }
+}
+
 @media (max-width: 900px) {
-nav { padding: 16px 24px; }
-.nav-links { display: none; }
-.pricing-header { padding: 110px 24px 60px; }
-.pricing-grid { grid-template-columns: 1fr; padding: 0 24px 80px; }
-.price-card.featured { transform: scale(1); }
-.commission-section { padding: 60px 24px; }
-.commission-inner { grid-template-columns: 1fr; }
-.faq-section { padding: 60px 24px 80px; }
-.footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
-.footer-bottom { flex-direction: column; gap: 16px; text-align: center; }
+  nav { padding: 16px 24px; }
+  .nav-links { display: none; }
+  .pricing-header { padding: 110px 24px 60px; }
+  .pricing-grid { grid-template-columns: 1fr; padding: 0 24px 80px; }
+  .price-card.featured { transform: scale(1); }
+  .commission-section { padding: 60px 24px; }
+  .commission-inner { grid-template-columns: 1fr; }
+  .faq-section { padding: 60px 24px 80px; }
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+  .footer-bottom { flex-direction: column; gap: 16px; text-align: center; }
+}
+
+@media (max-width: 480px) {
+  .pricing-header { padding: 90px 20px 48px; }
+  .pricing-grid { padding: 0 20px 60px; }
+  .commission-section { padding: 48px 20px; }
+  .faq-section { padding: 48px 20px 60px; }
+  .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+  footer { padding: 48px 20px 28px; }
+  .toggle-wrapper { width: 100%; justify-content: center; }
 }
 </style>
 

@@ -989,18 +989,64 @@ opacity: 1;
 transform: translateY(0);
 }
 
-/* MOBILE */
+/* HIDE CURSOR ON TOUCH DEVICES */
+@media (pointer: coarse) {
+  body { cursor: auto; }
+  .cursor, .cursor-dot { display: none; }
+}
+
+/* TABLET */
 @media (max-width: 900px) {
-nav { padding: 16px 24px; }
-.nav-links { display: none; }
-section { padding: 80px 24px; }
-.stats-strip { gap: 30px; flex-wrap: wrap; }
-.how-grid { grid-template-columns: 1fr; }
-.testimonials-grid { grid-template-columns: 1fr; }
-.footer-grid { grid-template-columns: 1fr 1fr; gap: 40px; }
-.footer-bottom { flex-direction: column; gap: 20px; text-align: center; }
-.big-cta-box { padding: 48px 32px; }
-.performers-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+  nav { padding: 16px 24px; }
+  .nav-links { display: none; }
+  section { padding: 80px 24px; }
+  .stats-strip { gap: 30px; flex-wrap: wrap; }
+  .how-grid { grid-template-columns: 1fr; }
+  .testimonials-grid { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 40px; }
+  .footer-bottom { flex-direction: column; gap: 20px; text-align: center; }
+  .big-cta-box { padding: 48px 32px; }
+  .performers-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+}
+
+/* MOBILE */
+@media (max-width: 600px) {
+  .hero { padding: 100px 20px 60px; }
+
+  /* Stack the search bar vertically */
+  .search-bar {
+    flex-direction: column;
+    border-radius: 20px;
+    padding: 16px;
+    gap: 10px;
+    align-items: stretch;
+  }
+  .search-divider { display: none; }
+  .search-location { min-width: unset; padding: 8px 0; border-top: 1px solid rgba(255,255,255,0.08); }
+  .btn-search { width: 100%; padding: 14px; }
+
+  .filter-tags { gap: 8px; }
+
+  /* Stats: 2×2 grid */
+  .stats-strip {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    padding: 40px 20px;
+  }
+  .stat {
+    padding: 20px;
+    border: 1px solid rgba(255,255,255,0.04);
+  }
+
+  section { padding: 60px 20px; }
+
+  .big-cta-box { padding: 40px 24px; }
+  .cta-buttons { flex-direction: column; }
+  .btn-primary, .btn-secondary { width: 100%; text-align: center; }
+
+  .footer-grid { grid-template-columns: 1fr; gap: 32px; }
+  footer { padding: 60px 20px 32px; }
 }
 
 /* SCROLL INDICATOR */

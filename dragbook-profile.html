@@ -364,22 +364,56 @@ footer { padding: 60px 60px 36px; border-top: 1px solid var(--border); backgroun
 .fade-up { opacity: 0; transform: translateY(28px); transition: opacity 0.6s, transform 0.6s; }
 .fade-up.visible { opacity: 1; transform: translateY(0); }
 
-@media (max-width: 1100px) {
-.hero-inner { grid-template-columns: 300px 1fr; }
-.profile-body { grid-template-columns: 1fr; }
-.booking-widget { position: relative; top: 0; }
+/* HIDE CURSOR ON TOUCH */
+@media (pointer: coarse) {
+  body { cursor: auto; }
+  .cursor, .cursor-dot { display: none; }
 }
+
+@media (max-width: 1100px) {
+  .hero-inner { grid-template-columns: 300px 1fr; }
+  .profile-body { grid-template-columns: 1fr; }
+  .booking-widget { position: relative; top: 0; }
+}
+
 @media (max-width: 768px) {
-nav { padding: 16px 24px; }
-.nav-links { display: none; }
-.hero-inner { grid-template-columns: 1fr; }
-.hero-visual { height: 300px; }
-.hero-info { padding: 32px 24px; }
-.profile-body { padding: 32px 24px 80px; }
-.services-grid { grid-template-columns: 1fr; }
-.gallery { grid-template-columns: repeat(2, 1fr); }
-.footer-grid { grid-template-columns: 1fr 1fr; }
-.footer-bottom { flex-direction: column; gap: 16px; text-align: center; }
+  nav { padding: 16px 24px; }
+  .nav-links { display: none; }
+  .hero-inner { grid-template-columns: 1fr; }
+  .hero-visual { height: 260px; font-size: 5rem; }
+  .hero-info { padding: 28px 20px; }
+  .performer-name { font-size: clamp(2rem, 8vw, 3rem); }
+  .profile-stats { gap: 20px; flex-wrap: wrap; }
+  .hero-cta { flex-direction: column; }
+  .hero-cta .btn-primary, .hero-cta .btn-secondary { width: 100%; justify-content: center; }
+  .profile-body { padding: 28px 20px 60px; gap: 24px; }
+  .profile-badges { gap: 6px; }
+
+  /* Tabs: horizontally scrollable, don't wrap */
+  .tabs { overflow-x: auto; -webkit-overflow-scrolling: touch; flex-wrap: nowrap; gap: 0; }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab { white-space: nowrap; flex-shrink: 0; padding: 14px 18px; }
+
+  .services-grid { grid-template-columns: 1fr; }
+  .gallery { grid-template-columns: repeat(2, 1fr); }
+
+  /* Reviews summary: stack rating + bars */
+  .reviews-summary { flex-direction: column; gap: 20px; align-items: stretch; }
+  .rating-big { min-width: unset; display: flex; align-items: center; gap: 16px; }
+
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+  .footer-bottom { flex-direction: column; gap: 16px; text-align: center; }
+}
+
+@media (max-width: 480px) {
+  .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+  footer { padding: 48px 20px 28px; }
+
+  /* Inline 2-col grids inside profile tabs */
+  div[style*="grid-template-columns: 1fr 1fr"] {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+  }
 }
 </style>
 
