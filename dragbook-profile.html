@@ -451,19 +451,18 @@ footer { padding: 60px 60px 36px; border-top: 1px solid var(--border); backgroun
       <div class="breadcrumb">
         <a href="dragbook-browse.html" target="_blank" rel="noopener">Browse</a>
         <span>/</span>
-        <span>London</span>
+        <span id="profile-breadcrumb-city">London</span>
         <span>/</span>
-        <span style="color:var(--text-light);">Scarlett Voltage</span>
+        <span id="profile-breadcrumb-name" style="color:var(--text-light);">Scarlett Voltage</span>
       </div>
 
-```
-  <h1 class="performer-name">Scarlett<br>Voltage</h1>
-  <p class="performer-tagline">"London's most electrifying drag host — where comedy meets chaos"</p>
+  <h1 class="performer-name" id="profile-name">Scarlett<br>Voltage</h1>
+  <p class="performer-tagline" id="profile-tagline">"London's most electrifying drag host — where comedy meets chaos"</p>
 
   <div class="profile-badges">
     <span class="profile-badge badge-verified">✓ Verified Performer</span>
     <span class="profile-badge badge-top">🏆 Top Rated 2025</span>
-    <span class="profile-badge badge-location">📍 London</span>
+    <span class="profile-badge badge-location" id="profile-location-badge">📍 London</span>
     <span class="profile-badge badge-travels">✈️ Travels UK-wide</span>
   </div>
 
@@ -480,8 +479,6 @@ footer { padding: 60px 60px 36px; border-top: 1px solid var(--border); backgroun
     <button class="btn-secondary" style="padding:15px 18px;">↗️ Share</button>
   </div>
 </div>
-```
-
   </div>
 </div>
 
@@ -497,12 +494,11 @@ footer { padding: 60px 60px 36px; border-top: 1px solid var(--border); backgroun
       <button class="tab" onclick="switchTab(this,'reviews')">Reviews (47)</button>
     </div>
 
-```
 <!-- ABOUT TAB -->
 <div id="tab-about">
   <div class="content-section fade-up">
-    <h2 class="section-heading">About Scarlett</h2>
-    <p class="bio-text">
+    <h2 class="section-heading" id="profile-about-heading">About Scarlett</h2>
+    <p class="bio-text" id="profile-bio">
       Scarlett Voltage has been lighting up stages across London and beyond for <strong>8 years</strong>. Trained in musical theatre, comedy, and the fine art of dramatic lip sync, Scarlett brings a unique blend of <strong>jaw-dropping performance, sharp wit, and audience chaos</strong> to every event she graces.<br><br>
       Whether she's hosting a hen party bingo that descends beautifully into carnage, crashing a wedding as a surprise guest (the bride always cries, in a good way), or running a corporate team-building drag workshop that HR will be talking about for years — Scarlett arrives in full costume, full personality, and absolutely zero chill.<br><br>
       Originally from Newcastle but <strong>based in London since 2016</strong>, Scarlett is available for events across the UK and has performed at venues from Soho basement bars to country house wedding marquees, corporate boardrooms to Brighton Pride.
@@ -668,8 +664,6 @@ footer { padding: 60px 60px 36px; border-top: 1px solid var(--border); backgroun
     </div>
   </div>
 </div>
-```
-
   </main>
 
   <!-- BOOKING SIDEBAR -->
@@ -686,7 +680,6 @@ footer { padding: 60px 60px 36px; border-top: 1px solid var(--border); backgroun
         <span>5.0 · 47 reviews</span>
       </div>
 
-```
   <div class="widget-field">
     <label class="widget-label">Event Type</label>
     <select class="widget-select">
@@ -769,8 +762,6 @@ footer { padding: 60px 60px 36px; border-top: 1px solid var(--border); backgroun
     </div>
   </div>
 </div>
-```
-
   </aside>
 
 </div>
@@ -778,13 +769,13 @@ footer { padding: 60px 60px 36px; border-top: 1px solid var(--border); backgroun
 <footer>
   <div class="footer-grid">
     <div class="footer-brand"><a href="dragbook.html" class="logo" target="_blank" rel="noopener">DragBook</a><p>The UK's only dedicated marketplace connecting drag performers with event organisers. No agency fees. No gatekeeping.</p></div>
-    <div class="footer-col"><h4>For Bookers</h4><ul><li><a href="#">Find a Performer</a></li><li><a href="#">Browse by Event</a></li><li><a href="dragbook-how-it-works.html" target="_blank" rel="noopener">How It Works</a></li></ul></div>
-    <div class="footer-col"><h4>For Performers</h4><ul><li><a href="dragbook-pricing.html" target="_blank" rel="noopener">List Your Act</a></li><li><a href="#">Dashboard</a></li><li><a href="#">Community</a></li></ul></div>
-    <div class="footer-col"><h4>Company</h4><ul><li><a href="#">About</a></li><li><a href="#">Blog</a></li><li><a href="#">Contact</a></li><li><a href="#">Terms</a></li></ul></div>
+    <div class="footer-col"><h4>For Bookers</h4><ul><li><a href="dragbook-browse.html">Find a Performer</a></li><li><a href="dragbook-browse.html">Browse by Event</a></li><li><a href="dragbook-how-it-works.html" target="_blank" rel="noopener">How It Works</a></li></ul></div>
+    <div class="footer-col"><h4>For Performers</h4><ul><li><a href="dragbook-pricing.html" target="_blank" rel="noopener">List Your Act</a></li><li><a href="dragbook-profile-edit.html">Dashboard</a></li><li><a href="#" data-coming-soon="Community">Community</a></li></ul></div>
+    <div class="footer-col"><h4>Company</h4><ul><li><a href="#" data-coming-soon="About">About</a></li><li><a href="#" data-coming-soon="Blog">Blog</a></li><li><a href="mailto:hello@dragbook.co.uk">Contact</a></li><li><a href="#" data-coming-soon="Terms">Terms</a></li></ul></div>
   </div>
   <div class="footer-bottom">
     <span>© 2026 DragBook · Built with love and glitter ✨</span>
-    <div class="footer-socials"><a href="#" class="social-btn">📸</a><a href="#" class="social-btn">🎵</a><a href="#" class="social-btn">🐦</a><a href="#" class="social-btn">💼</a></div>
+    <div class="footer-socials"><a href="#" class="social-btn" data-coming-soon="Socials">📸</a><a href="#" class="social-btn" data-coming-soon="Socials">🎵</a><a href="#" class="social-btn" data-coming-soon="Socials">🐦</a><a href="#" class="social-btn" data-coming-soon="Socials">💼</a></div>
   </div>
 </footer>
 
@@ -848,6 +839,7 @@ function switchTab(btn, tabId) {
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/supabase-client.js"></script>
 <script src="js/auth.js"></script>
+<script src="js/profile-page.js"></script>
 
 </body>
 </html>

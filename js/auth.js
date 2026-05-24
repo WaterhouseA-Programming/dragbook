@@ -103,6 +103,34 @@ window.dragbook.renderNav = async function () {
   if (out) out.addEventListener('click', (e) => { e.preventDefault(); window.dragbook.signOut(); });
 };
 
+// Tiny toast shown for any [data-coming-soon] anchor click.
+window.dragbook.toast = function (text) {
+  let host = document.getElementById('dragbook-toast');
+  if (!host) {
+    host = document.createElement('div');
+    host.id = 'dragbook-toast';
+    host.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1A0020;border:1px solid rgba(255,45,120,0.4);color:#FFE8FF;padding:12px 22px;border-radius:100px;font-family:"DM Sans",sans-serif;font-size:0.9rem;z-index:10000;box-shadow:0 10px 40px rgba(0,0,0,0.5);opacity:0;transition:opacity 0.25s;pointer-events:none;';
+    document.body.appendChild(host);
+  }
+  host.textContent = text;
+  host.style.opacity = '1';
+  clearTimeout(window.dragbook._toastT);
+  window.dragbook._toastT = setTimeout(() => { host.style.opacity = '0'; }, 2400);
+};
+
+function wireComingSoon() {
+  document.querySelectorAll('a[data-coming-soon]').forEach((a) => {
+    if (a.dataset.csWired) return;
+    a.dataset.csWired = '1';
+    a.addEventListener('click', (e) => {
+      e.preventDefault();
+      const label = a.getAttribute('data-coming-soon') || 'This';
+      window.dragbook.toast(`${label} is coming soon ✨`);
+    });
+  });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   if (window.sb) window.dragbook.renderNav();
+  wireComingSoon();
 });

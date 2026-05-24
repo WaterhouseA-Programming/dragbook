@@ -530,12 +530,12 @@ display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 60px; margin-bottom:
   <div class="search-bar-top">
     <div class="search-field">
       <span style="font-size:1rem;opacity:0.5;">🔍</span>
-      <input type="text" placeholder="Search by name, style or act type…" value="">
+      <input id="search-input" type="text" placeholder="Search by name, style or act type…" value="">
     </div>
     <div class="search-sep"></div>
     <div class="search-field">
-      <select>
-        <option>📍 All locations</option>
+      <select id="location-select">
+        <option value="">📍 All locations</option>
         <option>London</option>
         <option>Manchester</option>
         <option>Birmingham</option>
@@ -550,8 +550,8 @@ display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 60px; margin-bottom:
     </div>
     <div class="search-sep"></div>
     <div class="search-field">
-      <select>
-        <option>🎭 Any event type</option>
+      <select id="event-select">
+        <option value="">🎭 Any event type</option>
         <option>Hen Party</option>
         <option>Corporate Event</option>
         <option>Wedding</option>
@@ -562,7 +562,7 @@ display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 60px; margin-bottom:
         <option>Festival</option>
       </select>
     </div>
-    <button class="btn-search">Search 👑</button>
+    <button class="btn-search" id="search-go">Search 👑</button>
   </div>
 </div>
 
@@ -572,7 +572,6 @@ display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 60px; margin-bottom:
 
   <aside class="sidebar">
 
-```
 <div class="filter-block">
   <div class="filter-block-title">
     Event Type
@@ -632,7 +631,6 @@ display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 60px; margin-bottom:
   <div style="font-size:0.82rem;color:var(--text-muted);line-height:1.6;margin-bottom:16px;font-weight:300;">List your act for free and start getting booked today.</div>
   <a href="dragbook-pricing.html" style="display:block;text-align:center;background:linear-gradient(135deg,var(--hot-pink),var(--electric-purple));color:white;padding:10px;border-radius:100px;font-size:0.82rem;font-weight:500;text-decoration:none;transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'" target="_blank" rel="noopener">List For Free 💄</a>
 </div>
-```
 
   </aside>
 
@@ -640,7 +638,7 @@ display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 60px; margin-bottom:
 
   <main>
     <div class="results-header">
-      <div class="results-count">Showing <strong>312 performers</strong> near you</div>
+      <div class="results-count" id="results-count">Loading performers…</div>
       <select class="sort-select">
         <option>Sort: Most Popular</option>
         <option>Sort: Highest Rated</option>
@@ -650,150 +648,11 @@ display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 60px; margin-bottom:
       </select>
     </div>
 
-```
-<div class="active-filters">
-  <div class="active-filter">Hen Party <button>×</button></div>
-  <div class="active-filter">Travels UK-wide <button>×</button></div>
-  <div class="active-filter">5 stars only <button>×</button></div>
-  <div style="margin-left:auto;">
-    <button style="background:none;border:none;color:var(--text-muted);font-size:0.78rem;cursor:pointer;font-family:'DM Sans',sans-serif;">Clear all filters</button>
-  </div>
-</div>
+<div class="active-filters" id="active-filters" style="display:none;"></div>
 
-<div class="performers-grid fade-up">
+<div class="performers-grid fade-up" id="performers-grid"></div>
 
-  <div class="performer-card" onclick="location.href='dragbook-profile.html'">
-    <div class="card-image"><div class="card-image-inner g1">👑</div>
-    <div class="card-badge verified">✓ Verified</div><div class="card-fav">🤍</div></div>
-    <div class="card-body">
-      <div class="card-name">Scarlett Voltage</div>
-      <div class="card-location">📍 London · travels UK-wide</div>
-      <div class="card-tags"><span class="card-tag">Hen Parties</span><span class="card-tag">Drag Bingo</span><span class="card-tag">Corporate</span></div>
-      <div class="card-footer">
-        <div class="card-rating"><span class="stars">★★★★★</span> 5.0 (47)</div>
-        <div class="card-price">from £380 <span>/ event</span></div>
-      </div>
-      <button class="btn-book">View Profile →</button>
-    </div>
-  </div>
-
-  <div class="performer-card" onclick="location.href='dragbook-profile.html'">
-    <div class="card-image"><div class="card-image-inner g2">💜</div>
-    <div class="card-badge verified">✓ Verified</div><div class="card-fav">🤍</div></div>
-    <div class="card-body">
-      <div class="card-name">Madam Glitterbomb</div>
-      <div class="card-location">📍 Manchester · North West</div>
-      <div class="card-tags"><span class="card-tag">Weddings</span><span class="card-tag">Cabaret</span><span class="card-tag">Live Singing</span></div>
-      <div class="card-footer">
-        <div class="card-rating"><span class="stars">★★★★★</span> 4.9 (62)</div>
-        <div class="card-price">from £450 <span>/ event</span></div>
-      </div>
-      <button class="btn-book">View Profile →</button>
-    </div>
-  </div>
-
-  <div class="performer-card" onclick="location.href='dragbook-profile.html'">
-    <div class="card-image"><div class="card-image-inner g3">⚡</div>
-    <div class="card-badge top">🏆 Top Rated</div><div class="card-fav">🤍</div></div>
-    <div class="card-body">
-      <div class="card-name">Rex Havoc</div>
-      <div class="card-location">📍 Brighton · South East</div>
-      <div class="card-tags"><span class="card-tag">Drag King</span><span class="card-tag">Pride Events</span><span class="card-tag">Festivals</span></div>
-      <div class="card-footer">
-        <div class="card-rating"><span class="stars">★★★★★</span> 5.0 (38)</div>
-        <div class="card-price">from £320 <span>/ event</span></div>
-      </div>
-      <button class="btn-book">View Profile →</button>
-    </div>
-  </div>
-
-  <div class="performer-card" onclick="location.href='dragbook-profile.html'">
-    <div class="card-image"><div class="card-image-inner g4">💎</div>
-    <div class="card-badge verified">✓ Verified</div><div class="card-fav">🤍</div></div>
-    <div class="card-body">
-      <div class="card-name">Crystal Charade</div>
-      <div class="card-location">📍 Birmingham · Midlands</div>
-      <div class="card-tags"><span class="card-tag">Wedding Crasher</span><span class="card-tag">Hen Parties</span><span class="card-tag">Hosting</span></div>
-      <div class="card-footer">
-        <div class="card-rating"><span class="stars">★★★★½</span> 4.8 (29)</div>
-        <div class="card-price">from £350 <span>/ event</span></div>
-      </div>
-      <button class="btn-book">View Profile →</button>
-    </div>
-  </div>
-
-  <div class="performer-card" onclick="location.href='dragbook-profile.html'">
-    <div class="card-image"><div class="card-image-inner g5">🌈</div>
-    <div class="card-badge verified">✓ Verified</div><div class="card-fav">🤍</div></div>
-    <div class="card-body">
-      <div class="card-name">Nova Nightshade</div>
-      <div class="card-location">📍 Leeds · Yorkshire</div>
-      <div class="card-tags"><span class="card-tag">Drag Bingo</span><span class="card-tag">Comedy</span><span class="card-tag">Corporate</span></div>
-      <div class="card-footer">
-        <div class="card-rating"><span class="stars">★★★★★</span> 4.9 (51)</div>
-        <div class="card-price">from £295 <span>/ event</span></div>
-      </div>
-      <button class="btn-book">View Profile →</button>
-    </div>
-  </div>
-
-  <div class="performer-card" onclick="location.href='dragbook-profile.html'">
-    <div class="card-image"><div class="card-image-inner g6">🔥</div>
-    <div class="card-badge hot">🔥 Hot Right Now</div><div class="card-fav">🤍</div></div>
-    <div class="card-body">
-      <div class="card-name">Destiny Devine</div>
-      <div class="card-location">📍 Glasgow · Scotland</div>
-      <div class="card-tags"><span class="card-tag">Live Singing</span><span class="card-tag">Cabaret</span><span class="card-tag">Weddings</span></div>
-      <div class="card-footer">
-        <div class="card-rating"><span class="stars">★★★★★</span> 5.0 (18)</div>
-        <div class="card-price">from £410 <span>/ event</span></div>
-      </div>
-      <button class="btn-book">View Profile →</button>
-    </div>
-  </div>
-
-  <div class="performer-card" onclick="location.href='dragbook-profile.html'">
-    <div class="card-image"><div class="card-image-inner g7">🦋</div>
-    <div class="card-badge verified">✓ Verified</div><div class="card-fav">🤍</div></div>
-    <div class="card-body">
-      <div class="card-name">Priscilla Storm</div>
-      <div class="card-location">📍 Bristol · South West</div>
-      <div class="card-tags"><span class="card-tag">Hen Parties</span><span class="card-tag">Bottomless Brunch</span></div>
-      <div class="card-footer">
-        <div class="card-rating"><span class="stars">★★★★★</span> 4.9 (33)</div>
-        <div class="card-price">from £340 <span>/ event</span></div>
-      </div>
-      <button class="btn-book">View Profile →</button>
-    </div>
-  </div>
-
-  <div class="performer-card" onclick="location.href='dragbook-profile.html'">
-    <div class="card-image"><div class="card-image-inner g8">🌙</div>
-    <div class="card-badge verified">✓ Verified</div><div class="card-fav">🤍</div></div>
-    <div class="card-body">
-      <div class="card-name">Midnight Fierce</div>
-      <div class="card-location">📍 Edinburgh · Scotland</div>
-      <div class="card-tags"><span class="card-tag">Burlesque</span><span class="card-tag">Cabaret</span><span class="card-tag">Pride</span></div>
-      <div class="card-footer">
-        <div class="card-rating"><span class="stars">★★★★½</span> 4.7 (22)</div>
-        <div class="card-price">from £280 <span>/ event</span></div>
-      </div>
-      <button class="btn-book">View Profile →</button>
-    </div>
-  </div>
-
-</div>
-
-<div class="pagination">
-  <button class="page-btn">←</button>
-  <button class="page-btn active">1</button>
-  <button class="page-btn">2</button>
-  <button class="page-btn">3</button>
-  <span style="color:var(--text-muted);font-size:0.85rem;">…</span>
-  <button class="page-btn">12</button>
-  <button class="page-btn">→</button>
-</div>
-```
+<div class="empty-state" id="empty-state" style="display:none;text-align:center;padding:60px 20px;color:var(--text-muted);">No performers match your search yet.</div>
 
   </main>
 </div>
@@ -804,15 +663,15 @@ display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 60px; margin-bottom:
       <a href="dragbook.html" class="logo" target="_blank" rel="noopener">DragBook</a>
       <p>The UK's only dedicated marketplace connecting drag performers with event organisers. No agency fees. No gatekeeping.</p>
     </div>
-    <div class="footer-col"><h4>For Bookers</h4><ul><li><a href="#">Find a Performer</a></li><li><a href="#">Browse by Event</a></li><li><a href="dragbook-how-it-works.html" target="_blank" rel="noopener">How It Works</a></li><li><a href="#">Pricing Guide</a></li></ul></div>
-    <div class="footer-col"><h4>For Performers</h4><ul><li><a href="dragbook-pricing.html" target="_blank" rel="noopener">List Your Act</a></li><li><a href="#">Dashboard</a></li><li><a href="#">Community</a></li><li><a href="#">Resources</a></li></ul></div>
-    <div class="footer-col"><h4>Company</h4><ul><li><a href="#">About</a></li><li><a href="#">Blog</a></li><li><a href="#">Contact</a></li><li><a href="#">Terms & Privacy</a></li></ul></div>
+    <div class="footer-col"><h4>For Bookers</h4><ul><li><a href="dragbook-browse.html">Find a Performer</a></li><li><a href="dragbook-browse.html">Browse by Event</a></li><li><a href="dragbook-how-it-works.html" target="_blank" rel="noopener">How It Works</a></li><li><a href="dragbook-pricing.html">Pricing Guide</a></li></ul></div>
+    <div class="footer-col"><h4>For Performers</h4><ul><li><a href="dragbook-pricing.html" target="_blank" rel="noopener">List Your Act</a></li><li><a href="dragbook-profile-edit.html">Dashboard</a></li><li><a href="#" data-coming-soon="Community">Community</a></li><li><a href="#" data-coming-soon="Resources">Resources</a></li></ul></div>
+    <div class="footer-col"><h4>Company</h4><ul><li><a href="#" data-coming-soon="About">About</a></li><li><a href="#" data-coming-soon="Blog">Blog</a></li><li><a href="mailto:hello@dragbook.co.uk">Contact</a></li><li><a href="#" data-coming-soon="Terms & Privacy">Terms & Privacy</a></li></ul></div>
   </div>
   <div class="footer-bottom">
     <span>© 2026 DragBook · Built with love and glitter ✨</span>
     <div class="footer-socials">
-      <a href="#" class="social-btn">📸</a><a href="#" class="social-btn">🎵</a>
-      <a href="#" class="social-btn">🐦</a><a href="#" class="social-btn">💼</a>
+      <a href="#" class="social-btn" data-coming-soon="Socials">📸</a><a href="#" class="social-btn" data-coming-soon="Socials">🎵</a>
+      <a href="#" class="social-btn" data-coming-soon="Socials">🐦</a><a href="#" class="social-btn" data-coming-soon="Socials">💼</a>
     </div>
   </div>
 </footer>
@@ -870,6 +729,7 @@ function clearFilter(btn) {
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/supabase-client.js"></script>
 <script src="js/auth.js"></script>
+<script src="js/browse.js"></script>
 
 </body>
 </html>
