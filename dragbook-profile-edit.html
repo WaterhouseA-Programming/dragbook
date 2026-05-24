@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Listing · DragBook</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500&family=Abril+Fatface&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --hot-pink: #FF2D78;
+    --electric-purple: #9B00FF;
+    --acid-yellow: #FFE600;
+    --cyan: #00F5FF;
+    --deep-black: #0A0008;
+    --card-bg: #1A0020;
+    --text-light: #FFE8FF;
+    --text-muted: #C084C8;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--deep-black);
+    background-image:
+      radial-gradient(circle at 10% 0%, rgba(255,45,120,0.12), transparent 50%),
+      radial-gradient(circle at 90% 100%, rgba(155,0,255,0.15), transparent 50%);
+    color: var(--text-light);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+  }
+  nav {
+    padding: 20px 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .logo {
+    font-family: 'Abril Fatface', cursive;
+    font-size: 2rem;
+    background: linear-gradient(135deg, var(--hot-pink), var(--electric-purple), var(--cyan));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-decoration: none;
+  }
+  .nav-links { list-style: none; display: flex; gap: 28px; align-items: center; }
+  .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 0.95rem; }
+  .nav-links a:hover { color: var(--text-light); }
+  .btn-nav {
+    background: linear-gradient(135deg, var(--hot-pink), var(--electric-purple));
+    color: white !important;
+    padding: 10px 20px;
+    border-radius: 100px;
+    font-weight: 500;
+  }
+
+  main { max-width: 760px; margin: 0 auto; padding: 30px 24px 80px; }
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.4rem;
+    margin-bottom: 6px;
+    background: linear-gradient(135deg, var(--hot-pink), var(--cyan));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  p.sub { color: var(--text-muted); margin-bottom: 30px; }
+
+  .card {
+    background: var(--card-bg);
+    border: 1px solid rgba(255,45,120,0.2);
+    border-radius: 20px;
+    padding: 32px;
+    margin-bottom: 24px;
+  }
+  label {
+    display: block;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    margin: 14px 0 6px;
+  }
+  input, textarea, select {
+    width: 100%;
+    padding: 12px 14px;
+    background: rgba(0,0,0,0.4);
+    border: 1px solid rgba(255,232,255,0.1);
+    border-radius: 10px;
+    color: var(--text-light);
+    font: inherit;
+    font-size: 1rem;
+  }
+  textarea { resize: vertical; min-height: 110px; }
+  input:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: var(--hot-pink);
+    box-shadow: 0 0 0 3px rgba(255,45,120,0.2);
+  }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 600px) { .row { grid-template-columns: 1fr; } nav { padding: 16px 20px; } .nav-links { display: none; } main { padding: 20px 16px 60px; } .card { padding: 22px; } }
+
+  .toggle-row { display: flex; align-items: center; gap: 12px; margin-top: 20px; }
+  .toggle-row input[type=checkbox] { width: auto; }
+  .actions { display: flex; gap: 12px; margin-top: 26px; flex-wrap: wrap; }
+  button.primary {
+    padding: 13px 26px;
+    border: 0;
+    border-radius: 100px;
+    background: linear-gradient(135deg, var(--hot-pink), var(--electric-purple));
+    color: white;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 0 20px rgba(255,45,120,0.4);
+  }
+  button.primary:hover { transform: translateY(-1px); }
+  button.primary:disabled { opacity: 0.5; cursor: not-allowed; }
+  button.ghost {
+    padding: 13px 22px;
+    border: 1px solid rgba(255,232,255,0.2);
+    border-radius: 100px;
+    background: transparent;
+    color: var(--text-light);
+    font: inherit;
+    cursor: pointer;
+  }
+
+  .message { margin-top: 16px; padding: 12px 14px; border-radius: 10px; font-size: 0.9rem; display: none; }
+  .message.error { background: rgba(255,45,120,0.15); border: 1px solid rgba(255,45,120,0.4); display: block; }
+  .message.ok { background: rgba(0,245,255,0.1); border: 1px solid rgba(0,245,255,0.4); display: block; color: var(--cyan); }
+
+  .gate {
+    text-align: center;
+    padding: 80px 24px;
+    color: var(--text-muted);
+  }
+  .gate a { color: var(--cyan); }
+
+  .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.8s linear infinite; vertical-align: middle; margin-right: 8px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="dragbook.html" class="logo">DragBook</a>
+  <ul class="nav-links">
+    <li><a href="dragbook-browse.html">Find Performers</a></li>
+    <li><a href="dragbook-how-it-works.html">How It Works</a></li>
+    <li><a href="dragbook-pricing.html">For Performers</a></li>
+    <li><a href="dragbook-login.html" class="btn-nav">Log in</a></li>
+  </ul>
+</nav>
+
+<main>
+  <div id="loading" class="gate"><span class="spinner"></span>Loading your listing...</div>
+
+  <div id="gate-anon" class="gate" style="display:none;">
+    You need to <a href="dragbook-login.html">log in</a> or <a href="dragbook-signup.html">sign up as a performer</a> to manage a listing.
+  </div>
+
+  <div id="gate-booker" class="gate" style="display:none;">
+    This area is for performer accounts. <a href="dragbook-browse.html">Find performers instead</a>.
+  </div>
+
+  <div id="editor" style="display:none;">
+    <h1>Your listing</h1>
+    <p class="sub">This is what bookers will see when they find you on DragBook.</p>
+
+    <form id="profile-form" class="card">
+      <label for="stage_name">Stage name *</label>
+      <input id="stage_name" name="stage_name" type="text" required maxlength="80" placeholder="Trixie Sparkle">
+
+      <label for="tagline">Tagline</label>
+      <input id="tagline" name="tagline" type="text" maxlength="140" placeholder="High-energy host with a sequinned right hook">
+
+      <div class="row">
+        <div>
+          <label for="city">City</label>
+          <input id="city" name="city" type="text" maxlength="60" placeholder="London">
+        </div>
+        <div>
+          <label for="base_price">Base fee (£)</label>
+          <input id="base_price" name="base_price" type="number" min="0" step="1" placeholder="350">
+        </div>
+      </div>
+
+      <label for="styles">Styles (comma-separated)</label>
+      <input id="styles" name="styles" type="text" placeholder="Cabaret, Hosting, Bingo">
+
+      <label for="bio">Bio</label>
+      <textarea id="bio" name="bio" maxlength="2000" placeholder="Tell bookers about your act, your vibe and what you bring to an event."></textarea>
+
+      <label for="hero_image_url">Hero image URL</label>
+      <input id="hero_image_url" name="hero_image_url" type="url" placeholder="https://...">
+
+      <div class="toggle-row">
+        <input id="published" name="published" type="checkbox">
+        <label for="published" style="margin: 0; text-transform: none; letter-spacing: 0; font-size: 0.95rem; color: var(--text-light);">
+          Publish my listing (show it to bookers)
+        </label>
+      </div>
+
+      <div class="actions">
+        <button type="submit" class="primary" id="submit-btn">Save listing</button>
+        <button type="button" class="ghost" id="signout-btn">Sign out</button>
+      </div>
+
+      <div id="message" class="message"></div>
+    </form>
+  </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-client.js"></script>
+<script src="js/auth.js"></script>
+<script>
+  const loading = document.getElementById('loading');
+  const gateAnon = document.getElementById('gate-anon');
+  const gateBooker = document.getElementById('gate-booker');
+  const editor = document.getElementById('editor');
+  const form = document.getElementById('profile-form');
+  const msg = document.getElementById('message');
+  const submitBtn = document.getElementById('submit-btn');
+
+  document.getElementById('signout-btn').addEventListener('click', () => window.dragbook.signOut());
+
+  async function init() {
+    const profile = await window.dragbook.getProfile();
+    loading.style.display = 'none';
+
+    if (!profile) { gateAnon.style.display = 'block'; return; }
+    if (profile.account_type !== 'performer') { gateBooker.style.display = 'block'; return; }
+
+    editor.style.display = 'block';
+
+    const { data: existing, error } = await window.sb
+      .from('dragbook_performers')
+      .select('*')
+      .eq('id', profile.id)
+      .maybeSingle();
+    if (error) { showMsg('error', error.message); return; }
+
+    if (existing) {
+      form.stage_name.value = existing.stage_name || '';
+      form.tagline.value = existing.tagline || '';
+      form.city.value = existing.city || '';
+      form.base_price.value = existing.base_price_pennies != null ? existing.base_price_pennies / 100 : '';
+      form.styles.value = (existing.styles || []).join(', ');
+      form.bio.value = existing.bio || '';
+      form.hero_image_url.value = existing.hero_image_url || '';
+      form.published.checked = !!existing.published;
+    } else {
+      form.stage_name.value = profile.display_name || '';
+    }
+  }
+
+  function showMsg(kind, text) {
+    msg.className = 'message ' + kind;
+    msg.textContent = text;
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Saving...';
+    msg.className = 'message';
+    msg.textContent = '';
+
+    const { data: { user } } = await window.sb.auth.getUser();
+    if (!user) { window.location.href = 'dragbook-login.html'; return; }
+
+    const stylesArr = form.styles.value.split(',').map(s => s.trim()).filter(Boolean);
+    const pricePence = form.base_price.value ? Math.round(parseFloat(form.base_price.value) * 100) : null;
+
+    const row = {
+      id: user.id,
+      stage_name: form.stage_name.value.trim(),
+      tagline: form.tagline.value.trim() || null,
+      city: form.city.value.trim() || null,
+      base_price_pennies: pricePence,
+      styles: stylesArr,
+      bio: form.bio.value.trim() || null,
+      hero_image_url: form.hero_image_url.value.trim() || null,
+      published: form.published.checked
+    };
+
+    const { error } = await window.sb.from('dragbook_performers').upsert(row, { onConflict: 'id' });
+
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Save listing';
+
+    if (error) showMsg('error', error.message);
+    else showMsg('ok', 'Saved. ' + (row.published ? 'Your listing is live.' : 'Listing saved as draft.'));
+  });
+
+  init();
+</script>
+</body>
+</html>

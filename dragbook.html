@@ -1101,7 +1101,8 @@ animation: scrollPulse 2s infinite;
     <li><a href="dragbook-browse.html">Find Performers</a></li>
     <li><a href="dragbook-how-it-works.html">How It Works</a></li>
     <li><a href="dragbook-pricing.html">For Performers</a></li>
-    <li><a href="dragbook-pricing.html" class="btn-nav">List Your Act ✨</a></li>
+    <li><a href="dragbook-login.html">Log in</a></li>
+    <li><a href="dragbook-signup.html" class="btn-nav">List Your Act ✨</a></li>
   </ul>
 </nav>
 
@@ -1660,6 +1661,10 @@ animation: scrollPulse 2s infinite;
     card.addEventListener('click', () => { window.location.href = 'dragbook-profile.html'; });
   });
 </script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-client.js"></script>
+<script src="js/auth.js"></script>
 
 </body>
 </html>

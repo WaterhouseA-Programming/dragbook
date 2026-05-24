@@ -279,7 +279,8 @@ footer { padding: 60px 60px 36px; border-top: 1px solid var(--border); backgroun
     <li><a href="dragbook-browse.html" target="_blank" rel="noopener">Find Performers</a></li>
     <li><a href="dragbook-how-it-works.html" target="_blank" rel="noopener">How It Works</a></li>
     <li><a href="dragbook-pricing.html" class="active" target="_blank" rel="noopener">Pricing</a></li>
-    <li><a href="#" class="btn-nav">List Your Act ✨</a></li>
+    <li><a href="dragbook-login.html">Log in</a></li>
+    <li><a href="dragbook-signup.html" class="btn-nav">List Your Act ✨</a></li>
   </ul>
 </nav>
 
@@ -540,6 +541,10 @@ function toggleFaq(btn) {
   if(!isOpen) item.classList.add('open');
 }
 </script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-client.js"></script>
+<script src="js/auth.js"></script>
 
 </body>
 </html>
