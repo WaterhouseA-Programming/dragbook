@@ -242,6 +242,15 @@
       body: row.initial_message
     });
 
+    // Fire-and-forget: notify the performer by email. The endpoint requires
+    // RESEND_API_KEY to be set on the deployment; locally it returns 500 which
+    // we ignore so the UX still works.
+    fetch('/api/email/enquiry', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ enquiry_id: data.id })
+    }).catch(() => {});
+
     window.location.href = `dragbook-inbox.html?id=${encodeURIComponent(data.id)}`;
   });
 })();

@@ -310,6 +310,9 @@
           <button data-status="declined">Decline</button>
         `;
       }
+      if (enquiry.status === 'accepted') {
+        actionsEl.innerHTML = '<button class="primary" id="send-booking-link">💷 Send booking link</button>';
+      }
       if (enquiry.status !== 'closed') {
         actionsEl.insertAdjacentHTML('beforeend', '<button data-status="closed">Close</button>');
       }
@@ -328,6 +331,33 @@
         if (pill) { pill.className = `pill pill-${newStatus}`; pill.textContent = newStatus; }
       });
     });
+
+    const bookBtn = document.getElementById('send-booking-link');
+    if (bookBtn) {
+      bookBtn.addEventListener('click', async () => {
+        const totalStr = prompt('Total fee for this booking, in £?');
+        if (!totalStr) return;
+        const totalPennies = Math.round(parseFloat(totalStr) * 100);
+        if (!totalPennies || totalPennies < 100) { alert('Enter a number greater than £1.'); return; }
+        bookBtn.disabled = true;
+        const { data: { session } } = await window.sb.auth.getSession();
+        const res = await fetch('/api/stripe/checkout', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session.access_token}` },
+          body: JSON.stringify({ enquiry_id: enquiry.id, total_pennies: totalPennies })
+        });
+        const body = await res.json().catch(() => ({}));
+        bookBtn.disabled = false;
+        if (!res.ok) { alert(body.error || 'Could not create checkout. Stripe may not be configured yet.'); return; }
+        // Post the link into the thread for the booker to click
+        await window.sb.from('dragbook_messages').insert({
+          enquiry_id: enquiry.id,
+          sender_id: me.id,
+          body: `I've sent you a deposit link for £${(totalPennies / 100).toFixed(2)}. Pay here: ${body.url}`
+        });
+        await loadMessages();
+      });
+    }
   }
   renderActions();
 

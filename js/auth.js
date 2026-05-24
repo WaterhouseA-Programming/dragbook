@@ -71,7 +71,7 @@ window.dragbook.getProfile = async function () {
   if (!user) return null;
   const { data } = await window.sb
     .from('dragbook_profiles')
-    .select('id, account_type, display_name')
+    .select('id, account_type, display_name, is_admin')
     .eq('id', user.id)
     .maybeSingle();
   return data ? { ...data, email: user.email } : null;
@@ -92,10 +92,12 @@ window.dragbook.renderNav = async function () {
   const dashHref = isPerformer ? 'dragbook-profile-edit.html' : 'dragbook-browse.html';
   const dashLabel = isPerformer ? 'My Listing' : 'Find Performers';
 
+  const adminLink = profile.is_admin ? '<li><a href="dragbook-admin.html">Admin</a></li>' : '';
   nav.innerHTML = `
     <li><a href="dragbook-browse.html">Find Performers</a></li>
     <li><a href="dragbook-inbox.html">Inbox</a></li>
     <li><a href="${dashHref}">${dashLabel}</a></li>
+    ${adminLink}
     <li><a href="#" id="dragbook-signout" class="btn-nav">${initial} · Sign out</a></li>
   `;
 

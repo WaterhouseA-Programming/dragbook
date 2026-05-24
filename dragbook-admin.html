@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin · DragBook</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500&family=Abril+Fatface&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --hot-pink: #FF2D78; --electric-purple: #9B00FF; --acid-yellow: #FFE600;
+    --cyan: #00F5FF; --deep-black: #0A0008; --card-bg: #1A0020;
+    --text-light: #FFE8FF; --text-muted: #C084C8;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--deep-black);
+    background-image:
+      radial-gradient(circle at 10% 0%, rgba(255,45,120,0.1), transparent 50%),
+      radial-gradient(circle at 90% 100%, rgba(155,0,255,0.12), transparent 50%);
+    color: var(--text-light);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+  }
+  nav { padding: 18px 60px; display: flex; align-items: center; justify-content: space-between; }
+  .logo {
+    font-family: 'Abril Fatface', cursive; font-size: 2rem;
+    background: linear-gradient(135deg, var(--hot-pink), var(--electric-purple), var(--cyan));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    text-decoration: none;
+  }
+  .nav-links { list-style: none; display: flex; gap: 24px; align-items: center; }
+  .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; }
+  .nav-links a:hover { color: var(--text-light); }
+
+  main { max-width: 1180px; margin: 0 auto; padding: 30px 24px 80px; }
+  h1 {
+    font-family: 'Playfair Display', serif; font-size: 2.2rem; margin-bottom: 6px;
+    background: linear-gradient(135deg, var(--hot-pink), var(--cyan));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  p.sub { color: var(--text-muted); margin-bottom: 28px; font-size: 0.95rem; }
+
+  .tabs { display: flex; gap: 4px; margin-bottom: 22px; background: rgba(0,0,0,0.3); padding: 4px; border-radius: 12px; width: fit-content; }
+  .tab-btn {
+    padding: 10px 18px; border-radius: 9px; border: 0;
+    background: transparent; color: var(--text-muted);
+    font: inherit; font-size: 0.9rem; cursor: pointer;
+  }
+  .tab-btn.active {
+    background: linear-gradient(135deg, var(--hot-pink), var(--electric-purple));
+    color: white;
+  }
+
+  .table-card {
+    background: var(--card-bg);
+    border: 1px solid rgba(255,45,120,0.2);
+    border-radius: 18px;
+    padding: 8px 0;
+    overflow: hidden;
+  }
+  .row {
+    padding: 14px 22px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    display: grid;
+    grid-template-columns: minmax(0,1.6fr) minmax(0,1fr) minmax(0,1fr) minmax(0,1.4fr) auto;
+    gap: 18px;
+    align-items: center;
+  }
+  .row:last-child { border-bottom: none; }
+  .row .name { font-weight: 500; color: white; }
+  .row .meta { font-size: 0.82rem; color: var(--text-muted); }
+  .row .desc { font-size: 0.85rem; color: var(--text-muted); max-height: 2.5em; overflow: hidden; }
+
+  .pill {
+    display: inline-block; padding: 2px 10px; border-radius: 100px;
+    font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 600;
+  }
+  .pill-on  { background: rgba(0,245,255,0.12); color: var(--cyan); border: 1px solid rgba(0,245,255,0.3); }
+  .pill-off { background: rgba(255,255,255,0.05); color: var(--text-muted); border: 1px solid rgba(255,255,255,0.1); }
+  .pill-verified { background: rgba(255,230,0,0.15); color: var(--acid-yellow); border: 1px solid rgba(255,230,0,0.3); }
+
+  .actions { display: flex; gap: 8px; flex-wrap: wrap; }
+  button.action {
+    padding: 7px 14px; border-radius: 100px; border: 1px solid rgba(255,255,255,0.15);
+    background: transparent; color: var(--text-light); font: inherit; font-size: 0.82rem; cursor: pointer;
+  }
+  button.action:hover { border-color: var(--hot-pink); color: var(--hot-pink); }
+  button.action.primary {
+    background: linear-gradient(135deg, var(--hot-pink), var(--electric-purple));
+    border-color: transparent; color: white;
+  }
+
+  .gate { text-align: center; padding: 80px 24px; color: var(--text-muted); }
+  .gate a { color: var(--cyan); }
+  .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.8s linear infinite; vertical-align: middle; margin-right: 8px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  @media (max-width: 800px) {
+    .row { grid-template-columns: 1fr; }
+    main { padding: 20px 16px 60px; }
+    nav { padding: 16px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="dragbook.html" class="logo">DragBook</a>
+  <ul class="nav-links">
+    <li><a href="dragbook-browse.html">Browse</a></li>
+    <li><a href="dragbook-inbox.html">Inbox</a></li>
+    <li><a href="#" id="signout-link">Sign out</a></li>
+  </ul>
+</nav>
+
+<main>
+  <div id="loading" class="gate"><span class="spinner"></span>Checking permissions…</div>
+
+  <div id="gate-anon"    class="gate" style="display:none;">Please <a href="dragbook-login.html">log in</a> first.</div>
+  <div id="gate-denied"  class="gate" style="display:none;">You don't have admin access.</div>
+
+  <div id="admin" style="display:none;">
+    <h1>Admin</h1>
+    <p class="sub">Review listings, verify performers, manage accounts.</p>
+
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="listings">Listings</button>
+      <button class="tab-btn" data-tab="enquiries">Enquiries</button>
+      <button class="tab-btn" data-tab="bookings">Bookings</button>
+    </div>
+
+    <div id="panel-listings" class="table-card"></div>
+    <div id="panel-enquiries" class="table-card" style="display:none;"></div>
+    <div id="panel-bookings" class="table-card" style="display:none;"></div>
+  </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-client.js"></script>
+<script src="js/auth.js"></script>
+<script>
+(async () => {
+  const $ = (s) => document.querySelector(s);
+  const loading = $('#loading');
+
+  document.getElementById('signout-link').addEventListener('click', (e) => { e.preventDefault(); window.dragbook.signOut(); });
+
+  const me = await window.dragbook.getProfile();
+  if (!me) { loading.style.display = 'none'; $('#gate-anon').style.display = 'block'; return; }
+
+  // Re-fetch the profile row including is_admin (getProfile() doesn't include it)
+  const { data: meRow } = await window.sb
+    .from('dragbook_profiles')
+    .select('id, is_admin')
+    .eq('id', me.id)
+    .maybeSingle();
+
+  loading.style.display = 'none';
+  if (!meRow?.is_admin) { $('#gate-denied').style.display = 'block'; return; }
+
+  $('#admin').style.display = 'block';
+
+  // ---- tabs ----
+  document.querySelectorAll('.tab-btn').forEach((b) => {
+    b.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach((x) => x.classList.remove('active'));
+      b.classList.add('active');
+      const tab = b.getAttribute('data-tab');
+      document.querySelectorAll('[id^="panel-"]').forEach((p) => p.style.display = 'none');
+      $('#panel-' + tab).style.display = 'block';
+    });
+  });
+
+  function escape(s) {
+    return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+  function fmtMoney(p) { return p == null ? '—' : '£' + (p/100).toLocaleString(); }
+  function fmtDate(d) { return d ? new Date(d).toLocaleDateString() : '—'; }
+
+  // ---- listings ----
+  await loadListings();
+
+  async function loadListings() {
+    const panel = $('#panel-listings');
+    panel.innerHTML = '<div class="row"><span class="meta">Loading…</span></div>';
+    const { data, error } = await window.sb
+      .from('dragbook_performers')
+      .select('id, stage_name, tagline, city, base_price_pennies, published, verified, hero_image_url, updated_at')
+      .order('updated_at', { ascending: false });
+    if (error) { panel.innerHTML = `<div class="row"><span class="meta">${escape(error.message)}</span></div>`; return; }
+    if (!data.length) { panel.innerHTML = '<div class="row"><span class="meta">No listings yet.</span></div>'; return; }
+
+    panel.innerHTML = data.map((p) => `
+      <div class="row" data-id="${escape(p.id)}">
+        <div>
+          <div class="name">${escape(p.stage_name || 'Untitled')}</div>
+          <div class="desc">${escape(p.tagline || '')}</div>
+        </div>
+        <div class="meta">${escape(p.city || '—')}</div>
+        <div class="meta">${fmtMoney(p.base_price_pennies)}</div>
+        <div>
+          <span class="pill ${p.published ? 'pill-on' : 'pill-off'}">${p.published ? 'Published' : 'Draft'}</span>
+          ${p.verified ? '<span class="pill pill-verified" style="margin-left:6px;">Verified</span>' : ''}
+        </div>
+        <div class="actions">
+          <button class="action" data-action="toggle-published">${p.published ? 'Unpublish' : 'Publish'}</button>
+          <button class="action" data-action="toggle-verified">${p.verified ? 'Unverify' : 'Verify'}</button>
+          <a class="action" href="dragbook-profile.html?id=${encodeURIComponent(p.id)}" target="_blank" rel="noopener">View</a>
+        </div>
+      </div>
+    `).join('');
+
+    panel.querySelectorAll('[data-action]').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const row = btn.closest('.row');
+        const id = row.getAttribute('data-id');
+        const action = btn.getAttribute('data-action');
+        const target = data.find((d) => d.id === id);
+        if (!target) return;
+        const patch = action === 'toggle-published'
+          ? { published: !target.published }
+          : { verified: !target.verified };
+        btn.disabled = true;
+        const { error: upErr } = await window.sb.from('dragbook_performers').update(patch).eq('id', id);
+        btn.disabled = false;
+        if (upErr) { alert(upErr.message); return; }
+        await loadListings();
+      });
+    });
+  }
+
+  // ---- enquiries panel (read-only) ----
+  async function loadEnquiries() {
+    const panel = $('#panel-enquiries');
+    panel.innerHTML = '<div class="row"><span class="meta">Loading…</span></div>';
+    const { data, error } = await window.sb
+      .from('dragbook_enquiries')
+      .select('id, performer_id, booker_id, event_type, event_date, event_location, status, created_at')
+      .order('created_at', { ascending: false })
+      .limit(100);
+    if (error) { panel.innerHTML = `<div class="row"><span class="meta">${escape(error.message)}</span></div>`; return; }
+    if (!data.length) { panel.innerHTML = '<div class="row"><span class="meta">No enquiries yet.</span></div>'; return; }
+
+    panel.innerHTML = data.map((e) => `
+      <div class="row">
+        <div>
+          <div class="name">${escape(e.event_type || 'Enquiry')}</div>
+          <div class="meta">${fmtDate(e.created_at)}</div>
+        </div>
+        <div class="meta">${fmtDate(e.event_date)}</div>
+        <div class="meta">${escape(e.event_location || '—')}</div>
+        <div><span class="pill ${e.status === 'accepted' ? 'pill-on' : 'pill-off'}">${escape(e.status)}</span></div>
+        <div></div>
+      </div>
+    `).join('');
+  }
+
+  // ---- bookings panel ----
+  async function loadBookings() {
+    const panel = $('#panel-bookings');
+    panel.innerHTML = '<div class="row"><span class="meta">Loading…</span></div>';
+    const { data, error } = await window.sb
+      .from('dragbook_bookings')
+      .select('id, total_pennies, deposit_pennies, platform_fee_pennies, status, event_date, created_at')
+      .order('created_at', { ascending: false })
+      .limit(100);
+    if (error) { panel.innerHTML = `<div class="row"><span class="meta">${escape(error.message)}</span></div>`; return; }
+    if (!data.length) { panel.innerHTML = '<div class="row"><span class="meta">No bookings yet.</span></div>'; return; }
+
+    panel.innerHTML = data.map((b) => `
+      <div class="row">
+        <div>
+          <div class="name">${fmtMoney(b.total_pennies)} total</div>
+          <div class="meta">Deposit ${fmtMoney(b.deposit_pennies)} · Fee ${fmtMoney(b.platform_fee_pennies)}</div>
+        </div>
+        <div class="meta">${fmtDate(b.event_date)}</div>
+        <div class="meta">${fmtDate(b.created_at)}</div>
+        <div><span class="pill ${b.status === 'deposit_paid' ? 'pill-on' : 'pill-off'}">${escape(b.status)}</span></div>
+        <div></div>
+      </div>
+    `).join('');
+  }
+
+  document.querySelector('[data-tab="enquiries"]').addEventListener('click', loadEnquiries, { once: true });
+  document.querySelector('[data-tab="bookings"]').addEventListener('click', loadBookings, { once: true });
+})();
+</script>
+</body>
+</html>

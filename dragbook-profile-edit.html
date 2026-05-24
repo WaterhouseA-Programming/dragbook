@@ -166,6 +166,11 @@
     <h1>Your listing</h1>
     <p class="sub">This is what bookers will see when they find you on DragBook.</p>
 
+    <div id="onboarding" class="card" style="background:linear-gradient(135deg,rgba(155,0,255,0.12),rgba(255,45,120,0.12));border-color:rgba(255,45,120,0.3);margin-bottom:18px;display:none;">
+      <div style="font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;color:white;margin-bottom:10px;">Finish your listing to publish</div>
+      <ul id="onboarding-list" style="list-style:none;padding:0;margin:0;font-size:0.92rem;line-height:1.9;color:var(--text-muted);"></ul>
+    </div>
+
     <form id="profile-form" class="card">
       <label for="stage_name">Stage name *</label>
       <input id="stage_name" name="stage_name" type="text" required maxlength="80" placeholder="Trixie Sparkle">
@@ -190,8 +195,13 @@
       <label for="bio">Bio</label>
       <textarea id="bio" name="bio" maxlength="2000" placeholder="Tell bookers about your act, your vibe and what you bring to an event."></textarea>
 
-      <label for="hero_image_url">Hero image URL</label>
-      <input id="hero_image_url" name="hero_image_url" type="url" placeholder="https://...">
+      <label>Hero image</label>
+      <div id="hero-preview" style="margin-bottom:10px;display:none;border-radius:12px;overflow:hidden;border:1px solid rgba(255,232,255,0.1);background:#000;">
+        <img id="hero-preview-img" alt="" style="display:block;width:100%;max-height:240px;object-fit:cover;">
+      </div>
+      <input id="hero_image_file" type="file" accept="image/png,image/jpeg,image/webp,image/gif" style="font-size:0.9rem;">
+      <input id="hero_image_url" name="hero_image_url" type="hidden">
+      <div id="hero-upload-status" style="font-size:0.82rem;color:var(--text-muted);margin-top:6px;"></div>
 
       <div class="toggle-row">
         <input id="published" name="published" type="checkbox">
@@ -249,15 +259,99 @@
       form.bio.value = existing.bio || '';
       form.hero_image_url.value = existing.hero_image_url || '';
       form.published.checked = !!existing.published;
+      if (existing.hero_image_url) renderHeroPreview(existing.hero_image_url);
     } else {
       form.stage_name.value = profile.display_name || '';
     }
+    if (typeof renderOnboarding === 'function') renderOnboarding();
   }
+
+  function renderHeroPreview(url) {
+    const wrap = document.getElementById('hero-preview');
+    const img = document.getElementById('hero-preview-img');
+    if (!url) { wrap.style.display = 'none'; return; }
+    img.src = url;
+    wrap.style.display = 'block';
+  }
+
+  const fileInput = document.getElementById('hero_image_file');
+  const uploadStatus = document.getElementById('hero-upload-status');
+  fileInput.addEventListener('change', async () => {
+    const file = fileInput.files && fileInput.files[0];
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) {
+      uploadStatus.textContent = 'File too large (max 5MB).';
+      uploadStatus.style.color = 'var(--hot-pink)';
+      fileInput.value = '';
+      return;
+    }
+    const { data: { user } } = await window.sb.auth.getUser();
+    if (!user) { window.location.href = 'dragbook-login.html'; return; }
+
+    uploadStatus.style.color = 'var(--text-muted)';
+    uploadStatus.textContent = 'Uploading…';
+    const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
+    const path = `${user.id}/hero-${Date.now()}.${ext}`;
+    const { error: upErr } = await window.sb.storage
+      .from('dragbook-hero-images')
+      .upload(path, file, { cacheControl: '3600', upsert: false, contentType: file.type });
+    if (upErr) {
+      uploadStatus.textContent = upErr.message;
+      uploadStatus.style.color = 'var(--hot-pink)';
+      return;
+    }
+    const { data: pub } = window.sb.storage.from('dragbook-hero-images').getPublicUrl(path);
+    form.hero_image_url.value = pub.publicUrl;
+    renderHeroPreview(pub.publicUrl);
+    uploadStatus.textContent = 'Uploaded. Save the listing to keep it.';
+    uploadStatus.style.color = 'var(--cyan)';
+  });
 
   function showMsg(kind, text) {
     msg.className = 'message ' + kind;
     msg.textContent = text;
   }
+
+  function requiredChecks() {
+    const styles = form.styles.value.split(',').map(s => s.trim()).filter(Boolean);
+    return [
+      { ok: form.stage_name.value.trim().length >= 2,           label: 'Stage name' },
+      { ok: form.city.value.trim().length >= 2,                 label: 'City' },
+      { ok: form.bio.value.trim().length >= 50,                 label: 'Bio (at least 50 characters)' },
+      { ok: styles.length > 0,                                  label: 'At least one style' },
+      { ok: !!form.hero_image_url.value,                        label: 'Hero image' }
+    ];
+  }
+
+  function renderOnboarding() {
+    const checks = requiredChecks();
+    const missing = checks.filter(c => !c.ok);
+    const wrap = document.getElementById('onboarding');
+    const list = document.getElementById('onboarding-list');
+
+    list.innerHTML = checks.map(c => {
+      const mark = c.ok ? '<span style="color:var(--cyan);">✓</span>' : '<span style="color:var(--hot-pink);">○</span>';
+      return `<li>${mark} ${c.label}</li>`;
+    }).join('');
+
+    wrap.style.display = missing.length ? 'block' : 'none';
+
+    // Gate the publish toggle until everything is filled in
+    if (missing.length) {
+      form.published.disabled = true;
+      form.published.checked = false;
+      form.published.parentElement.title = 'Complete the checklist to publish';
+    } else {
+      form.published.disabled = false;
+      form.published.parentElement.title = '';
+    }
+  }
+
+  // Re-evaluate on every input change
+  form.addEventListener('input', renderOnboarding);
+  form.addEventListener('change', renderOnboarding);
+  // Run after the page has hydrated the form
+  setTimeout(renderOnboarding, 600);
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
