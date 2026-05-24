@@ -5,6 +5,20 @@
 (function () {
   const params = new URLSearchParams(window.location.search);
   const id = params.get('id');
+
+  // Wire the Send Enquiry button regardless of whether we have an id —
+  // without an id the button has nothing to enquire about.
+  const enquireBtn = document.getElementById('send-enquiry-btn');
+  if (enquireBtn) {
+    enquireBtn.addEventListener('click', () => {
+      if (!id) {
+        if (window.dragbook && window.dragbook.toast) window.dragbook.toast('Open a real performer listing to send an enquiry.');
+        return;
+      }
+      window.location.href = `dragbook-enquire.html?performer=${encodeURIComponent(id)}`;
+    });
+  }
+
   if (!id) return;
 
   const $ = (sel) => document.querySelector(sel);

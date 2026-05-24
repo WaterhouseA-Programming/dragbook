@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Send enquiry · DragBook</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500&family=Abril+Fatface&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --hot-pink: #FF2D78; --electric-purple: #9B00FF; --acid-yellow: #FFE600;
+    --cyan: #00F5FF; --deep-black: #0A0008; --card-bg: #1A0020;
+    --text-light: #FFE8FF; --text-muted: #C084C8;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--deep-black);
+    background-image:
+      radial-gradient(circle at 20% 20%, rgba(255,45,120,0.15), transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(155,0,255,0.15), transparent 50%);
+    color: var(--text-light);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+  }
+  nav { padding: 20px 60px; display: flex; align-items: center; justify-content: space-between; }
+  .logo {
+    font-family: 'Abril Fatface', cursive; font-size: 2rem;
+    background: linear-gradient(135deg, var(--hot-pink), var(--electric-purple), var(--cyan));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    text-decoration: none;
+  }
+  .nav-right a { color: var(--text-muted); text-decoration: none; font-size: 0.95rem; }
+  .nav-right a:hover { color: var(--text-light); }
+
+  main { max-width: 600px; margin: 0 auto; padding: 30px 24px 80px; }
+  h1 {
+    font-family: 'Playfair Display', serif; font-size: 2.2rem; margin-bottom: 6px;
+    background: linear-gradient(135deg, var(--hot-pink), var(--cyan));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  p.sub { color: var(--text-muted); margin-bottom: 28px; font-size: 0.95rem; }
+
+  .target {
+    background: var(--card-bg);
+    border: 1px solid rgba(255,45,120,0.25);
+    border-radius: 16px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.95rem;
+  }
+  .target strong { color: var(--text-light); }
+
+  .card {
+    background: var(--card-bg);
+    border: 1px solid rgba(255,45,120,0.2);
+    border-radius: 20px;
+    padding: 28px;
+  }
+  label { display: block; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); margin: 14px 0 6px; }
+  input, textarea, select {
+    width: 100%; padding: 12px 14px;
+    background: rgba(0,0,0,0.4);
+    border: 1px solid rgba(255,232,255,0.1);
+    border-radius: 10px;
+    color: var(--text-light);
+    font: inherit; font-size: 1rem;
+  }
+  textarea { resize: vertical; min-height: 130px; }
+  input:focus, textarea:focus, select:focus {
+    outline: none; border-color: var(--hot-pink);
+    box-shadow: 0 0 0 3px rgba(255,45,120,0.2);
+  }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 600px) { .row { grid-template-columns: 1fr; } nav { padding: 16px 20px; } main { padding: 20px 16px 60px; } .card { padding: 22px; } }
+
+  button.primary {
+    margin-top: 22px;
+    width: 100%;
+    padding: 14px; border: 0; border-radius: 100px;
+    background: linear-gradient(135deg, var(--hot-pink), var(--electric-purple));
+    color: white; font: inherit; font-weight: 600; font-size: 1rem; cursor: pointer;
+    box-shadow: 0 0 20px rgba(255,45,120,0.4);
+  }
+  button.primary:hover { transform: translateY(-1px); }
+  button.primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .message { margin-top: 16px; padding: 12px 14px; border-radius: 10px; font-size: 0.9rem; display: none; }
+  .message.error { background: rgba(255,45,120,0.15); border: 1px solid rgba(255,45,120,0.4); display: block; }
+  .message.ok { background: rgba(0,245,255,0.1); border: 1px solid rgba(0,245,255,0.4); display: block; color: var(--cyan); }
+
+  .gate { text-align: center; padding: 80px 24px; color: var(--text-muted); }
+  .gate a { color: var(--cyan); }
+
+  .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.8s linear infinite; vertical-align: middle; margin-right: 8px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="dragbook.html" class="logo">DragBook</a>
+  <div class="nav-right"><a href="dragbook-browse.html">← Back to browse</a></div>
+</nav>
+
+<main>
+  <div id="loading" class="gate"><span class="spinner"></span>Loading…</div>
+
+  <div id="gate-anon" class="gate" style="display:none;">
+    <h1>Want to send an enquiry?</h1>
+    <p style="margin:14px 0;">Please <a href="dragbook-login.html">log in</a> or <a href="dragbook-signup.html">sign up</a> first.</p>
+  </div>
+
+  <div id="gate-self" class="gate" style="display:none;">
+    You can't send an enquiry to your own listing.
+  </div>
+
+  <div id="gate-missing" class="gate" style="display:none;">
+    Performer not found. <a href="dragbook-browse.html">Browse listings</a>
+  </div>
+
+  <div id="form-wrap" style="display:none;">
+    <h1>Send an enquiry</h1>
+    <p class="sub">Tell the performer about your event. They'll reply in your inbox.</p>
+
+    <div class="target">
+      Enquiring with <strong id="performer-name">…</strong><span id="performer-city" style="color:var(--text-muted);"></span>
+    </div>
+
+    <form id="enquiry-form" class="card">
+      <div class="row">
+        <div>
+          <label for="event_date">Event date</label>
+          <input id="event_date" name="event_date" type="date">
+        </div>
+        <div>
+          <label for="event_type">Event type</label>
+          <select id="event_type" name="event_type">
+            <option value="">Choose one</option>
+            <option>Hen Party</option>
+            <option>Corporate Event</option>
+            <option>Wedding</option>
+            <option>Drag Bingo</option>
+            <option>Pride Event</option>
+            <option>Birthday Party</option>
+            <option>Cabaret Night</option>
+            <option>Festival</option>
+            <option>Other</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row">
+        <div>
+          <label for="event_location">Location</label>
+          <input id="event_location" name="event_location" type="text" placeholder="London, EC1A">
+        </div>
+        <div>
+          <label for="budget">Estimated budget (£)</label>
+          <input id="budget" name="budget" type="number" min="0" step="50" placeholder="500">
+        </div>
+      </div>
+
+      <label for="message">Message *</label>
+      <textarea id="message" name="message" required maxlength="2000" placeholder="Tell them about your event, the vibe you're going for, and what you'd like them to do."></textarea>
+
+      <button type="submit" class="primary" id="submit-btn">Send enquiry 💌</button>
+
+      <div id="status" class="message"></div>
+    </form>
+  </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-client.js"></script>
+<script src="js/auth.js"></script>
+<script>
+(async () => {
+  const $ = (s) => document.querySelector(s);
+  const params = new URLSearchParams(location.search);
+  const performerId = params.get('performer');
+
+  const loading = $('#loading');
+  const wrap = $('#form-wrap');
+
+  function show(id) {
+    loading.style.display = 'none';
+    document.querySelectorAll('.gate, #form-wrap').forEach((el) => el.style.display = 'none');
+    const el = $(id);
+    if (el) el.style.display = 'block';
+  }
+
+  if (!performerId) { show('#gate-missing'); return; }
+
+  const profile = await window.dragbook.getProfile();
+  if (!profile) { show('#gate-anon'); return; }
+  if (profile.id === performerId) { show('#gate-self'); return; }
+
+  const { data: performer, error } = await window.sb
+    .from('dragbook_performers')
+    .select('id, stage_name, city, published')
+    .eq('id', performerId)
+    .maybeSingle();
+  if (error || !performer) { show('#gate-missing'); return; }
+
+  $('#performer-name').textContent = performer.stage_name;
+  if (performer.city) $('#performer-city').textContent = ' · ' + performer.city;
+  show('#form-wrap');
+
+  const form = $('#enquiry-form');
+  const status = $('#status');
+  const btn = $('#submit-btn');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    btn.disabled = true; btn.textContent = 'Sending…';
+    status.className = 'message'; status.textContent = '';
+
+    const budget = form.budget.value ? Math.round(parseFloat(form.budget.value) * 100) : null;
+
+    const row = {
+      performer_id: performerId,
+      booker_id: profile.id,
+      event_date: form.event_date.value || null,
+      event_type: form.event_type.value || null,
+      event_location: form.event_location.value.trim() || null,
+      estimated_budget_pennies: budget,
+      initial_message: form.message.value.trim()
+    };
+
+    const { data, error: insertErr } = await window.sb.from('dragbook_enquiries').insert(row).select().single();
+
+    if (insertErr) {
+      status.className = 'message error';
+      status.textContent = insertErr.message;
+      btn.disabled = false; btn.textContent = 'Send enquiry 💌';
+      return;
+    }
+
+    // Also drop the initial message into the messages table so threads stay consistent
+    await window.sb.from('dragbook_messages').insert({
+      enquiry_id: data.id,
+      sender_id: profile.id,
+      body: row.initial_message
+    });
+
+    window.location.href = `dragbook-inbox.html?id=${encodeURIComponent(data.id)}`;
+  });
+})();
+</script>
+</body>
+</html>

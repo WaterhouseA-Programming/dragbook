@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inbox · DragBook</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500&family=Abril+Fatface&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --hot-pink: #FF2D78; --electric-purple: #9B00FF; --acid-yellow: #FFE600;
+    --cyan: #00F5FF; --deep-black: #0A0008; --card-bg: #1A0020;
+    --text-light: #FFE8FF; --text-muted: #C084C8;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--deep-black);
+    background-image:
+      radial-gradient(circle at 10% 0%, rgba(255,45,120,0.12), transparent 50%),
+      radial-gradient(circle at 90% 100%, rgba(155,0,255,0.15), transparent 50%);
+    color: var(--text-light);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+  }
+  nav { padding: 18px 60px; display: flex; align-items: center; justify-content: space-between; }
+  .logo {
+    font-family: 'Abril Fatface', cursive; font-size: 2rem;
+    background: linear-gradient(135deg, var(--hot-pink), var(--electric-purple), var(--cyan));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    text-decoration: none;
+  }
+  .nav-links { list-style: none; display: flex; gap: 24px; align-items: center; }
+  .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; }
+  .nav-links a:hover { color: var(--text-light); }
+
+  main { max-width: 1100px; margin: 0 auto; padding: 30px 24px 80px; }
+  h1 {
+    font-family: 'Playfair Display', serif; font-size: 2.2rem; margin-bottom: 6px;
+    background: linear-gradient(135deg, var(--hot-pink), var(--cyan));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  p.sub { color: var(--text-muted); margin-bottom: 28px; font-size: 0.95rem; }
+
+  .layout { display: grid; grid-template-columns: 320px 1fr; gap: 24px; align-items: start; }
+  @media (max-width: 800px) { .layout { grid-template-columns: 1fr; } }
+
+  .list, .thread {
+    background: var(--card-bg);
+    border: 1px solid rgba(255,45,120,0.2);
+    border-radius: 18px;
+    overflow: hidden;
+  }
+
+  .list-empty { padding: 30px 20px; color: var(--text-muted); text-align: center; font-size: 0.92rem; }
+
+  .list-item {
+    display: block;
+    padding: 16px 18px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    color: var(--text-light);
+    text-decoration: none;
+    transition: background 0.15s;
+  }
+  .list-item:last-child { border-bottom: none; }
+  .list-item:hover { background: rgba(255,45,120,0.06); }
+  .list-item.active { background: linear-gradient(135deg, rgba(255,45,120,0.18), rgba(155,0,255,0.18)); }
+  .list-item .from { font-weight: 500; font-size: 0.95rem; }
+  .list-item .meta { font-size: 0.78rem; color: var(--text-muted); margin-top: 4px; }
+  .list-item .preview { font-size: 0.85rem; color: var(--text-muted); margin-top: 6px; line-height: 1.4; max-height: 2.6em; overflow: hidden; }
+  .list-item .pill {
+    display: inline-block; padding: 2px 8px; border-radius: 100px;
+    font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 600;
+    margin-left: 6px;
+  }
+  .pill-new { background: rgba(255,230,0,0.15); color: var(--acid-yellow); border: 1px solid rgba(255,230,0,0.3); }
+  .pill-accepted { background: rgba(0,245,255,0.1); color: var(--cyan); border: 1px solid rgba(0,245,255,0.3); }
+  .pill-declined { background: rgba(255,45,120,0.1); color: var(--hot-pink); border: 1px solid rgba(255,45,120,0.3); }
+  .pill-closed { background: rgba(255,255,255,0.05); color: var(--text-muted); border: 1px solid rgba(255,255,255,0.1); }
+
+  .thread { min-height: 480px; display: flex; flex-direction: column; }
+  .thread-header {
+    padding: 18px 22px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .thread-header h2 {
+    font-family: 'Playfair Display', serif; font-size: 1.25rem; color: white; margin-bottom: 4px;
+  }
+  .thread-header .meta { font-size: 0.82rem; color: var(--text-muted); }
+  .thread-header .actions { margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap; }
+  .thread-header button {
+    padding: 6px 14px; border-radius: 100px; border: 1px solid rgba(255,255,255,0.15);
+    background: transparent; color: var(--text-light); font: inherit; font-size: 0.82rem; cursor: pointer;
+  }
+  .thread-header button:hover { border-color: var(--hot-pink); color: var(--hot-pink); }
+  .thread-header button.primary {
+    background: linear-gradient(135deg, var(--hot-pink), var(--electric-purple));
+    border-color: transparent; color: white;
+  }
+
+  .messages { flex: 1; padding: 18px 22px; overflow-y: auto; max-height: 520px; }
+  .msg { margin-bottom: 14px; display: flex; flex-direction: column; max-width: 80%; }
+  .msg.me { align-self: flex-end; margin-left: auto; }
+  .msg .bubble {
+    padding: 10px 14px; border-radius: 16px;
+    background: rgba(255,255,255,0.04); color: var(--text-light); font-size: 0.95rem; line-height: 1.5;
+    white-space: pre-wrap; word-wrap: break-word;
+  }
+  .msg.me .bubble {
+    background: linear-gradient(135deg, var(--hot-pink), var(--electric-purple)); color: white;
+  }
+  .msg .stamp { font-size: 0.72rem; color: var(--text-muted); margin-top: 4px; }
+  .msg.me .stamp { text-align: right; }
+
+  .composer {
+    padding: 14px 18px; border-top: 1px solid rgba(255,255,255,0.06);
+    display: flex; gap: 10px; align-items: flex-end;
+  }
+  .composer textarea {
+    flex: 1; resize: none; min-height: 44px; max-height: 140px;
+    padding: 10px 14px; border-radius: 14px;
+    background: rgba(0,0,0,0.4); border: 1px solid rgba(255,232,255,0.1);
+    color: var(--text-light); font: inherit; font-size: 0.95rem;
+  }
+  .composer textarea:focus { outline: none; border-color: var(--hot-pink); }
+  .composer button {
+    padding: 10px 18px; border-radius: 100px; border: 0;
+    background: linear-gradient(135deg, var(--hot-pink), var(--electric-purple));
+    color: white; font: inherit; font-weight: 600; cursor: pointer;
+  }
+  .composer button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .empty-thread { padding: 80px 24px; text-align: center; color: var(--text-muted); }
+
+  .gate { text-align: center; padding: 80px 24px; color: var(--text-muted); }
+  .gate a { color: var(--cyan); }
+
+  .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.8s linear infinite; vertical-align: middle; margin-right: 8px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="dragbook.html" class="logo">DragBook</a>
+  <ul class="nav-links">
+    <li><a href="dragbook-browse.html">Browse</a></li>
+    <li><a href="#" id="signout-link">Sign out</a></li>
+  </ul>
+</nav>
+
+<main>
+  <div id="loading" class="gate"><span class="spinner"></span>Loading inbox…</div>
+
+  <div id="gate-anon" class="gate" style="display:none;">
+    Please <a href="dragbook-login.html">log in</a> to view your inbox.
+  </div>
+
+  <div id="inbox" style="display:none;">
+    <h1>Inbox</h1>
+    <p class="sub" id="inbox-sub">Your enquiries and conversations.</p>
+
+    <div class="layout">
+      <div class="list" id="enquiry-list">
+        <div class="list-empty" id="list-empty">No enquiries yet.</div>
+      </div>
+
+      <div class="thread" id="thread">
+        <div class="empty-thread" id="thread-empty">Select an enquiry to view the conversation.</div>
+        <div class="thread-header" id="thread-header" style="display:none;">
+          <h2 id="thread-title"></h2>
+          <div class="meta" id="thread-meta"></div>
+          <div class="actions" id="thread-actions"></div>
+        </div>
+        <div class="messages" id="messages" style="display:none;"></div>
+        <form class="composer" id="composer" style="display:none;" autocomplete="off">
+          <textarea id="composer-body" placeholder="Type a reply…" rows="1" required></textarea>
+          <button type="submit" id="composer-send">Send</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-client.js"></script>
+<script src="js/auth.js"></script>
+<script>
+(async () => {
+  const $ = (s) => document.querySelector(s);
+  const loading = $('#loading');
+  const inbox = $('#inbox');
+
+  document.getElementById('signout-link').addEventListener('click', (e) => { e.preventDefault(); window.dragbook.signOut(); });
+
+  const me = await window.dragbook.getProfile();
+  if (!me) {
+    loading.style.display = 'none';
+    document.getElementById('gate-anon').style.display = 'block';
+    return;
+  }
+
+  loading.style.display = 'none';
+  inbox.style.display = 'block';
+  $('#inbox-sub').textContent = me.account_type === 'performer'
+    ? 'Enquiries received from bookers.'
+    : 'Enquiries you have sent.';
+
+  // Load enquiries the user participates in. RLS already scopes this to me.
+  const { data: enquiries, error } = await window.sb
+    .from('dragbook_enquiries')
+    .select('id, performer_id, booker_id, event_date, event_type, event_location, initial_message, status, created_at')
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    $('#enquiry-list').innerHTML = `<div class="list-empty">Could not load. ${error.message}</div>`;
+    return;
+  }
+
+  // Fetch counterparties' display names in one go
+  const counterpartyIds = [...new Set(enquiries.map(e => e.booker_id === me.id ? e.performer_id : e.booker_id))];
+  let counterparties = {};
+  if (counterpartyIds.length) {
+    const { data: profiles } = await window.sb
+      .from('dragbook_profiles')
+      .select('id, display_name, account_type')
+      .in('id', counterpartyIds);
+    (profiles || []).forEach(p => { counterparties[p.id] = p; });
+  }
+
+  function escapeHtml(s) {
+    return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  function fmtDate(iso) {
+    if (!iso) return '';
+    const d = new Date(iso);
+    return d.toLocaleDateString(undefined, { day: 'numeric', month: 'short' });
+  }
+
+  function fmtTime(iso) {
+    if (!iso) return '';
+    return new Date(iso).toLocaleString(undefined, { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+  }
+
+  const list = $('#enquiry-list');
+  const emptyMsg = $('#list-empty');
+  if (!enquiries || enquiries.length === 0) {
+    emptyMsg.style.display = 'block';
+  } else {
+    emptyMsg.style.display = 'none';
+    list.innerHTML = enquiries.map((e) => {
+      const otherId = e.booker_id === me.id ? e.performer_id : e.booker_id;
+      const other = counterparties[otherId] || {};
+      const name = other.display_name || (other.account_type === 'performer' ? 'Performer' : 'Booker');
+      return `
+        <a href="?id=${encodeURIComponent(e.id)}" class="list-item" data-id="${e.id}">
+          <div class="from">${escapeHtml(name)}<span class="pill pill-${e.status}">${e.status}</span></div>
+          <div class="meta">${escapeHtml(e.event_type || 'Event')} · ${fmtDate(e.event_date)} · ${fmtDate(e.created_at)}</div>
+          <div class="preview">${escapeHtml((e.initial_message || '').slice(0, 120))}</div>
+        </a>
+      `;
+    }).join('');
+  }
+
+  // ---- Thread ----
+  const params = new URLSearchParams(location.search);
+  const activeId = params.get('id');
+  const threadEmpty = $('#thread-empty');
+  const threadHeader = $('#thread-header');
+  const messagesEl = $('#messages');
+  const composer = $('#composer');
+  const composerBody = $('#composer-body');
+  const sendBtn = $('#composer-send');
+
+  if (!activeId) return;
+
+  const enquiry = enquiries.find(e => e.id === activeId);
+  if (!enquiry) {
+    threadEmpty.textContent = 'Enquiry not found or you no longer have access.';
+    return;
+  }
+
+  // Highlight selected row
+  const row = list.querySelector(`[data-id="${CSS.escape(activeId)}"]`);
+  if (row) row.classList.add('active');
+
+  threadEmpty.style.display = 'none';
+  threadHeader.style.display = 'block';
+  messagesEl.style.display = 'flex';
+  messagesEl.style.flexDirection = 'column';
+  composer.style.display = 'flex';
+
+  const otherId = enquiry.booker_id === me.id ? enquiry.performer_id : enquiry.booker_id;
+  const other = counterparties[otherId] || {};
+  $('#thread-title').textContent = other.display_name || 'Conversation';
+
+  const metaBits = [];
+  if (enquiry.event_type) metaBits.push(enquiry.event_type);
+  if (enquiry.event_date) metaBits.push(new Date(enquiry.event_date).toLocaleDateString());
+  if (enquiry.event_location) metaBits.push(enquiry.event_location);
+  $('#thread-meta').textContent = metaBits.join(' · ') || 'Enquiry details';
+
+  // Status actions
+  const actionsEl = $('#thread-actions');
+  function renderActions() {
+    actionsEl.innerHTML = '';
+    if (me.account_type === 'performer' && enquiry.performer_id === me.id) {
+      if (enquiry.status === 'new') {
+        actionsEl.innerHTML = `
+          <button class="primary" data-status="accepted">Accept</button>
+          <button data-status="declined">Decline</button>
+        `;
+      }
+      if (enquiry.status !== 'closed') {
+        actionsEl.insertAdjacentHTML('beforeend', '<button data-status="closed">Close</button>');
+      }
+    } else if (enquiry.status !== 'closed') {
+      actionsEl.innerHTML = '<button data-status="closed">Close enquiry</button>';
+    }
+    actionsEl.querySelectorAll('button[data-status]').forEach((b) => {
+      b.addEventListener('click', async () => {
+        const newStatus = b.getAttribute('data-status');
+        b.disabled = true;
+        const { error } = await window.sb.from('dragbook_enquiries').update({ status: newStatus }).eq('id', enquiry.id);
+        if (error) { alert(error.message); b.disabled = false; return; }
+        enquiry.status = newStatus;
+        renderActions();
+        const pill = row?.querySelector('.pill');
+        if (pill) { pill.className = `pill pill-${newStatus}`; pill.textContent = newStatus; }
+      });
+    });
+  }
+  renderActions();
+
+  async function loadMessages() {
+    const { data, error: mErr } = await window.sb
+      .from('dragbook_messages')
+      .select('id, sender_id, body, created_at')
+      .eq('enquiry_id', enquiry.id)
+      .order('created_at', { ascending: true });
+    if (mErr) { messagesEl.innerHTML = `<div class="empty-thread">${mErr.message}</div>`; return; }
+
+    messagesEl.innerHTML = (data || []).map((m) => `
+      <div class="msg ${m.sender_id === me.id ? 'me' : 'them'}">
+        <div class="bubble">${escapeHtml(m.body)}</div>
+        <div class="stamp">${fmtTime(m.created_at)}</div>
+      </div>
+    `).join('');
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+  }
+  await loadMessages();
+
+  composer.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const body = composerBody.value.trim();
+    if (!body) return;
+    sendBtn.disabled = true;
+    const { error: sendErr } = await window.sb.from('dragbook_messages').insert({
+      enquiry_id: enquiry.id,
+      sender_id: me.id,
+      body
+    });
+    sendBtn.disabled = false;
+    if (sendErr) { alert(sendErr.message); return; }
+    composerBody.value = '';
+    await loadMessages();
+  });
+})();
+</script>
+</body>
+</html>

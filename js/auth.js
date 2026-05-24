@@ -94,7 +94,7 @@ window.dragbook.renderNav = async function () {
 
   nav.innerHTML = `
     <li><a href="dragbook-browse.html">Find Performers</a></li>
-    <li><a href="dragbook-how-it-works.html">How It Works</a></li>
+    <li><a href="dragbook-inbox.html">Inbox</a></li>
     <li><a href="${dashHref}">${dashLabel}</a></li>
     <li><a href="#" id="dragbook-signout" class="btn-nav">${initial} · Sign out</a></li>
   `;
@@ -119,12 +119,12 @@ window.dragbook.toast = function (text) {
 };
 
 function wireComingSoon() {
-  document.querySelectorAll('a[data-coming-soon]').forEach((a) => {
-    if (a.dataset.csWired) return;
-    a.dataset.csWired = '1';
-    a.addEventListener('click', (e) => {
+  document.querySelectorAll('[data-coming-soon]').forEach((el) => {
+    if (el.dataset.csWired) return;
+    el.dataset.csWired = '1';
+    el.addEventListener('click', (e) => {
       e.preventDefault();
-      const label = a.getAttribute('data-coming-soon') || 'This';
+      const label = el.getAttribute('data-coming-soon') || 'This';
       window.dragbook.toast(`${label} is coming soon ✨`);
     });
   });
