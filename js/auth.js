@@ -7,7 +7,11 @@ window.dragbook.signUp = async function ({ email, password, accountType, display
   const { data, error } = await window.sb.auth.signUp({
     email,
     password,
-    options: { data: { account_type: accountType, display_name: displayName } }
+    options: {
+      data: { account_type: accountType, display_name: displayName },
+      // The Supabase project is shared, so without this the link lands on another app.
+      emailRedirectTo: `${window.location.origin}/dragbook-login.html`
+    }
   });
   if (error) throw error;
 

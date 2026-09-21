@@ -179,6 +179,16 @@
   const msg = document.getElementById('message');
   const submitBtn = document.getElementById('submit-btn');
 
+  // Arriving from the sign-up confirmation link leaves a session in place.
+  (async () => {
+    const { data: { session } } = await window.sb.auth.getSession();
+    if (!session) return;
+    const profile = await window.dragbook.ensureProfile();
+    window.location.href = profile && profile.account_type === 'performer'
+      ? 'dragbook-profile-edit.html'
+      : 'dragbook-browse.html';
+  })();
+
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     msg.className = 'message';
