@@ -198,13 +198,6 @@
       <button type="submit" class="submit" id="submit-btn">Create account</button>
     </form>
 
-    <form id="code-form" hidden>
-      <p class="sub">We sent a link to <strong id="code-email"></strong>. Tap it, or enter the code from the email here.</p>
-      <label for="code">Code</label>
-      <input id="code" name="code" type="text" inputmode="numeric" autocomplete="one-time-code" required placeholder="123456" style="letter-spacing:0.4em;text-align:center;">
-      <button type="submit" class="submit" id="code-btn">Confirm</button>
-    </form>
-
     <div id="message" class="message"></div>
 
     <div class="switcher">
@@ -251,49 +244,16 @@
           ? 'dragbook-profile-edit.html'
           : 'dragbook-browse.html';
       } else {
-        form.hidden = true;
-        codeForm.hidden = false;
-        document.getElementById('code-email').textContent = form.email.value.trim();
-        codeForm.code.focus();
+        msg.className = 'message ok';
+        msg.textContent = 'Check your inbox to confirm your email, then log in.';
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Create account';
       }
     } catch (err) {
       msg.className = 'message error';
       msg.textContent = err.message || 'Something went wrong. Try again.';
       submitBtn.disabled = false;
       submitBtn.textContent = 'Create account';
-    }
-  });
-
-  // The confirmation link may open in a different browser. The code confirms here.
-  const codeForm = document.getElementById('code-form');
-  const codeBtn = document.getElementById('code-btn');
-  codeForm.code.addEventListener('input', () => {
-    codeForm.code.value = codeForm.code.value.replace(/\D/g, '');
-  });
-
-  codeForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    msg.className = 'message';
-    msg.textContent = '';
-    codeBtn.disabled = true;
-    codeBtn.textContent = 'Checking...';
-
-    try {
-      const { error } = await window.sb.auth.verifyOtp({
-        email: form.email.value.trim(),
-        token: codeForm.code.value,
-        type: 'email'
-      });
-      if (error) throw error;
-      await window.dragbook.ensureProfile();
-      window.location.href = accountType === 'performer'
-        ? 'dragbook-profile-edit.html'
-        : 'dragbook-browse.html';
-    } catch (err) {
-      msg.className = 'message error';
-      msg.textContent = err.message || 'That code did not work.';
-      codeBtn.disabled = false;
-      codeBtn.textContent = 'Confirm';
     }
   });
 </script>
